@@ -1327,9 +1327,22 @@ export default function MortgageCalc({ country }) {
                   />
                   <div>
                     <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">{t('mortgage.loanTerm')}</label>
-                    <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
-                      {termOptions.map(y => <option key={y} value={y}>{y} years</option>)}
-                    </select>
+                    <div className="flex gap-1 flex-wrap">
+                      {termOptions.map(y => (
+                        <button
+                          key={y}
+                          type="button"
+                          onClick={() => setTerm(y)}
+                          className="flex-1 min-w-[44px] py-2 px-1 rounded-lg text-sm font-semibold transition-colors"
+                          style={term === y
+                            ? { background: '#1A6AFF', color: '#fff', border: '1.5px solid #1A6AFF' }
+                            : { background: '#F1F5F9', color: '#475569', border: '1.5px solid #E2E8F0' }
+                          }
+                        >
+                          {y}yr
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1373,7 +1386,7 @@ export default function MortgageCalc({ country }) {
 
             {optOpen && (
               <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-3">Monthly cost estimates</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-3">{t('mortgage.monthlyCostEstimates')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {optionDefs.map(opt => {
                     const enabled = !!optEnabled[opt.key]
@@ -1409,7 +1422,7 @@ export default function MortgageCalc({ country }) {
                             )}
                             {opt.type === 'cmhc' && result && (
                               <p className="text-xs text-blue-600 mt-1 font-medium">
-                                One-time: {fmt(result.principal * val / 100)} added to loan
+                                {t('mortgage.oneTimeAdded', { amount: fmt(result.principalBase * val / 100) })}
                               </p>
                             )}
                           </div>

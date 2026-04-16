@@ -111,7 +111,9 @@
     "balance": "Saldo",
     "stressTest": "Tasa de prueba",
     "stressTestNote": "Prueba de resistencia CA",
-    "optCosts": "Costos opcionales"
+    "optCosts": "Costos opcionales",
+    "monthlyCostEstimates": "Estimaciones de costos mensuales",
+    "oneTimeAdded": "Único: {{amount}} agregado al préstamo"
   },
   "tax": {
     "title": "Calculadora de Impuestos",

@@ -111,7 +111,9 @@
     "balance": "Solde",
     "stressTest": "Taux de simulation",
     "stressTestNote": "Test de résistance CA : qualification au taux contractuel +2% ou 5,25% (le plus élevé)",
-    "optCosts": "Coûts optionnels"
+    "optCosts": "Coûts optionnels",
+    "monthlyCostEstimates": "Coûts mensuels estimés",
+    "oneTimeAdded": "Unique : {{amount}} ajouté au prêt"
   },
   "tax": {
     "title": "Calculateur d'Impôts",

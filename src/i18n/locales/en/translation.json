@@ -111,7 +111,9 @@
     "balance": "Balance",
     "stressTest": "Stress Test Rate",
     "stressTestNote": "Canadian stress test: qualify at contract rate +2% or 5.25% (whichever higher)",
-    "optCosts": "Optional Costs"
+    "optCosts": "Optional Costs",
+    "monthlyCostEstimates": "Monthly Cost Estimates",
+    "oneTimeAdded": "One-time: {{amount}} added to loan"
   },
   "tax": {
     "title": "Tax Calculator",
