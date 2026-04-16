@@ -254,7 +254,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
           <h1 className="text-3xl font-display font-bold mb-2">
             Affordability Calculator
           </h1>
-          <p className="text-cw-gray">{descByCountry[country] || descByCountry.us}</p>
+          <p className="text-slate-500">{descByCountry[country] || descByCountry.us}</p>
         </div>
 
         <CalcIntro
@@ -265,24 +265,24 @@ export default function AffordabilityCalc({ country = 'us' }) {
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Annual Gross Income ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Annual Gross Income ({c.symbol})</label>
               <NumericInput value={grossIncome} onChange={setGrossIncome} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Monthly Debts ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Monthly Debts ({c.symbol})</label>
               <NumericInput value={monthlyDebts} onChange={setMonthlyDebts} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Down Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Down Payment ({c.symbol})</label>
               <NumericInput value={downPayment} onChange={setDownPayment} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Mortgage Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">Mortgage Rate (%)</label>
               <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             {country === 'us' && (
               <div className="sm:col-span-2">
-                <label className="block text-xs text-cw-gray mb-1">Loan Type</label>
+                <label className="block text-xs text-slate-500 mb-1">Loan Type</label>
                 <select className="cw-input" value={loanType} onChange={e => setLoanType(e.target.value)}>
                   {loanTypes.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                 </select>
@@ -292,12 +292,10 @@ export default function AffordabilityCalc({ country = 'us' }) {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-4">
+        <div className="cw-tabs mb-4">
           {['result', 'chart', 'breakdown'].map(v => (
             <button key={v} onClick={() => setView(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}>
+              className={`cw-tab${view === v ? ' active' : ''}`}>
               {v}
             </button>
           ))}
@@ -316,11 +314,11 @@ export default function AffordabilityCalc({ country = 'us' }) {
 
             {/* Affordability Meter */}
             <div className="cw-card mt-4">
-              <h3 className="font-semibold mb-3 text-sm uppercase tracking-wider text-cw-gray">
+              <h3 className="font-semibold mb-3 text-sm uppercase tracking-wider text-slate-500">
                 Affordability Meter
               </h3>
               <div className="mb-2">
-                <label className="block text-xs text-cw-gray mb-1">Enter a target home price to check ({c.symbol})</label>
+                <label className="block text-xs text-slate-500 mb-1">Enter a target home price to check ({c.symbol})</label>
                 <NumericInput value={homePrice} onChange={setHomePrice} min={0} step={1000} prefix={c.symbol} />
               </div>
               {meterPct !== null && (
@@ -334,7 +332,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
                       }}
                     />
                   </div>
-                  <div className="flex justify-between text-xs text-cw-gray mt-1">
+                  <div className="flex justify-between text-xs text-slate-500 mt-1">
                     <span>0%</span>
                     <span className="font-semibold" style={{ color: meterColor(meterPct) }}>
                       {meterPct}% of max budget
@@ -353,7 +351,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
           <>
             {/* Price tiers bar chart */}
             <div className="cw-card mb-6">
-              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-cw-gray">
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-slate-500">
                 Affordable Price Tiers
               </h3>
               <ResponsiveContainer width="100%" height={260}>
@@ -377,14 +375,14 @@ export default function AffordabilityCalc({ country = 'us' }) {
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
-              <p className="text-xs text-cw-gray mt-2 text-center">
+              <p className="text-xs text-slate-500 mt-2 text-center">
                 Recommended = 80% of max. Conservative = 60% of max. Red = upper limit.
               </p>
             </div>
 
             {/* DTI thresholds bar chart */}
             <div className="cw-card mb-6">
-              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-cw-gray">
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-slate-500">
                 Monthly Payment vs DTI Thresholds
               </h3>
               <ResponsiveContainer width="100%" height={260}>
@@ -408,7 +406,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
-              <p className="text-xs text-cw-gray mt-2 text-center">
+              <p className="text-xs text-slate-500 mt-2 text-center">
                 Green = 28% front-end. Orange = 36% back-end. Red = 43% max. Blue = your qualifying payment.
               </p>
             </div>
@@ -522,7 +520,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
         )}
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter your income and details above to see how much you can afford.
           </div>
         )}

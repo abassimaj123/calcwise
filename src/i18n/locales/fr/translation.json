@@ -1,84 +1,129 @@
 {
   "nav": {
-    "getApp": "Obtenir l'App",
+    "getApp": "Télécharger l'app",
     "lang": "FR"
   },
   "hero": {
-    "title": "Calculateurs Financiers Gratuits",
-    "titleHighlight": "pour 6 Pays",
-    "subtitle": "Hypothèques, impôts, salaire, prêts auto et plus. Précis, transparent, gratuit. Ce que votre banque ne vous montre pas.",
+    "title": "Calculateurs Financiers Qui Révèlent",
+    "titleHighlight": "Ce Que les Banques Cachent",
+    "subtitle": "Hypothèque, impôts, salaire, prêt auto — avec tous les coûts cachés dévoilés. 6 pays, taux 2026, zéro inscription.",
     "cta_mortgage": "Calculateur Hypothécaire",
-    "cta_tax": "Calculateur d'Impôts"
+    "cta_tax": "Calculateur d'Impôts",
+    "badge": "6 Pays · 47+ Calculateurs · 100% Gratuit"
   },
   "home": {
-    "chooseCountry": "Choisissez votre Pays",
+    "chooseCountry": "Choisissez Votre Pays",
     "calculators": "calculateurs",
-    "popular": "Calculateurs les Plus Populaires",
-    "howItWorks": "Comment Ça Marche",
+    "popular": "Calculateurs les Plus Utilisés",
+    "howItWorks": "Comment Ça Fonctionne",
     "step1Title": "Choisissez votre pays",
-    "step1Desc": "Sélectionnez US, CA, UK, AU, IE ou NZ pour des calculs spécifiques au pays.",
+    "step1Desc": "Sélectionnez US, CA, UK, AU, IE ou NZ pour des taux, paliers d'imposition et règles spécifiques à votre pays.",
     "step2Title": "Entrez vos chiffres",
-    "step2Desc": "Saisissez vos données. Tous les calculs se font instantanément dans votre navigateur.",
-    "step3Title": "Obtenez le détail complet",
-    "step3Desc": "Voyez des résultats simples ou basculez vers la vue détaillée avec amortissement complet."
+    "step2Desc": "Saisissez vos données. Les résultats se calculent en temps réel — aucune soumission requise.",
+    "step3Title": "Découvrez ce que les autres cachent",
+    "step3Desc": "Vue simple pour une réponse rapide. Vue détaillée pour les coûts cachés, l'amortissement complet et les déductions.",
+    "whyTitle": "Pourquoi CalcWise?",
+    "whyAccurateTitle": "Taux 2026 Exacts",
+    "whyAccurateDesc": "Paliers d'imposition, taux hypothécaires et plafonds de cotisation mis à jour pour les 6 pays.",
+    "whyInstantTitle": "Résultats Instantanés",
+    "whyInstantDesc": "Calculs en temps réel au fil de la saisie. Sans rechargement, sans courriel requis.",
+    "whyHiddenTitle": "Coûts Cachés Dévoilés",
+    "whyHiddenDesc": "On affiche l'assurance PMI/CMHC, l'assurance collective, les cotisations syndicales, les taxes foncières — tout ce que votre banque oublie de mentionner.",
+    "trustAccuracy": "Précision bancaire",
+    "trustInstant": "Résultats instantanés",
+    "trustCountries": "6 pays",
+    "trustCalcs": "47+ calculateurs"
   },
   "countryHub": {
     "financialCalcs": "Calculateurs Financiers",
     "subtitle": "calculateurs gratuits — mis à jour 2026",
-    "updated": "Mis à jour 2026"
+    "updated": "Mis à jour 2026",
+    "popular": "Populaire"
   },
   "stats": {
     "calculators": "Calculateurs",
     "countries": "Pays",
     "taxRates": "Taux 2026",
-    "noSignup": "Gratuit"
+    "noSignup": "Gratuit · Sans inscription"
   },
   "calc": {
     "simple": "Simple",
     "detailed": "Détaillé",
+    "summary": "Sommaire",
+    "chart": "Graphique",
+    "schedule": "Tableau",
     "monthlyPayment": "Paiement Mensuel",
-    "totalInterest": "Intérêt Total",
+    "totalInterest": "Intérêts Totaux",
     "totalCost": "Coût Total",
-    "netAnnual": "Revenu Annuel Net",
-    "monthlyTakeHome": "Revenu Mensuel Net",
+    "netAnnual": "Salaire Net Annuel",
+    "monthlyTakeHome": "Salaire Net Mensuel",
     "effectiveRate": "Taux d'Imposition Effectif",
-    "enterValid": "Entrez des valeurs valides ci-dessus pour voir vos résultats.",
-    "enterIncome": "Entrez votre revenu annuel ci-dessus pour voir le détail."
+    "enterValid": "Entrez vos valeurs ci-dessus pour voir les résultats.",
+    "enterIncome": "Entrez votre revenu ci-dessus pour voir le détail complet.",
+    "optionalDeductions": "Déductions Optionnelles",
+    "optionalCosts": "Coûts Optionnels",
+    "preTax": "Avant impôt",
+    "postTax": "Après impôt",
+    "preTaxDesc": "Réduit votre revenu imposable",
+    "postTaxDesc": "Déduit du salaire net",
+    "active": "actif(s)",
+    "hiddenCostRevealed": "Coût caché révélé",
+    "trueMonthly": "Vrai Coût Mensuel",
+    "paymentStrategy": "Stratégie de Remboursement",
+    "minPayment": "Paiement Minimum",
+    "fixedAmount": "Montant Fixe",
+    "payOffIn": "Remboursement en",
+    "extraPayment": "Paiement Supplémentaire Mensuel",
+    "payOffSooner": "Vous remboursez {months} mois plus tôt et économisez {amount} en intérêts.",
+    "benchmarkBelow": "Votre taux est {pct}% sous la moyenne 2026 — bonne position.",
+    "benchmarkAbove": "Votre taux est {pct}% au-dessus de la moyenne 2026 — magasinez davantage.",
+    "alertPMI": "L'assurance hypothécaire s'applique quand la mise de fonds est inférieure à 20%.",
+    "alertCMHC": "L'assurance CMHC est obligatoire pour une mise de fonds inférieure à 20%.",
+    "shareResults": "Partager les résultats",
+    "copyLink": "Copier le lien",
+    "print": "Imprimer",
+    "resetDefaults": "Réinitialiser"
   },
   "mortgage": {
     "title": "Calculateur Hypothécaire",
-    "desc": "Calculez votre paiement mensuel, l'intérêt total et le tableau d'amortissement.",
-    "homePrice": "Prix du Logement",
-    "downPayment": "Apport Initial",
-    "interestRate": "Taux d'Intérêt Annuel (%)",
-    "loanTerm": "Durée du Prêt (ans)",
+    "desc": "Paiement mensuel, coût total réel et tableau d'amortissement — avec taxes, assurance et CMHC.",
+    "homePrice": "Prix de la Propriété",
+    "downPayment": "Mise de Fonds",
+    "interestRate": "Taux d'Intérêt Annuel",
+    "loanTerm": "Durée de l'Hypothèque",
     "purchasePrice": "Prix d'Achat",
-    "loanAmount": "Montant du Prêt",
-    "ltvRatio": "Ratio LTV",
-    "totalPayments": "Total des Paiements",
-    "amortTitle": "Capital vs Intérêt dans le Temps",
-    "pieTitle": "Répartition du Coût Total"
+    "loanAmount": "Montant Hypothécaire",
+    "ltvRatio": "Ratio PTR (Prêt/Valeur)",
+    "totalPayments": "Total des Versements",
+    "amortTitle": "Capital vs Intérêts dans le Temps",
+    "pieTitle": "Répartition du Coût Total",
+    "piti": "Mensualité PITI Totale",
+    "closingCosts": "Frais de Clôture (est.)",
+    "trueCost": "Vrai Coût de Propriété"
   },
   "tax": {
     "title": "Calculateur d'Impôts",
-    "desc": "Calculez votre salaire net et votre taux d'imposition effectif. Mis à jour 2025-26.",
+    "desc": "Salaire net, taux effectif et ventilation complète par source de revenus. Mis à jour 2026.",
     "annualIncome": "Revenu Brut Annuel",
-    "enterGross": "Entrez votre revenu annuel brut (avant impôts)",
-    "pieTitle": "Répartition des Revenus",
+    "enterGross": "Entrez votre revenu annuel brut (avant impôts et cotisations)",
+    "pieTitle": "Où va votre argent",
     "barTitle": "Composantes de l'Impôt",
-    "disclaimer": "Il s'agit d'estimations basées sur des déductions standard et des taux moyens. L'impôt réel peut différer. Consultez un professionnel fiscal."
+    "disclaimer": "Estimations basées sur les déductions standard et les taux moyens 2026. L'impôt réel peut varier selon votre situation. Consultez un fiscaliste pour des conseils personnalisés."
   },
   "footer": {
-    "tagline": "Calculateurs financiers gratuits pour 6 pays. Ce que votre banque ne vous montre pas.",
+    "tagline": "Calculateurs financiers gratuits pour 6 pays. On vous montre ce que les banques omettent.",
     "countries": "Pays",
     "topCalcs": "Top Calculateurs",
     "legal": "Légal",
-    "disclaimer": "À titre informatif uniquement. Pas un conseil financier.",
-    "covering": "Couvre US · CA · UK · AU · IE · NZ"
+    "disclaimer": "À titre informatif seulement. Ne constitue pas un conseil financier. Vérifiez avec un professionnel qualifié.",
+    "covering": "Couvre US · CA · UK · AU · IE · NZ",
+    "methodology": "Tous les calculs utilisent les paliers d'imposition officiels 2026, les tableaux de taux gouvernementaux et les directives des prêteurs. Aucune donnée n'est sauvegardée ou transmise."
   },
   "download": {
     "title": "Profitez de l'expérience complète sur mobile",
+    "subtitle": "Graphiques, tableaux d'amortissement et coûts cachés — où que vous soyez.",
     "ios": "App Store",
-    "android": "Google Play"
+    "android": "Google Play",
+    "comingSoon": "Bientôt disponible"
   }
 }

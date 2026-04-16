@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
@@ -11,7 +12,42 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 
-function calcRentVsBuy({ homePrice, downPayment, mortgageRate, termYears, monthlyRent, rentIncrease, homeAppreciation }) {
+// ---------------------------------------------------------------------------
+// Country-specific additional buying costs
+// ---------------------------------------------------------------------------
+const BUY_OPTIONS = {
+  us: [
+    { key: 'pmi',       label: 'PMI',                hint: 'If down < 20% · avg 0.5-1.5%/yr of loan',  type: 'pct', step: 0.1, defaultVal: 0 },
+    { key: 'propertax', label: 'Property Tax Rate',  hint: 'Annual % of home value · US avg 1.1%',      type: 'pct', step: 0.1, defaultVal: 1.1 },
+    { key: 'hoa',       label: 'HOA Fees',           hint: 'Monthly HOA fee',                            type: 'amt', step: 50,  defaultVal: 0 },
+    { key: 'homeins',   label: 'Home Insurance',     hint: 'Annual premium',                             type: 'amt', step: 100, defaultVal: 1500 },
+  ],
+  ca: [
+    { key: 'propertax', label: 'Property Tax Rate',  hint: 'Annual % · CA avg ~0.9%',                   type: 'pct', step: 0.1, defaultVal: 0.9 },
+    { key: 'condo',     label: 'Condo / Strata Fees',hint: 'Monthly fees',                               type: 'amt', step: 50,  defaultVal: 0 },
+    { key: 'homeins',   label: 'Home Insurance',     hint: 'Annual premium',                             type: 'amt', step: 100, defaultVal: 2000 },
+  ],
+  uk: [
+    { key: 'council',   label: 'Council Tax',        hint: 'Annual council tax',                         type: 'amt', step: 100, defaultVal: 2000 },
+    { key: 'service',   label: 'Service Charge',     hint: 'Annual leasehold service charge',            type: 'amt', step: 100, defaultVal: 0 },
+    { key: 'homeins',   label: 'Buildings Insurance',hint: 'Annual premium',                             type: 'amt', step: 50,  defaultVal: 300 },
+  ],
+  au: [
+    { key: 'rates',     label: 'Council Rates',      hint: 'Annual local rates',                         type: 'amt', step: 100, defaultVal: 1800 },
+    { key: 'strata',    label: 'Strata Fees',         hint: 'Annual strata (units only)',                 type: 'amt', step: 100, defaultVal: 0 },
+    { key: 'homeins',   label: 'Home Insurance',     hint: 'Annual premium',                             type: 'amt', step: 100, defaultVal: 2000 },
+  ],
+  ie: [
+    { key: 'lpt',       label: 'Local Property Tax', hint: 'Annual LPT',                                 type: 'amt', step: 100, defaultVal: 800 },
+    { key: 'homeins',   label: 'Home Insurance',     hint: 'Annual premium',                             type: 'amt', step: 50,  defaultVal: 900 },
+  ],
+  nz: [
+    { key: 'rates',     label: 'Council Rates',      hint: 'Annual rates',                               type: 'amt', step: 100, defaultVal: 2500 },
+    { key: 'homeins',   label: 'Home Insurance',     hint: 'Annual premium',                             type: 'amt', step: 100, defaultVal: 2000 },
+  ],
+}
+
+function calcRentVsBuy({ homePrice, downPayment, mortgageRate, termYears, monthlyRent, rentIncrease, homeAppreciation, extraBuyMonthly }) {
   const principal = homePrice - downPayment
   const monthlyRate = mortgageRate / 100 / 12
   const n = termYears * 12
@@ -22,7 +58,8 @@ function calcRentVsBuy({ homePrice, downPayment, mortgageRate, termYears, monthl
   const propertyTaxMonthly = homePrice * 0.012 / 12
   const insuranceMonthly = homePrice * 0.003 / 12
   const maintenanceMonthly = homePrice * 0.01 / 12
-  const totalBuyCostMonthly = mortgage + propertyTaxMonthly + insuranceMonthly + maintenanceMonthly
+  const baseBuyCostMonthly = mortgage + propertyTaxMonthly + insuranceMonthly + maintenanceMonthly
+  const totalBuyCostMonthly = baseBuyCostMonthly + extraBuyMonthly
 
   // Find break-even year
   let buyWealth = -downPayment
@@ -65,7 +102,6 @@ function calcRentVsBuy({ homePrice, downPayment, mortgageRate, termYears, monthl
       isBetter: buyEquity > rentWealth,
     })
 
-    // For cost chart: cumulative cost of renting vs buying
     chartData.push({
       year,
       Renting: Math.round(cumulativeRent),
@@ -73,13 +109,12 @@ function calcRentVsBuy({ homePrice, downPayment, mortgageRate, termYears, monthl
     })
   }
 
-  // Year 5 data for pie
   const y5 = yearlyData[4] || yearlyData[yearlyData.length - 1]
   const year5RentPaid = chartData[4]?.Renting || 0
   const year5Equity = y5?.buyEquity || 0
 
   return {
-    mortgage, totalBuyCostMonthly, breakEvenYear,
+    mortgage, baseBuyCostMonthly, totalBuyCostMonthly, breakEvenYear,
     finalHomeValue: Math.round(homeValue),
     finalBuyEquity: Math.round(yearlyData[yearlyData.length - 1]?.buyEquity || 0),
     finalRentWealth: Math.round(yearlyData[yearlyData.length - 1]?.rentWealth || 0),
@@ -95,8 +130,27 @@ const COLORS = { buy: '#3b82f6', rent: '#f97316' }
 const currencyFormatter = (locale, currency) => (val) =>
   new Intl.NumberFormat(locale, { style: 'currency', currency, maximumFractionDigits: 0 }).format(val)
 
+// ---------------------------------------------------------------------------
+// Toggle switch
+// ---------------------------------------------------------------------------
+function Toggle({ on, onChange }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!on)}
+      className={`relative inline-flex w-10 h-5 rounded-full transition-colors focus:outline-none ${on ? 'bg-blue-500' : 'bg-slate-300'}`}
+      aria-pressed={on}
+    >
+      <span
+        className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${on ? 'translate-x-5' : 'translate-x-0'}`}
+      />
+    </button>
+  )
+}
+
 export default function RentVsBuyCalc({ country }) {
   const c = countries[country]
+  const buyOptionDefs = BUY_OPTIONS[country] || []
 
   const [homePrice, setHomePrice] = useState(country === 'ca' ? 600000 : country === 'uk' ? 350000 : 400000)
   const [downPayment, setDownPayment] = useState(country === 'ca' ? 120000 : country === 'uk' ? 70000 : 80000)
@@ -106,16 +160,52 @@ export default function RentVsBuyCalc({ country }) {
   const [rentIncrease, setRentIncrease] = useState(3)
   const [appreciation, setAppreciation] = useState(4)
   const [view, setView] = useState('summary')
+  const [buyOptOpen, setBuyOptOpen] = useState(false)
+  const [buyOptEnabled, setBuyOptEnabled] = useState({})
+  const [buyOptAmounts, setBuyOptAmounts] = useState(
+    Object.fromEntries(buyOptionDefs.map(d => [d.key, d.defaultVal]))
+  )
+
+  const toggleBuyOpt = (key, val) => setBuyOptEnabled(prev => ({ ...prev, [key]: val }))
+  const setBuyOptAmt = (key, val) => setBuyOptAmounts(prev => ({ ...prev, [key]: val }))
+
+  const activeBuyOpts = buyOptionDefs.filter(d => buyOptEnabled[d.key])
+  const activeBuyOptCount = activeBuyOpts.length
+
+  // Compute extra monthly buy cost from active options
+  const extraBuyMonthly = useMemo(() => {
+    let total = 0
+    for (const d of buyOptionDefs) {
+      if (!buyOptEnabled[d.key]) continue
+      const val = buyOptAmounts[d.key] || 0
+      if (d.type === 'pct') {
+        // percentage of home price annually → monthly
+        total += (homePrice * val / 100) / 12
+      } else {
+        // amt: monthly if it's a monthly fee, annual / 12 otherwise
+        // HOA and condo are already monthly; insurance/council/rates are annual
+        const annualKeys = ['homeins', 'council', 'service', 'rates', 'strata', 'lpt']
+        if (annualKeys.includes(d.key)) {
+          total += val / 12
+        } else {
+          total += val // monthly (hoa, condo)
+        }
+      }
+    }
+    return total
+  }, [buyOptionDefs, buyOptEnabled, buyOptAmounts, homePrice])
 
   const result = useMemo(
-    () => calcRentVsBuy({ homePrice, downPayment, mortgageRate: rate, termYears: term, monthlyRent: rent, rentIncrease, homeAppreciation: appreciation }),
-    [homePrice, downPayment, rate, term, rent, rentIncrease, appreciation]
+    () => calcRentVsBuy({ homePrice, downPayment, mortgageRate: rate, termYears: term, monthlyRent: rent, rentIncrease, homeAppreciation: appreciation, extraBuyMonthly }),
+    [homePrice, downPayment, rate, term, rent, rentIncrease, appreciation, extraBuyMonthly]
   )
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
   const fmtD = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
+  const fmtShort = (n) =>
+    new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
 
   const fmtAxis = currencyFormatter(c.locale, c.currency)
 
@@ -153,7 +243,7 @@ export default function RentVsBuyCalc({ country }) {
           <h1 className="text-3xl font-display font-bold mb-2">
             {c.name} Rent vs Buy Calculator
           </h1>
-          <p className="text-cw-gray">Find the year when buying becomes financially smarter than renting.</p>
+          <p className="text-slate-500">Find the year when buying becomes financially smarter than renting.</p>
         </div>
 
         <CalcIntro
@@ -161,55 +251,111 @@ export default function RentVsBuyCalc({ country }) {
           hiddenCost="Opportunity cost of down payment is often ignored"
         />
 
-        <div className="cw-card mb-6">
-          <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-cw-gray">Buying Scenario</h3>
+        <div className="cw-card mb-4">
+          <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-slate-500">Buying Scenario</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Home Price ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Home Price ({c.symbol})</label>
               <NumericInput value={homePrice} onChange={setHomePrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Down Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Down Payment ({c.symbol})</label>
               <NumericInput value={downPayment} onChange={setDownPayment} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Mortgage Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">Mortgage Rate (%)</label>
               <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Loan Term (years)</label>
+              <label className="block text-xs text-slate-500 mb-1">Loan Term (years)</label>
               <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
                 {[15, 20, 25, 30].map(y => <option key={y} value={y}>{y} years</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Home Appreciation (%/yr)</label>
+              <label className="block text-xs text-slate-500 mb-1">Home Appreciation (%/yr)</label>
               <NumericInput value={appreciation} onChange={setAppreciation} min={0} step={0.1} suffix="%" />
             </div>
           </div>
 
-          <h3 className="font-semibold mt-6 mb-4 text-sm uppercase tracking-wider text-cw-gray">Renting Scenario</h3>
+          <h3 className="font-semibold mt-6 mb-4 text-sm uppercase tracking-wider text-slate-500">Renting Scenario</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Monthly Rent ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Monthly Rent ({c.symbol})</label>
               <NumericInput value={rent} onChange={setRent} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Annual Rent Increase (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">Annual Rent Increase (%)</label>
               <NumericInput value={rentIncrease} onChange={setRentIncrease} min={0} step={0.1} suffix="%" />
             </div>
           </div>
         </div>
 
+        {/* Additional Buying Costs collapsible */}
+        {buyOptionDefs.length > 0 && (
+          <div className="cw-card mb-6">
+            <button
+              type="button"
+              onClick={() => setBuyOptOpen(o => !o)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-slate-800">Additional Costs (Buying)</span>
+                {activeBuyOptCount > 0 && (
+                  <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
+                    {activeBuyOptCount} active · +{fmtShort(extraBuyMonthly)}/mo
+                  </span>
+                )}
+              </div>
+              {buyOptOpen ? <ChevronUp size={18} className="text-slate-400" /> : <ChevronDown size={18} className="text-slate-400" />}
+            </button>
+
+            {buyOptOpen && (
+              <div className="mt-5">
+                <p className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-3">Added to monthly buying cost</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {buyOptionDefs.map(d => (
+                    <div
+                      key={d.key}
+                      className={`border rounded-xl p-3 transition-colors ${buyOptEnabled[d.key] ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white'}`}
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">{d.label}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">{d.hint}</p>
+                          <p className="text-xs text-blue-500 mt-0.5">{d.type === 'pct' ? '% of home value / yr' : ['homeins','council','service','rates','strata','lpt'].includes(d.key) ? 'Annual amount' : 'Monthly amount'}</p>
+                        </div>
+                        <Toggle on={!!buyOptEnabled[d.key]} onChange={v => toggleBuyOpt(d.key, v)} />
+                      </div>
+                      {buyOptEnabled[d.key] && (
+                        <div className="mt-2">
+                          <NumericInput
+                            label=""
+                            value={buyOptAmounts[d.key] ?? d.defaultVal}
+                            onChange={v => setBuyOptAmt(d.key, v)}
+                            min={0}
+                            max={d.type === 'pct' ? 10 : 100000}
+                            step={d.step}
+                            prefix={d.type === 'pct' ? undefined : c.symbol}
+                            suffix={d.type === 'pct' ? '%' : undefined}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Tabs */}
-        <div className="flex gap-2 mb-4">
+        <div className="cw-tabs mb-4">
           {['summary', 'chart', 'detailed'].map(v => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}
+              className={`cw-tab${view === v ? ' active' : ''}`}
             >
               {v}
             </button>
@@ -220,11 +366,11 @@ export default function RentVsBuyCalc({ country }) {
         {result && view === 'summary' && (
           <>
             <div className="cw-card text-center border-primary/40 bg-primary/10 mb-4">
-              <p className="text-cw-gray text-sm mb-2">Break-Even Year</p>
+              <p className="text-slate-500 text-sm mb-2">Break-Even Year</p>
               <p className="text-6xl font-display font-bold text-white">
                 {result.breakEvenYear ? `Year ${result.breakEvenYear}` : 'Never'}
               </p>
-              <p className="text-cw-gray text-sm mt-2">
+              <p className="text-slate-500 text-sm mt-2">
                 {result.breakEvenYear
                   ? `Buying beats renting after ${result.breakEvenYear} years`
                   : `Renting is better over the full ${term}-year period`}
@@ -234,31 +380,54 @@ export default function RentVsBuyCalc({ country }) {
               metrics={[
                 { label: `Buy Equity (Year ${term})`, value: fmt(result.finalBuyEquity) },
                 { label: `Rent Wealth (Year ${term})`, value: fmt(result.finalRentWealth) },
-                { label: 'Monthly Mortgage Cost', value: fmtD(result.totalBuyCostMonthly) },
+                { label: 'True Monthly Cost (buying)', value: fmtD(result.totalBuyCostMonthly), sub: extraBuyMonthly > 0 ? `Incl. ${fmtShort(extraBuyMonthly)}/mo extra costs` : 'Mortgage + tax + insurance + maintenance' },
               ]}
             />
+            {activeBuyOpts.length > 0 && (
+              <div className="cw-card mt-4 border border-blue-500/30 bg-blue-500/5">
+                <p className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">Additional Buying Costs Included</p>
+                <div className="space-y-1">
+                  {activeBuyOpts.map(d => {
+                    const val = buyOptAmounts[d.key] || 0
+                    const monthly = d.type === 'pct'
+                      ? (homePrice * val / 100) / 12
+                      : (['homeins','council','service','rates','strata','lpt'].includes(d.key) ? val / 12 : val)
+                    return (
+                      <div key={d.key} className="flex items-center justify-between text-sm">
+                        <span className="text-blue-700 font-medium">{d.label}</span>
+                        <span className="text-slate-700 font-semibold">
+                          {fmtShort(monthly)}/mo
+                          {d.type === 'pct' ? ` (${val}%/yr)` : ''}
+                        </span>
+                      </div>
+                    )
+                  })}
+                  <div className="pt-2 mt-1 border-t border-blue-100 text-xs text-blue-700 font-semibold">
+                    Total extra: +{fmtShort(extraBuyMonthly)}/mo (+{fmtShort(extraBuyMonthly * 12)}/yr)
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )}
 
         {/* Chart tab */}
         {result && view === 'chart' && (
           <>
-            {/* Break-even metric card */}
             <div className="cw-card text-center border-primary/40 bg-primary/10 mb-6">
-              <p className="text-cw-gray text-sm mb-1">Break-Even Year</p>
+              <p className="text-slate-500 text-sm mb-1">Break-Even Year</p>
               <p className="text-5xl font-display font-bold text-white">
                 {result.breakEvenYear ? `Year ${result.breakEvenYear}` : 'Never'}
               </p>
-              <p className="text-cw-gray text-xs mt-1">
+              <p className="text-slate-500 text-xs mt-1">
                 {result.breakEvenYear
                   ? `After year ${result.breakEvenYear}, cumulative buying costs become lower than renting`
                   : 'Renting remains cheaper over the full period'}
               </p>
             </div>
 
-            {/* Cumulative cost comparison line chart */}
             <div className="cw-card mb-6">
-              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-cw-gray">
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-slate-500">
                 Cumulative Cost: Renting vs Buying (30 Years)
               </h3>
               <ResponsiveContainer width="100%" height={320}>
@@ -298,14 +467,14 @@ export default function RentVsBuyCalc({ country }) {
                   />
                 </LineChart>
               </ResponsiveContainer>
-              <p className="text-xs text-cw-gray mt-2 text-center">
-                Lines cross at break-even. Rent increases {rentIncrease}%/yr. Buy cost includes mortgage, tax, insurance &amp; maintenance.
+              <p className="text-xs text-slate-500 mt-2 text-center">
+                Lines cross at break-even. Rent increases {rentIncrease}%/yr. Buy cost includes mortgage, tax, insurance &amp; maintenance
+                {extraBuyMonthly > 0 ? ` + ${fmtShort(extraBuyMonthly)}/mo additional costs` : ''}.
               </p>
             </div>
 
-            {/* Year 5 Pie Chart */}
             <div className="cw-card mb-6">
-              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-cw-gray">
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-slate-500">
                 Year 5 Snapshot: Rent Paid vs Equity Built
               </h3>
               {pie5Data[0].value > 0 || pie5Data[1].value > 0 ? (
@@ -331,15 +500,15 @@ export default function RentVsBuyCalc({ country }) {
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-cw-gray text-center py-8">Insufficient data for year-5 comparison.</p>
+                <p className="text-slate-500 text-center py-8">Insufficient data for year-5 comparison.</p>
               )}
               <div className="grid grid-cols-2 gap-4 mt-4 text-center">
                 <div className="bg-orange-500/10 rounded-lg p-3">
-                  <p className="text-xs text-cw-gray mb-1">Rent Paid (5 yr)</p>
+                  <p className="text-xs text-slate-500 mb-1">Rent Paid (5 yr)</p>
                   <p className="font-bold text-orange-400">{fmt(result.year5RentPaid)}</p>
                 </div>
                 <div className="bg-blue-500/10 rounded-lg p-3">
-                  <p className="text-xs text-cw-gray mb-1">Equity Built (5 yr)</p>
+                  <p className="text-xs text-slate-500 mb-1">Equity Built (5 yr)</p>
                   <p className="font-bold text-blue-400">{fmt(Math.max(0, result.year5Equity))}</p>
                 </div>
               </div>
@@ -350,6 +519,37 @@ export default function RentVsBuyCalc({ country }) {
         {/* Detailed tab */}
         {result && view === 'detailed' && (
           <>
+            {activeBuyOpts.length > 0 && (
+              <div className="cw-card mb-4 border border-blue-500/30 bg-blue-500/5">
+                <p className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">True Monthly Cost (buying)</p>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">Mortgage payment</span>
+                    <span className="font-semibold">{fmtD(result.mortgage)}/mo</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">Base costs (tax, ins, maintenance)</span>
+                    <span className="font-semibold">{fmtD(result.baseBuyCostMonthly - result.mortgage)}/mo</span>
+                  </div>
+                  {activeBuyOpts.map(d => {
+                    const val = buyOptAmounts[d.key] || 0
+                    const monthly = d.type === 'pct'
+                      ? (homePrice * val / 100) / 12
+                      : (['homeins','council','service','rates','strata','lpt'].includes(d.key) ? val / 12 : val)
+                    return (
+                      <div key={d.key} className="flex justify-between">
+                        <span className="text-blue-700">{d.label}</span>
+                        <span className="font-semibold text-blue-700">+{fmtD(monthly)}/mo</span>
+                      </div>
+                    )
+                  })}
+                  <div className="pt-2 mt-1 border-t border-blue-100 font-bold flex justify-between text-blue-800">
+                    <span>Total Monthly (buying)</span>
+                    <span>{fmtD(result.totalBuyCostMonthly)}/mo</span>
+                  </div>
+                </div>
+              </div>
+            )}
             <ResultDetailed
               title="Year-by-Year Comparison (every 5 years)"
               rows={result.yearlyData.filter(r => r.year % 5 === 0 || r.year === 1).map(r => ({
@@ -363,7 +563,7 @@ export default function RentVsBuyCalc({ country }) {
         )}
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter valid values above to compare renting vs buying.
           </div>
         )}

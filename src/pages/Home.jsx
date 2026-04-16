@@ -24,39 +24,27 @@ const featuredCalcs = [
   { to: '/us/affordability', calcKey: 'affordability', title: 'Affordability Calculator US', desc: 'How much home can you afford? DTI rules, FHA/VA/Conv.' },
 ]
 
-const trustItems = [
-  { Icon: Shield,     label: 'Bank-level accuracy' },
-  { Icon: Zap,        label: 'Instant results' },
-  { Icon: Globe,      label: '6 countries' },
-  { Icon: Calculator, label: '47+ calculators' },
+const trustItemKeys = [
+  { Icon: Shield,     key: 'home.trustAccuracy' },
+  { Icon: Zap,        key: 'home.trustInstant' },
+  { Icon: Globe,      key: 'home.trustCountries' },
+  { Icon: Calculator, key: 'home.trustCalcs' },
 ]
 
-const whyFeatures = [
-  {
-    Icon: Shield,
-    title: 'Accurate 2026 Rates',
-    desc: 'Updated tax brackets, interest rates, and regulations for all 6 countries.',
-  },
-  {
-    Icon: Zap,
-    title: 'Instant Calculations',
-    desc: 'Real-time results as you type. No waiting, no submissions.',
-  },
-  {
-    Icon: Globe,
-    title: 'Multi-Country',
-    desc: 'Switch between US, Canada, UK, Australia, Ireland and New Zealand instantly.',
-  },
+const whyFeatureKeys = [
+  { Icon: Shield, titleKey: 'home.whyAccurateTitle', descKey: 'home.whyAccurateDesc' },
+  { Icon: Zap,    titleKey: 'home.whyInstantTitle',  descKey: 'home.whyInstantDesc'  },
+  { Icon: Globe,  titleKey: 'home.whyHiddenTitle',   descKey: 'home.whyHiddenDesc'   },
 ]
 
 export default function Home() {
   const { t } = useTranslation()
 
   const stats = [
-    { value: '47+',              label: t('stats.calculators') },
-    { value: '6',                label: t('stats.countries') },
-    { value: '2026',             label: t('stats.taxRates') },
-    { value: t('stats.noSignup'), label: 'No Signup' },
+    { value: '47+',  label: t('stats.calculators') },
+    { value: '6',    label: t('stats.countries') },
+    { value: '2026', label: t('stats.taxRates') },
+    { value: t('stats.noSignup'), label: null },
   ]
 
   return (
@@ -69,38 +57,51 @@ export default function Home() {
 
       {/* ── Hero ── */}
       <section
-        className="w-full px-4 pt-20 pb-16 text-center"
-        style={{ background: 'linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%)' }}
+        className="w-full px-4 pt-24 pb-20 text-center relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #F0F6FF 0%, #FAFCFF 50%, #F0F9FF 100%)' }}
       >
-        <div className="max-w-7xl mx-auto">
+        {/* Background decoration */}
+        <div style={{
+          position: 'absolute', top: '-60px', right: '-60px',
+          width: '400px', height: '400px', borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(26,106,255,0.06) 0%, transparent 70%)',
+          pointerEvents: 'none'
+        }} />
+        <div style={{
+          position: 'absolute', bottom: '-40px', left: '-40px',
+          width: '300px', height: '300px', borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(26,106,255,0.04) 0%, transparent 70%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div className="max-w-4xl mx-auto relative">
           {/* Badge */}
-          <div className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-primary text-xs font-semibold px-4 py-1.5 rounded-full">
-              🌍 6 Countries · 47+ Calculators · Free Forever
+          <div className="flex justify-center mb-7">
+            <span className="cw-hero-badge">
+              <span>✦</span>
+              {t('hero.badge')}
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-5 text-slate-900 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-slate-900 leading-tight tracking-tight">
             {t('hero.title')}<br />
             <span className="text-primary">{t('hero.titleHighlight')}</span>
           </h1>
 
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
             {t('hero.subtitle')}
           </p>
 
           {/* CTA buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <Link
-              to="/us/mortgage"
-              className="cw-btn flex items-center gap-2 text-sm px-6 py-3"
-            >
+          <div className="flex flex-wrap justify-center gap-3 mb-14">
+            <Link to="/us/mortgage" className="cw-btn text-sm px-7 py-3.5">
               <HomeIcon size={17} />
               {t('hero.cta_mortgage')}
             </Link>
             <Link
               to="/us/tax"
-              className="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:border-primary hover:text-primary font-semibold px-6 py-3 rounded-lg transition-colors text-sm shadow-sm"
+              className="cw-btn-ghost text-sm px-7 py-3.5"
+              style={{ fontSize: '0.875rem', padding: '0.625rem 1.5rem' }}
             >
               <BarChart2 size={17} />
               {t('hero.cta_tax')}
@@ -108,15 +109,11 @@ export default function Home() {
           </div>
 
           {/* Stats row */}
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-3">
             {stats.map(({ value, label }) => (
-              <div
-                key={value}
-                className="bg-white border border-slate-200 rounded-xl px-6 py-4 text-center min-w-[110px]"
-                style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
-              >
-                <div className="text-2xl font-display font-bold text-primary leading-none">{value}</div>
-                {label && <div className="text-xs text-slate-500 mt-1">{label}</div>}
+              <div key={value} className="cw-stat-card">
+                <div className="cw-stat-value">{value}</div>
+                {label && <div className="cw-stat-label">{label}</div>}
               </div>
             ))}
           </div>
@@ -127,10 +124,10 @@ export default function Home() {
       <div className="bg-white border-y border-slate-200 py-3">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
-            {trustItems.map(({ Icon, label }) => (
-              <div key={label} className="flex items-center gap-2 text-slate-500 text-sm font-medium">
+            {trustItemKeys.map(({ Icon, key }) => (
+              <div key={key} className="flex items-center gap-2 text-slate-500 text-sm font-medium">
                 <Icon size={15} className="text-primary shrink-0" />
-                {label}
+                {t(key)}
               </div>
             ))}
           </div>
@@ -150,7 +147,10 @@ export default function Home() {
               <Link
                 key={code}
                 to={`/${code}`}
-                className="bg-white border border-slate-200 hover:border-primary hover:shadow-card-hover rounded-2xl p-5 text-center transition-all hover:scale-105 group"
+                className="group bg-white border border-slate-200 hover:border-primary rounded-2xl p-5 text-center transition-all"
+                style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(26,106,255,0.1)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)'; }}
               >
                 <div className="flex justify-center mb-3">
                   <CountryFlag code={code} size="lg" />
@@ -158,7 +158,7 @@ export default function Home() {
                 <div className="font-semibold text-sm text-slate-900 group-hover:text-primary transition-colors">
                   {c.name}
                 </div>
-                <div className="text-xs text-slate-400 mt-1">
+                <div className="text-xs text-slate-400 mt-1 font-medium">
                   {calcsByCountry[code].length} {t('home.calculators')}
                 </div>
               </Link>
@@ -167,36 +167,44 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Hidden Costs Revealed banner ── */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 text-white flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <p className="font-display font-bold text-lg mb-1">We reveal what others hide</p>
+            <p className="text-blue-100 text-sm">Group insurance, union dues, PMI, property tax, CMHC — every cost that affects your real bottom line.</p>
+          </div>
+          <div className="flex flex-wrap gap-2 shrink-0">
+            {['PMI/CMHC', 'Assurance collective', 'Property Tax', 'Union Dues', 'Closing Costs'].map(tag => (
+              <span key={tag} className="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">{tag}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ── Popular Calculators ── */}
       <section className="py-16 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-display font-bold mb-10 text-center text-slate-900">
             {t('home.popular')}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {featuredCalcs.map(({ to, calcKey, title, desc }) => {
               const Icon = calcIconMap[calcKey] || BarChart2
               return (
-                <Link
-                  key={to}
-                  to={to}
-                  className="bg-white border border-slate-200 hover:border-primary hover:shadow-card-hover rounded-2xl p-5 transition-all group flex items-start gap-4"
-                >
-                  <div
-                    className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
-                    style={{ background: '#EFF6FF' }}
-                  >
+                <Link key={to} to={to} className="cw-calc-card group">
+                  <div className="cw-calc-card-icon group-hover:bg-blue-100 transition-colors">
                     <Icon size={20} color={ICON_COLOR} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-slate-900 group-hover:text-primary transition-colors mb-1 leading-snug">
+                    <h3 className="font-semibold text-sm text-slate-900 group-hover:text-primary transition-colors mb-1 leading-snug">
                       {title}
                     </h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
+                    <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
                   </div>
                   <ChevronRight
-                    size={16}
-                    className="ml-auto shrink-0 mt-1 text-slate-300 group-hover:text-primary transition-colors"
+                    size={15}
+                    className="shrink-0 mt-0.5 text-slate-300 group-hover:text-primary transition-colors"
                   />
                 </Link>
               )
@@ -211,22 +219,23 @@ export default function Home() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-display font-bold mb-10 text-center text-slate-900">
-            Why CalcWise?
+            {t('home.whyTitle')}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {whyFeatures.map(({ Icon, title, desc }) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {whyFeatureKeys.map(({ Icon, titleKey, descKey }) => (
               <div
-                key={title}
-                className="bg-slate-50 border border-slate-100 rounded-2xl p-7 text-center"
+                key={titleKey}
+                className="bg-white border border-slate-200 rounded-2xl p-7"
+                style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
               >
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
                   style={{ background: '#EFF6FF' }}
                 >
-                  <Icon size={26} color={ICON_COLOR} />
+                  <Icon size={22} color={ICON_COLOR} />
                 </div>
-                <h3 className="font-display font-bold text-slate-900 mb-2">{title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
+                <h3 className="font-display font-bold text-slate-900 mb-2 text-base">{t(titleKey)}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
           </div>
@@ -239,20 +248,20 @@ export default function Home() {
           <h2 className="text-2xl md:text-3xl font-display font-bold mb-12 text-slate-900">
             {t('home.howItWorks')}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               { step: '1', title: t('home.step1Title'), desc: t('home.step1Desc') },
               { step: '2', title: t('home.step2Title'), desc: t('home.step2Desc') },
               { step: '3', title: t('home.step3Title'), desc: t('home.step3Desc') },
             ].map(({ step, title, desc }) => (
-              <div key={step} className="bg-white border border-slate-200 rounded-2xl p-7 text-center shadow-sm">
+              <div key={step} className="bg-white border border-slate-200 rounded-2xl p-7 relative" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
                 <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center font-display font-bold text-2xl mx-auto mb-5 text-white"
-                  style={{ background: ICON_COLOR }}
+                  className="w-11 h-11 rounded-xl flex items-center justify-center font-display font-bold text-lg mb-5 text-white"
+                  style={{ background: 'linear-gradient(135deg, #1A6AFF 0%, #1455CC 100%)', boxShadow: '0 3px 10px rgba(26,106,255,0.3)' }}
                 >
                   {step}
                 </div>
-                <h3 className="font-display font-semibold mb-2 text-slate-900">{title}</h3>
+                <h3 className="font-display font-bold mb-2 text-slate-900 text-base">{title}</h3>
                 <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
               </div>
             ))}

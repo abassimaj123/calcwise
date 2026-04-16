@@ -133,55 +133,53 @@ export default function RefinanceCalc({ country = 'us' }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">Refinance Calculator</h1>
-          <p className="text-cw-gray">Is it worth refinancing? Find your break-even point and lifetime savings.</p>
+          <p className="text-slate-500">Is it worth refinancing? Find your break-even point and lifetime savings.</p>
         </div>
 
         <CalcIntro intro="The mortgage refinance calculator shows whether refinancing makes financial sense. It calculates your monthly savings, break-even point (when savings exceed closing costs), and total interest saved over the life of the loan." hiddenCost="Closing costs add 2-5% to your new loan" />
 
         <div className="cw-card mb-6">
-          <h3 className="text-sm text-cw-gray uppercase tracking-wider mb-4">Current Mortgage</h3>
+          <h3 className="text-sm text-slate-500 uppercase tracking-wider mb-4">Current Mortgage</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Outstanding Balance ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Outstanding Balance ({c.symbol})</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Current Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">Current Rate (%)</label>
               <NumericInput value={currentRate} onChange={setCurrentRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Remaining Term (years)</label>
+              <label className="block text-xs text-slate-500 mb-1">Remaining Term (years)</label>
               <select className="cw-input" value={remainingYears} onChange={e => setRemainingYears(+e.target.value)}>
                 {[5,10,15,20,25,30].map(y => <option key={y} value={y}>{y} years</option>)}
               </select>
             </div>
           </div>
 
-          <h3 className="text-sm text-cw-gray uppercase tracking-wider mb-4 mt-6">New Mortgage</h3>
+          <h3 className="text-sm text-slate-500 uppercase tracking-wider mb-4 mt-6">New Mortgage</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">New Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">New Rate (%)</label>
               <NumericInput value={newRate} onChange={setNewRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">New Term (years)</label>
+              <label className="block text-xs text-slate-500 mb-1">New Term (years)</label>
               <select className="cw-input" value={newTerm} onChange={e => setNewTerm(+e.target.value)}>
                 {[10,15,20,25,30].map(y => <option key={y} value={y}>{y} years</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Closing Costs ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Closing Costs ({c.symbol})</label>
               <NumericInput value={closingCosts} onChange={setClosingCosts} min={0} step={100} prefix={c.symbol} />
             </div>
           </div>
         </div>
 
-        <div className="flex gap-2 mb-4">
+        <div className="cw-tabs mb-4">
           {['summary', 'chart', 'detailed'].map(v => (
             <button key={v} onClick={() => setView(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}>
+              className={`cw-tab${view === v ? ' active' : ''}`}>
               {v}
             </button>
           ))}
@@ -206,7 +204,7 @@ export default function RefinanceCalc({ country = 'us' }) {
           <div className="space-y-8">
             {/* Cumulative interest AreaChart */}
             <div className="cw-card">
-              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4">Cumulative Interest Paid — Old vs New Loan</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Cumulative Interest Paid — Old vs New Loan</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={result.cumulativeData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <defs>
@@ -232,7 +230,7 @@ export default function RefinanceCalc({ country = 'us' }) {
 
             {/* Monthly savings BarChart */}
             <div className="cw-card">
-              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4">Monthly Payment Comparison</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Monthly Payment Comparison</h3>
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={savingsBarData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
@@ -245,7 +243,7 @@ export default function RefinanceCalc({ country = 'us' }) {
                 </BarChart>
               </ResponsiveContainer>
               {result.monthlySavings > 0 && (
-                <p className="text-center text-sm text-cw-gray mt-2">
+                <p className="text-center text-sm text-slate-500 mt-2">
                   Monthly saving: <span className="text-cw-success font-semibold">{fmtD(result.monthlySavings)}</span>
                 </p>
               )}
@@ -270,12 +268,12 @@ export default function RefinanceCalc({ country = 'us' }) {
         )}
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter your current and new mortgage details above.
           </div>
         )}
 
-        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-cw-gray">
+        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-slate-500">
           This calculator assumes you refinance the full remaining balance. Actual closing costs vary by lender and location. Rate buydowns and lender credits not included.
         </div>
 

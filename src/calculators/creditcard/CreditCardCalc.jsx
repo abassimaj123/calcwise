@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   AreaChart, Area, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -13,6 +14,16 @@ import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
 
 const COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444']
 
+const CC_HINTS = {
+  us: 'US avg APR 2026: 21.5%',
+  ca: 'CA avg APR: 19.99% (most cards)',
+  uk: 'UK avg APR: 23%',
+  au: 'AU avg APR: 19.5%',
+  ie: 'IE avg APR: 22%',
+  nz: 'NZ avg APR: 20%',
+}
+
+// payment mode: 'minimum' | 'fixed' | 'payoff'
 function simulate(balance, monthlyRate, getPayment) {
   let bal = balance
   let months = 0
@@ -35,18 +46,37 @@ function simulate(balance, monthlyRate, getPayment) {
   return { months, totalInterest, totalPaid, schedule }
 }
 
-function calcCreditCard({ balance, apr, minType, minPct, minFixed, extraPayment }) {
+// Calculate required monthly payment to pay off in targetMonths
+function calcFixedPayoff(balance, monthlyRate, targetMonths) {
+  if (monthlyRate === 0) return balance / targetMonths
+  return balance * (monthlyRate * Math.pow(1 + monthlyRate, targetMonths)) / (Math.pow(1 + monthlyRate, targetMonths) - 1)
+}
+
+function calcCreditCard({ balance, apr, payMode, minPct, fixedAmount, payoffMonths, extraPayment }) {
   const monthlyRate = apr / 100 / 12
   if (balance <= 0 || monthlyRate <= 0) return null
 
-  const getMinPayment = (bal) =>
-    minType === 'percent' ? Math.max(bal * (minPct / 100), 25) : minFixed
+  let basePaymentFn
+  if (payMode === 'minimum') {
+    basePaymentFn = (bal) => Math.max(bal * (minPct / 100), 25)
+  } else if (payMode === 'fixed') {
+    basePaymentFn = () => fixedAmount
+  } else {
+    // payoff in X months
+    const required = calcFixedPayoff(balance, monthlyRate, payoffMonths)
+    basePaymentFn = () => required
+  }
 
-  const withExtra = simulate(balance, monthlyRate, (bal) => getMinPayment(bal) + extraPayment)
-  const withoutExtra = simulate(balance, monthlyRate, (bal) => getMinPayment(bal))
+  const withExtra = simulate(balance, monthlyRate, (bal) => basePaymentFn(bal) + extraPayment)
+  const withoutExtra = simulate(balance, monthlyRate, (bal) => basePaymentFn(bal))
 
   const interestSaved = withoutExtra.totalInterest - withExtra.totalInterest
   const monthsSaved = withoutExtra.months - withExtra.months
+
+  // For display: base monthly payment (first month)
+  const baseMonthlyPayment = payMode === 'payoff'
+    ? calcFixedPayoff(balance, monthlyRate, payoffMonths)
+    : basePaymentFn(balance)
 
   return {
     ...withExtra,
@@ -54,6 +84,7 @@ function calcCreditCard({ balance, apr, minType, minPct, minFixed, extraPayment 
     monthsSaved,
     totalInterestNoExtra: withoutExtra.totalInterest,
     scheduleMin: withoutExtra.schedule,
+    baseMonthlyPayment,
   }
 }
 
@@ -67,7 +98,6 @@ function buildAreaData(scheduleWith, scheduleMin, maxMonths) {
       minOnly: scheduleMin[i] ? +scheduleMin[i].balance.toFixed(2) : 0,
     })
   }
-  // ensure final point
   if (data[data.length - 1]?.month !== len) {
     data.push({
       month: len,
@@ -87,7 +117,13 @@ const defaultsByCountry = {
   nz: { balance: 3000, apr: 19.95 },
 }
 
-const TABS = ['summary', 'chart', 'payoff']
+const TABS = ['chart', 'summary', 'payoff']
+
+const PAY_MODES = [
+  { key: 'minimum', label: 'Minimum Payment' },
+  { key: 'fixed',   label: 'Fixed Amount' },
+  { key: 'payoff',  label: 'Pay Off In X Months' },
+]
 
 export default function CreditCardCalc({ country = 'us' }) {
   const c = countries[country]
@@ -95,15 +131,22 @@ export default function CreditCardCalc({ country = 'us' }) {
 
   const [balance, setBalance] = useState(d.balance)
   const [apr, setApr] = useState(d.apr)
-  const [minType, setMinType] = useState('percent')
-  const [minPct, setMinPct] = useState(2)
-  const [minFixed, setMinFixed] = useState(200)
-  const [extraPayment, setExtraPayment] = useState(100)
-  const [tab, setTab] = useState('summary')
+
+  // Payment mode state
+  const [payMode, setPayMode]         = useState('minimum')
+  const [minPct, setMinPct]           = useState(2)
+  const [fixedAmount, setFixedAmount] = useState(200)
+  const [payoffMonths, setPayoffMonths] = useState(24)
+
+  // Extra payment
+  const [extraOpen, setExtraOpen]         = useState(false)
+  const [extraPayment, setExtraPayment]   = useState(0)
+
+  const [tab, setTab] = useState('chart')
 
   const result = useMemo(
-    () => calcCreditCard({ balance, apr, minType, minPct, minFixed, extraPayment }),
-    [balance, apr, minType, minPct, minFixed, extraPayment]
+    () => calcCreditCard({ balance, apr, payMode, minPct, fixedAmount, payoffMonths, extraPayment }),
+    [balance, apr, payMode, minPct, fixedAmount, payoffMonths, extraPayment]
   )
 
   const fmt = (n) =>
@@ -133,6 +176,8 @@ export default function CreditCardCalc({ country = 'us' }) {
       ]
     : []
 
+  const extraLabel = extraPayment > 0 ? `With +${fmt0(extraPayment)} Extra` : 'With Extra'
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -156,7 +201,7 @@ export default function CreditCardCalc({ country = 'us' }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">Credit Card Payoff Calculator</h1>
-          <p className="text-cw-gray">Find out when you'll be debt-free and how much interest you can save.</p>
+          <p className="text-slate-500">Find out when you'll be debt-free and how much interest you can save.</p>
         </div>
 
         <CalcIntro
@@ -164,92 +209,145 @@ export default function CreditCardCalc({ country = 'us' }) {
           hiddenCost="Minimum payments cost 3-4x more in interest"
         />
 
-        <div className="cw-card mb-6">
+        {/* Main inputs */}
+        <div className="cw-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Current Balance ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Current Balance ({c.symbol})</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">APR (%)</label>
-              <NumericInput value={apr} onChange={setApr} min={0} step={0.1} suffix="%" />
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Minimum Payment Type</label>
-              <select className="cw-input" value={minType} onChange={e => setMinType(e.target.value)}>
-                <option value="percent">% of Balance</option>
-                <option value="fixed">Fixed Amount</option>
-              </select>
-            </div>
-            <div>
-              {minType === 'percent' ? (
-                <>
-                  <label className="block text-xs text-cw-gray mb-1">Min Payment % (min {c.symbol}25)</label>
-                  <NumericInput value={minPct} onChange={setMinPct} min={1} step={0.5} suffix="%" />
-                </>
-              ) : (
-                <>
-                  <label className="block text-xs text-cw-gray mb-1">Fixed Monthly Payment ({c.symbol})</label>
-                  <NumericInput value={minFixed} onChange={setMinFixed} min={25} step={50} prefix={c.symbol} />
-                </>
-              )}
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Extra Monthly Payment ({c.symbol})</label>
-              <NumericInput value={extraPayment} onChange={setExtraPayment} min={0} step={50} prefix={c.symbol} />
+              <label className="block text-xs text-slate-500 mb-1">APR (%)</label>
+              <NumericInput
+                value={apr}
+                onChange={setApr}
+                min={0}
+                step={0.1}
+                suffix="%"
+                hint={CC_HINTS[country] || ''}
+              />
             </div>
           </div>
         </div>
 
+        {/* Payment Strategy — always visible */}
+        <div className="cw-card mb-4">
+          <p className="text-sm font-semibold text-slate-800 mb-3">Payment Strategy</p>
+
+          {/* Pill selector */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {PAY_MODES.map(m => (
+              <button
+                key={m.key}
+                type="button"
+                onClick={() => setPayMode(m.key)}
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-colors ${
+                  payMode === m.key
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white border-slate-300 text-slate-600 hover:border-primary hover:text-primary'
+                }`}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Mode-specific input */}
+          {payMode === 'minimum' && (
+            <div className="max-w-xs">
+              <label className="block text-xs text-slate-500 mb-1">Min Payment Rate (min {c.symbol}25)</label>
+              <NumericInput value={minPct} onChange={setMinPct} min={1} max={10} step={0.1} suffix="%" />
+              <p className="text-xs text-slate-500 mt-1">Monthly: {c.symbol}25 floor applies automatically</p>
+            </div>
+          )}
+
+          {payMode === 'fixed' && (
+            <div className="max-w-xs">
+              <label className="block text-xs text-slate-500 mb-1">Fixed Monthly Payment</label>
+              <NumericInput value={fixedAmount} onChange={setFixedAmount} min={10} step={10} prefix={c.symbol} />
+            </div>
+          )}
+
+          {payMode === 'payoff' && (
+            <div className="max-w-xs">
+              <label className="block text-xs text-slate-500 mb-1">Pay Off In</label>
+              <NumericInput value={payoffMonths} onChange={setPayoffMonths} min={1} max={120} step={1} suffix=" months" />
+              {result && (
+                <p className="text-xs text-slate-500 mt-1">
+                  Required payment: {fmt(result.baseMonthlyPayment)}/mo
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Extra Payment — collapsible */}
+        <div className="cw-card mb-6">
+          <button
+            type="button"
+            onClick={() => setExtraOpen(o => !o)}
+            className="w-full flex items-center justify-between text-left"
+          >
+            <div className="flex items-center gap-3">
+              <span className="font-semibold text-slate-800">Extra Payment (optional)</span>
+              {extraPayment > 0 && (
+                <span className="text-xs bg-green-100 border border-green-200 text-green-700 rounded-full px-2 py-0.5">
+                  +{fmt0(extraPayment)}/mo active
+                </span>
+              )}
+            </div>
+            {extraOpen ? <ChevronUp size={18} className="text-slate-400" /> : <ChevronDown size={18} className="text-slate-400" />}
+          </button>
+
+          {extraOpen && (
+            <div className="mt-4 max-w-xs">
+              <label className="block text-xs text-slate-500 mb-1">Extra Monthly Payment</label>
+              <NumericInput value={extraPayment} onChange={setExtraPayment} min={0} step={10} prefix={c.symbol} />
+            </div>
+          )}
+        </div>
+
+        {/* Extra payment savings callout */}
+        {result && extraPayment > 0 && result.monthsSaved > 0 && (
+          <div className="mb-6 rounded-xl border border-green-300 bg-green-50 p-4 flex items-start gap-3">
+            <div className="text-green-600 text-xl mt-0.5">💡</div>
+            <div>
+              <p className="text-sm font-semibold text-green-800">
+                You'll pay off {months2years(result.monthsSaved)} sooner by paying {fmt0(extraPayment)}/month extra
+              </p>
+              <p className="text-sm text-green-700 mt-0.5">
+                That saves you {fmt0(result.interestSaved)} in interest.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Tabs */}
-        <div className="flex gap-2 mb-4">
+        <div className="cw-tabs mb-4">
           {TABS.map(v => (
             <button key={v} onClick={() => setTab(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                tab === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}>
-              {v}
+              className={`cw-tab${tab === v ? ' active' : ''}`}>
+              {v === 'payoff' ? 'Schedule' : v}
             </button>
           ))}
         </div>
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter your credit card details above.
           </div>
         )}
 
-        {/* Summary Tab */}
-        {result && tab === 'summary' && (
-          <>
-            <ResultSimple
-              metrics={[
-                { label: 'Payoff Time', value: months2years(result.months), highlight: true },
-                { label: 'Total Interest', value: fmt0(result.totalInterest) },
-                { label: 'Interest Saved', value: fmt0(result.interestSaved), sub: `${months2years(result.monthsSaved)} faster` },
-              ]}
-            />
-            <ResultDetailed
-              title="Payoff Details"
-              rows={[
-                { label: 'Balance', value: fmt0(balance) },
-                { label: 'APR', value: `${apr}%` },
-                { label: 'Payoff Time (with extra)', value: months2years(result.months), bold: true },
-                { label: 'Total Interest', value: fmt0(result.totalInterest) },
-                { label: 'Total Paid', value: fmt(result.totalPaid), bold: true },
-                { label: 'Interest Without Extra', value: fmt0(result.totalInterestNoExtra) },
-                { label: 'Interest Saved', value: fmt0(result.interestSaved), bold: true },
-                { label: 'Time Saved', value: months2years(result.monthsSaved), bold: true },
-              ]}
-            />
-          </>
-        )}
-
-        {/* Chart Tab */}
+        {/* Chart Tab — default */}
         {result && tab === 'chart' && (
           <div className="space-y-6">
             <div className="cw-card">
-              <h3 className="font-semibold mb-4 text-sm">Remaining Balance Over Time</h3>
+              <h3 className="font-semibold mb-1 text-sm">Remaining Balance Over Time</h3>
+              {extraPayment > 0 && result.monthsSaved > 0 && (
+                <p className="text-xs text-green-600 mb-3">
+                  Extra {fmt0(extraPayment)}/mo eliminates debt {months2years(result.monthsSaved)} sooner
+                </p>
+              )}
               <ResponsiveContainer width="100%" height={280}>
                 <AreaChart data={areaData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
                   <defs>
@@ -267,8 +365,8 @@ export default function CreditCardCalc({ country = 'us' }) {
                   <YAxis tickFormatter={fmtK} tick={{ fontSize: 11 }} width={60} />
                   <Tooltip formatter={(v) => fmt0(v)} labelFormatter={(l) => `Month ${l}`} />
                   <Legend />
-                  <Area type="monotone" dataKey="minOnly" name="Min Payment Only" stroke={COLORS[1]} fill="url(#gradMin)" strokeWidth={2} dot={false} />
-                  <Area type="monotone" dataKey="withExtra" name={`With +${fmt0(extraPayment)} Extra`} stroke={COLORS[0]} fill="url(#gradExtra)" strokeWidth={2} dot={false} />
+                  <Area type="monotone" dataKey="minOnly" name="Base Payment" stroke={COLORS[1]} fill="url(#gradMin)" strokeWidth={2} dot={false} />
+                  <Area type="monotone" dataKey="withExtra" name={extraPayment > 0 ? extraLabel : 'Base Payment'} stroke={COLORS[0]} fill="url(#gradExtra)" strokeWidth={2} dot={false} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -290,17 +388,48 @@ export default function CreditCardCalc({ country = 'us' }) {
           </div>
         )}
 
+        {/* Summary Tab */}
+        {result && tab === 'summary' && (
+          <>
+            <ResultSimple
+              metrics={[
+                { label: 'Payoff Time', value: months2years(result.months), highlight: true },
+                { label: 'Total Interest', value: fmt0(result.totalInterest) },
+                { label: 'Interest Saved', value: fmt0(result.interestSaved), sub: `${months2years(result.monthsSaved)} faster` },
+              ]}
+            />
+            <ResultDetailed
+              title="Payoff Details"
+              rows={[
+                { label: 'Balance', value: fmt0(balance) },
+                { label: 'APR', value: `${apr}%` },
+                { label: 'Payment Mode', value: PAY_MODES.find(m => m.key === payMode)?.label },
+                { label: 'Base Monthly Payment', value: fmt(result.baseMonthlyPayment) },
+                ...(extraPayment > 0 ? [{ label: 'Extra Monthly Payment', value: fmt0(extraPayment) }] : []),
+                { label: 'Payoff Time', value: months2years(result.months), bold: true },
+                { label: 'Total Interest', value: fmt0(result.totalInterest) },
+                { label: 'Total Paid', value: fmt(result.totalPaid), bold: true },
+                ...(extraPayment > 0 ? [
+                  { label: 'Interest Without Extra', value: fmt0(result.totalInterestNoExtra) },
+                  { label: 'Interest Saved', value: fmt0(result.interestSaved), bold: true },
+                  { label: 'Time Saved', value: months2years(result.monthsSaved), bold: true },
+                ] : []),
+              ]}
+            />
+          </>
+        )}
+
         {/* Payoff Table Tab */}
         {result && tab === 'payoff' && (
           <div className="cw-card overflow-x-auto">
-            <h3 className="font-semibold mb-4 text-sm">Monthly Payment Schedule (with extra payment)</h3>
+            <h3 className="font-semibold mb-4 text-sm">Monthly Payment Schedule</h3>
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-slate-200">
-                  <th className="text-left py-2 pr-3 text-cw-gray font-medium">Month</th>
-                  <th className="text-right py-2 pr-3 text-cw-gray font-medium">Payment</th>
-                  <th className="text-right py-2 pr-3 text-cw-gray font-medium">Interest</th>
-                  <th className="text-right py-2 text-cw-gray font-medium">Balance</th>
+                  <th className="text-left py-2 pr-3 text-slate-500 font-medium">Month</th>
+                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">Payment</th>
+                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">Interest</th>
+                  <th className="text-right py-2 text-slate-500 font-medium">Balance</th>
                 </tr>
               </thead>
               <tbody>
@@ -322,6 +451,7 @@ export default function CreditCardCalc({ country = 'us' }) {
         <CalcFAQ faqs={[
           { q: 'Why should I pay more than the minimum?', a: 'Minimum payments are designed to maximize interest revenue for the bank. Paying just $50-100 more per month can cut years off your payoff and save thousands in interest.' },
           { q: 'What APR is considered high for a credit card?', a: 'Anything above 20% APR is considered high. Average credit card APR in 2026 is around 21-24%. Premium travel cards can exceed 28%.' },
+          { q: 'What is the "Pay Off In X Months" mode?', a: 'This calculates the exact fixed payment you need to make every month to become debt-free in your chosen timeframe. It is the most goal-oriented payoff strategy.' },
           { q: 'Should I consolidate my credit card debt?', a: 'If you can get a personal loan or balance transfer at a lower APR, consolidation can save significant money. Compare total interest paid before and after.' },
         ]} />
 

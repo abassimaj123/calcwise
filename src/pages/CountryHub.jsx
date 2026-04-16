@@ -52,11 +52,11 @@ export default function CountryHub({ country }) {
 
       {/* ── Hero header ── */}
       <section
-        className="w-full px-4 pt-14 pb-10 text-center"
-        style={{ background: 'linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%)' }}
+        className="w-full px-4 pt-16 pb-12 text-center"
+        style={{ background: 'linear-gradient(160deg, #F0F6FF 0%, #FAFCFF 60%, #F5F9FF 100%)' }}
       >
         <div className="max-w-3xl mx-auto">
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-5">
             <CountryFlag code={country} size="xl" />
           </div>
 
@@ -65,36 +65,18 @@ export default function CountryHub({ country }) {
             <span className="text-primary">{t('countryHub.financialCalcs')}</span>
           </h1>
 
-          <p className="text-slate-500 text-lg mb-5">
+          <p className="text-slate-500 text-lg mb-6">
             {calcs.length} {t('countryHub.subtitle')}
           </p>
 
-          {/* Currency badge */}
-          <span className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-primary text-xs font-semibold px-4 py-1.5 rounded-full">
-            💱 Currency: {currencyDisplay} · Locale: {c.locale}
-          </span>
+          {/* Info pills */}
+          <div className="flex flex-wrap justify-center gap-2">
+            <span className="cw-badge blue">Currency: {currencyDisplay}</span>
+            <span className="cw-badge blue">Updated 2026</span>
+            <span className="cw-badge green">100% Free</span>
+          </div>
         </div>
       </section>
-
-      {/* ── Currency info bar ── */}
-      <div className="bg-white border-b border-slate-200 py-2.5">
-        <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-center items-center gap-4 text-sm text-slate-500">
-          <span>
-            <span className="font-semibold text-slate-700">Currency:</span>{' '}
-            {c.symbol} {c.currency}
-          </span>
-          <span className="text-slate-300 hidden sm:inline">·</span>
-          <span>
-            <span className="font-semibold text-slate-700">Locale:</span>{' '}
-            {c.locale}
-          </span>
-          <span className="text-slate-300 hidden sm:inline">·</span>
-          <span>
-            <span className="font-semibold text-slate-700">Updated:</span>{' '}
-            2026
-          </span>
-        </div>
-      </div>
 
       {/* ── Calc grid ── */}
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -107,39 +89,28 @@ export default function CountryHub({ country }) {
             const shortDesc = calcDescriptions[calcKey] || t('countryHub.updated')
 
             return (
-              <Link
-                key={calcKey}
-                to={`/${country}/${m.slug}`}
-                className="bg-white border border-slate-200 hover:border-primary hover:shadow-card-hover rounded-2xl p-5 transition-all group flex items-start gap-4"
-              >
-                {/* Icon circle */}
-                <div
-                  className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
-                  style={{ background: '#EFF6FF' }}
-                >
+              <Link key={calcKey} to={`/${country}/${m.slug}`} className="cw-calc-card group">
+                <div className="cw-calc-card-icon group-hover:bg-blue-100 transition-colors">
                   <Icon size={20} color={ICON_COLOR} />
                 </div>
 
-                {/* Text */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h2 className="font-semibold text-slate-900 group-hover:text-primary transition-colors leading-snug">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <h2 className="font-semibold text-sm text-slate-900 group-hover:text-primary transition-colors leading-snug">
                       {m.label}
                     </h2>
                     {isPopular && (
-                      <span className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 leading-none">
-                        <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block" />
-                        Popular
+                      <span className="cw-badge blue" style={{ fontSize: '0.6rem' }}>
+                        ★ Popular
                       </span>
                     )}
                   </div>
                   <p className="text-xs text-slate-500 leading-relaxed">{shortDesc}</p>
                 </div>
 
-                {/* Arrow */}
                 <ChevronRight
-                  size={16}
-                  className="shrink-0 mt-1 text-slate-300 group-hover:text-primary transition-colors"
+                  size={15}
+                  className="shrink-0 mt-0.5 text-slate-300 group-hover:text-primary transition-colors"
                 />
               </Link>
             )

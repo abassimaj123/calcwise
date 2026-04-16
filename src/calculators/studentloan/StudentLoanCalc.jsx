@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   AreaChart, Area, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -9,7 +10,55 @@ import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
 import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
 
-const POVERTY_LINE = 15060  // 2025 federal poverty line, family of 1
+// ---------------------------------------------------------------------------
+// Country-specific repayment options
+// ---------------------------------------------------------------------------
+const REPAYMENT_OPTIONS = {
+  us: [
+    { key: 'extra', label: 'Extra Monthly Payment',  hint: 'Applied directly to principal',                   type: 'amount', step: 25 },
+    { key: 'pslf',  label: 'PSLF Track',             hint: 'Public Service: forgiveness after 120 payments',  type: 'toggle' },
+    { key: 'save',  label: 'SAVE Plan',              hint: 'Income-based: 5% of discretionary income',        type: 'toggle' },
+  ],
+  ca: [
+    { key: 'extra', label: 'Paiement supplémentaire', hint: 'Appliqué directement au capital',                type: 'amount', step: 25 },
+    { key: 'ril',   label: 'RAD (Remboursement aid rev.)', hint: 'Paiements basés sur revenu',               type: 'toggle' },
+  ],
+  uk: [
+    { key: 'extra', label: 'Extra Monthly Payment',  hint: 'Applied to principal',                            type: 'amount', step: 25 },
+    { key: 'plan',  label: 'Plan 1 vs Plan 2',       hint: 'Plan 2 threshold: £27,295 · 9% above',           type: 'toggle' },
+  ],
+  au: [
+    { key: 'extra', label: 'Extra Voluntary Payment', hint: 'Applied to principal',                           type: 'amount', step: 25 },
+  ],
+  ie: [
+    { key: 'extra', label: 'Extra Monthly Payment',  hint: 'Applied to principal',                            type: 'amount', step: 25 },
+  ],
+  nz: [
+    { key: 'extra', label: 'Extra Weekly Payment',   hint: 'Applied directly to balance',                     type: 'amount', step: 10 },
+  ],
+}
+
+// Info text shown when a toggle plan is enabled
+const PLAN_INFO = {
+  pslf: {
+    title: 'Public Service Loan Forgiveness (PSLF)',
+    body: 'Work full-time for a qualifying employer (government, non-profit) and make 120 qualifying payments under an IDR plan. Remaining balance is forgiven tax-free. Use the PSLF Help Tool at StudentAid.gov to verify employer eligibility.',
+  },
+  save: {
+    title: 'SAVE Plan (Saving on a Valuable Education)',
+    body: 'Payments are capped at 5% of discretionary income (undergraduate loans) with an expanded poverty line exclusion. Unpaid interest does not capitalize. Note: SAVE plan benefits are subject to ongoing legal proceedings — check StudentAid.gov for current status.',
+  },
+  ril: {
+    title: 'Remboursement en fonction du revenu (RAD)',
+    body: "Le RAD plafonne les paiements mensuels à un pourcentage du revenu net. Disponible si vous avez du mal à effectuer vos paiements réguliers. Contactez le NSLSC pour les conditions d'admissibilité.",
+  },
+  plan: {
+    title: 'Plan 1 vs Plan 2 — UK Student Loans',
+    body: 'Plan 1 (pre-2012): repay 9% above £24,990/yr, written off after 25 years. Plan 2 (2012–2023): repay 9% above £27,295/yr, written off after 30 years. Plan 5 (post-Aug 2023): repay 9% above £25,000/yr, written off after 40 years. Your plan depends on when and where you studied.',
+  },
+}
+
+const POVERTY_LINE = 15060
 const POVERTY_MULTIPLIERS = { 1: 1, 2: 1.35, 3: 1.62, 4: 1.89 }
 
 const PIE_COLORS = ['#6366f1', '#f59e0b']
@@ -45,8 +94,25 @@ function calcIDR({ balance, rate, income, familySize, planName, payPct, povertyM
   }
 
   const forgiveness = Math.max(0, balance_)
-
   return { payment: monthlyPayment, totalPaid, totalInterest, months, forgiveness, planName }
+}
+
+// Calculate payoff with an extra monthly payment on top of the standard payment
+function calcWithExtra({ balance, rate, basePayment, extraPayment }) {
+  const monthlyRate = rate / 100 / 12
+  const totalPayment = basePayment + extraPayment
+  let bal = balance
+  let months = 0
+  let totalInterest = 0
+
+  while (bal > 0.01 && months < 360) {
+    const interest = bal * monthlyRate
+    const payment = Math.min(totalPayment, bal + interest)
+    bal = Math.max(0, bal + interest - payment)
+    totalInterest += interest
+    months++
+  }
+  return { months, totalInterest }
 }
 
 // Build yearly balance schedule for a plan
@@ -93,6 +159,27 @@ function buildYearlyAmort({ balance, rate, monthlyPayment, maxMonths }) {
   return rows
 }
 
+// ---------------------------------------------------------------------------
+// Toggle switch
+// ---------------------------------------------------------------------------
+function Toggle({ on, onChange }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!on)}
+      className={`relative inline-flex w-10 h-5 rounded-full transition-colors focus:outline-none ${on ? 'bg-green-500' : 'bg-slate-300'}`}
+      aria-pressed={on}
+    >
+      <span
+        className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${on ? 'translate-x-5' : 'translate-x-0'}`}
+      />
+    </button>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
 export default function StudentLoanCalc({ country = 'us' }) {
   const [balance, setBalance] = useState(35000)
   const [rate, setRate] = useState(6.54)
@@ -100,52 +187,81 @@ export default function StudentLoanCalc({ country = 'us' }) {
   const [familySize, setFamilySize] = useState(1)
   const [tab, setTab] = useState('summary')
 
+  // Repayment options state
+  const repayDefs = REPAYMENT_OPTIONS[country] || []
+  const [repayOpen, setRepayOpen] = useState(false)
+  const [repayEnabled, setRepayEnabled] = useState({})
+  const [repayAmounts, setRepayAmounts] = useState(
+    Object.fromEntries(repayDefs.filter(d => d.type === 'amount').map(d => [d.key, 0]))
+  )
+
+  const toggleRepay = (key, val) => setRepayEnabled(prev => ({ ...prev, [key]: val }))
+  const setRepayAmt  = (key, val) => setRepayAmounts(prev => ({ ...prev, [key]: val }))
+
+  // Extra monthly payment (NZ is weekly, convert to monthly)
+  const extraPayment = useMemo(() => {
+    const extraDef = repayDefs.find(d => d.key === 'extra')
+    if (!extraDef || !repayEnabled['extra']) return 0
+    const amt = repayAmounts['extra'] || 0
+    return country === 'nz' ? amt * 52 / 12 : amt
+  }, [repayDefs, repayEnabled, repayAmounts, country])
+
+  const activeRepayCount = repayDefs.filter(d => repayEnabled[d.key]).length
+
   const results = useMemo(() => {
     if (!balance || !rate || !income) return null
 
     const standard = calcStandard({ balance, rate })
-    const ibr = calcIDR({ balance, rate, income, familySize, planName: 'IBR', payPct: 0.10, povertyMultiplier: 1.5, maxYears: 25 })
-    const paye = calcIDR({ balance, rate, income, familySize, planName: 'PAYE', payPct: 0.10, povertyMultiplier: 1.5, maxYears: 20 })
+    const ibr  = calcIDR({ balance, rate, income, familySize, planName: 'IBR',  payPct: 0.10, povertyMultiplier: 1.5,  maxYears: 25 })
+    const paye = calcIDR({ balance, rate, income, familySize, planName: 'PAYE', payPct: 0.10, povertyMultiplier: 1.5,  maxYears: 20 })
     const save = calcIDR({ balance, rate, income, familySize, planName: 'SAVE', payPct: 0.05, povertyMultiplier: 2.25, maxYears: 25 })
 
     return { standard, ibr, paye, save }
   }, [balance, rate, income, familySize])
 
-  // Chart data: balance over time for Standard and SAVE
+  // Extra payment savings vs standard
+  const extraSavings = useMemo(() => {
+    if (!results || !results.standard || extraPayment <= 0) return null
+    const base = results.standard
+    const withExtra = calcWithExtra({ balance, rate, basePayment: base.payment, extraPayment })
+    const monthsSaved = base.months - withExtra.months
+    const interestSaved = base.totalInterest - withExtra.totalInterest
+    return { monthsSaved, interestSaved, newMonths: withExtra.months }
+  }, [results, balance, rate, extraPayment])
+
+  // Chart data
   const balanceChartData = useMemo(() => {
     if (!results) return []
-    const stdSched = buildSchedule({ balance, rate, monthlyPayment: results.standard.payment, maxMonths: results.standard.months })
-    const saveSched = buildSchedule({ balance, rate, monthlyPayment: results.save.payment, maxMonths: results.save.months })
+    const stdSched  = buildSchedule({ balance, rate, monthlyPayment: results.standard.payment, maxMonths: results.standard.months })
+    const saveSched = buildSchedule({ balance, rate, monthlyPayment: results.save.payment,     maxMonths: results.save.months })
 
     const maxYr = Math.max(stdSched[stdSched.length - 1]?.year || 0, saveSched[saveSched.length - 1]?.year || 0)
     const data = []
     for (let y = 0; y <= maxYr; y++) {
-      const stdPt = stdSched.find(r => r.year === y)
+      const stdPt  = stdSched.find(r => r.year === y)
       const savePt = saveSched.find(r => r.year === y)
       data.push({
         year: `Yr ${y}`,
-        Standard: stdPt ? stdPt.balance : 0,
-        SAVE: savePt ? savePt.balance : undefined,
+        Standard: stdPt  ? stdPt.balance  : 0,
+        SAVE:     savePt ? savePt.balance : undefined,
       })
     }
     return data
   }, [results, balance, rate])
 
-  // Pie: principal vs interest at payoff for standard plan
   const pieData = results
     ? [
-        { name: 'Principal', value: balance },
+        { name: 'Principal',      value: balance },
         { name: 'Total Interest', value: Math.round(results.standard.totalInterest) },
       ]
     : []
 
-  // Amortization schedule for standard plan
   const amortRows = useMemo(() => {
     if (!results) return []
     return buildYearlyAmort({ balance, rate, monthlyPayment: results.standard.payment, maxMonths: results.standard.months })
   }, [results, balance, rate])
 
-  const fmt = (n) => `$${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
+  const fmt  = (n) => `$${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
   const fmtD = (n) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   const years = (m) => `${Math.round(m / 12)} yr`
 
@@ -171,7 +287,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">Student Loan Calculator</h1>
-          <p className="text-cw-gray">Compare Standard, IBR, PAYE, and SAVE repayment plans.</p>
+          <p className="text-slate-500">Compare Standard, IBR, PAYE, and SAVE repayment plans.</p>
         </div>
 
         <CalcIntro
@@ -179,22 +295,23 @@ export default function StudentLoanCalc({ country = 'us' }) {
           hiddenCost="Extended repayment plans double or triple total interest"
         />
 
-        <div className="cw-card mb-6">
+        {/* Main inputs */}
+        <div className="cw-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Loan Balance ($)</label>
+              <label className="block text-xs text-slate-500 mb-1">Loan Balance ($)</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix="$" />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Interest Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">Interest Rate (%)</label>
               <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Annual Gross Income ($)</label>
+              <label className="block text-xs text-slate-500 mb-1">Annual Gross Income ($)</label>
               <NumericInput value={income} onChange={setIncome} min={0} step={1000} prefix="$" />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Family Size</label>
+              <label className="block text-xs text-slate-500 mb-1">Family Size</label>
               <select className="cw-input" value={familySize} onChange={e => setFamilySize(+e.target.value)}>
                 {[1, 2, 3, 4].map(n => <option key={n} value={n}>{n} person{n > 1 ? 's' : ''}</option>)}
               </select>
@@ -202,12 +319,90 @@ export default function StudentLoanCalc({ country = 'us' }) {
           </div>
         </div>
 
-        <div className="flex gap-2 mb-4">
+        {/* Repayment Options collapsible */}
+        {repayDefs.length > 0 && (
+          <div className="cw-card mb-6">
+            <button
+              type="button"
+              onClick={() => setRepayOpen(o => !o)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-slate-800">Repayment Options</span>
+                {activeRepayCount > 0 && (
+                  <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
+                    {activeRepayCount} active
+                  </span>
+                )}
+              </div>
+              {repayOpen ? <ChevronUp size={18} className="text-slate-400" /> : <ChevronDown size={18} className="text-slate-400" />}
+            </button>
+
+            {repayOpen && (
+              <div className="mt-5 space-y-3">
+                {repayDefs.map(def => {
+                  const enabled = !!repayEnabled[def.key]
+                  const isAmount = def.type === 'amount'
+                  const isToggle = def.type === 'toggle'
+                  const info = PLAN_INFO[def.key]
+
+                  return (
+                    <div
+                      key={def.key}
+                      className={`border rounded-xl p-3 transition-colors ${enabled ? 'border-green-300 bg-green-50' : 'border-slate-200 bg-white'}`}
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">{def.label}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">{def.hint}</p>
+                        </div>
+                        <Toggle on={enabled} onChange={v => toggleRepay(def.key, v)} />
+                      </div>
+
+                      {enabled && isAmount && (
+                        <div className="mt-2">
+                          <NumericInput
+                            label=""
+                            value={repayAmounts[def.key] || 0}
+                            onChange={v => setRepayAmt(def.key, v)}
+                            min={0}
+                            step={def.step}
+                            prefix="$"
+                          />
+                        </div>
+                      )}
+
+                      {enabled && isToggle && info && (
+                        <div className="mt-2 p-3 bg-white border border-slate-200 rounded-lg">
+                          <p className="text-xs font-bold text-slate-700 mb-1">{info.title}</p>
+                          <p className="text-xs text-slate-600 leading-relaxed">{info.body}</p>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Extra payment savings callout */}
+        {extraSavings && extraSavings.monthsSaved > 0 && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <p className="text-sm font-bold text-green-800 mb-1">With extra payment</p>
+            <p className="text-sm text-green-700">
+              Pay off <span className="font-bold">{extraSavings.monthsSaved} month{extraSavings.monthsSaved !== 1 ? 's' : ''} sooner</span> and save{' '}
+              <span className="font-bold">{fmt(extraSavings.interestSaved)}</span> in interest.
+              New payoff: <span className="font-bold">{years(extraSavings.newMonths)}</span>.
+            </p>
+          </div>
+        )}
+
+        {/* View tabs */}
+        <div className="cw-tabs mb-4">
           {['summary', 'chart', 'schedule'].map(v => (
             <button key={v} onClick={() => setTab(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                tab === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}>
+              className={`cw-tab${tab === v ? ' active' : ''}`}>
               {v}
             </button>
           ))}
@@ -222,24 +417,24 @@ export default function StudentLoanCalc({ country = 'us' }) {
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-cw-gray">Monthly Payment</span>
+                    <span className="text-slate-500">Monthly Payment</span>
                     <span className="font-semibold">{fmtD(plan.payment)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-cw-gray">Payoff Time</span>
+                    <span className="text-slate-500">Payoff Time</span>
                     <span>{years(plan.months)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-cw-gray">Total Interest</span>
+                    <span className="text-slate-500">Total Interest</span>
                     <span>{fmt(plan.totalInterest)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-cw-gray">Total Paid</span>
+                    <span className="text-slate-500">Total Paid</span>
                     <span className="font-bold">{fmt(plan.totalPaid)}</span>
                   </div>
                   {plan.forgiveness > 0 && (
                     <div className="flex justify-between border-t border-white/10 pt-2">
-                      <span className="text-cw-gray">Forgiven Balance</span>
+                      <span className="text-slate-500">Forgiven Balance</span>
                       <span className="text-cw-success font-bold">{fmt(plan.forgiveness)}</span>
                     </div>
                   )}
@@ -253,7 +448,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
           <div className="space-y-6">
             <div className="cw-card">
               <h3 className="font-semibold text-sm mb-1">Loan Balance Over Time</h3>
-              <p className="text-xs text-cw-gray mb-4">Standard (10yr) vs SAVE plan — balance remaining each year</p>
+              <p className="text-xs text-slate-500 mb-4">Standard (10yr) vs SAVE plan — balance remaining each year</p>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={balanceChartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <defs>
@@ -279,7 +474,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
                   />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Area type="monotone" dataKey="Standard" stroke="#6366f1" fill="url(#stdGrad)" strokeWidth={2} connectNulls />
-                  <Area type="monotone" dataKey="SAVE" stroke="#22d3ee" fill="url(#saveGrad)" strokeWidth={2} connectNulls />
+                  <Area type="monotone" dataKey="SAVE"     stroke="#22d3ee" fill="url(#saveGrad)" strokeWidth={2} connectNulls />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -315,7 +510,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
             <h3 className="font-semibold text-sm mb-4">Yearly Amortization — Standard Plan</h3>
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-white/10 text-cw-gray">
+                <tr className="border-b border-white/10 text-slate-500">
                   <th className="text-left py-2 pr-3">Year</th>
                   <th className="text-right py-2 pr-3">Monthly Pmt</th>
                   <th className="text-right py-2 pr-3">Principal</th>
@@ -338,8 +533,8 @@ export default function StudentLoanCalc({ country = 'us' }) {
           </div>
         )}
 
-        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-cw-gray">
-          ℹ️ IDR plan calculations are estimates. Actual payments depend on your exact AGI, family size, and plan eligibility. SAVE plan benefits are subject to ongoing legal proceedings. Consult StudentAid.gov for current information.
+        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-slate-500">
+          IDR plan calculations are estimates. Actual payments depend on your exact AGI, family size, and plan eligibility. SAVE plan benefits are subject to ongoing legal proceedings. Consult StudentAid.gov for current information.
         </div>
 
         <CalcFAQ faqs={[
@@ -350,8 +545,8 @@ export default function StudentLoanCalc({ country = 'us' }) {
 
         <CalcRelated links={[
           { to: `/${country}/loan-payoff`, label: 'Loan Payoff Calculator' },
-          { to: `/${country}/salary`, label: 'Salary Calculator' },
-          { to: `/${country}/tax`, label: 'Tax Calculator' },
+          { to: `/${country}/salary`,      label: 'Salary Calculator' },
+          { to: `/${country}/tax`,         label: 'Tax Calculator' },
         ]} />
 
         <AdSenseSlot format="rectangle" />

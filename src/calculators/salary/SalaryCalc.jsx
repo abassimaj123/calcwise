@@ -2,56 +2,13 @@ import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { countries } from '../../config/countries'
+import { SALARY_DEDUCTIONS } from '../../config/salaryDeductions'
+import { SALARY_DEFAULTS } from '../../config/calcDefaults'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
-
-// ---------------------------------------------------------------------------
-// Country-specific optional deductions
-// ---------------------------------------------------------------------------
-const COUNTRY_DEDUCTIONS = {
-  us: [
-    { key: '401k',   label: '401(k) Contribution',   hint: 'Pre-tax · 2026 max: $23,000',          preTax: true,  step: 500 },
-    { key: 'health', label: 'Health Insurance',       hint: 'Pre-tax employer plan premium',         preTax: true,  step: 50  },
-    { key: 'hsa',    label: 'HSA Contribution',       hint: 'Pre-tax · 2026 max: $4,150',            preTax: true,  step: 100 },
-    { key: 'union',  label: 'Union Dues',             hint: 'Post-tax · varies by local',            preTax: false, step: 10  },
-    { key: 'life',   label: 'Life / Disability Ins.', hint: 'Post-tax supplemental',                 preTax: false, step: 10  },
-  ],
-  ca: [
-    { key: 'rrsp',     label: 'Cotisation REER',          hint: 'Avant impôt · réduit revenu imposable', preTax: true,  step: 500 },
-    { key: 'pension',  label: 'Régime de retraite (RPP)', hint: 'Avant impôt · pension entreprise',      preTax: true,  step: 100 },
-    { key: 'groupins', label: 'Assurance collective',      hint: 'Après impôt · santé/vie/dentaire',     preTax: false, step: 20  },
-    { key: 'union',    label: 'Cotisation syndicale',      hint: 'Après impôt · déductible déclaration', preTax: false, step: 10  },
-    { key: 'club',     label: 'Club social / loisirs',     hint: 'Après impôt · activités parrainées',   preTax: false, step: 5   },
-    { key: 'parking',  label: 'Stationnement / transport', hint: 'Avant impôt · laissez-passer commun',  preTax: true,  step: 20  },
-  ],
-  uk: [
-    { key: 'pension',     label: 'Pension Contribution',     hint: 'Pre-tax · typical 5% employee',   preTax: true,  step: 50 },
-    { key: 'healthins',   label: 'Private Health Insurance', hint: 'Post-tax · BUPA, AXA etc.',        preTax: false, step: 20 },
-    { key: 'union',       label: 'Union Dues',               hint: 'Post-tax · TUC affiliated',        preTax: false, step: 5  },
-    { key: 'studentloan', label: 'Student Loan Repayment',   hint: 'Post-tax · Plan 1/2',              preTax: false, step: 20 },
-    { key: 'cycle',       label: 'Cycle to Work Scheme',     hint: 'Pre-tax salary sacrifice',         preTax: true,  step: 10 },
-  ],
-  au: [
-    { key: 'super',         label: 'Extra Super Contribution', hint: 'Pre-tax · above mandatory 11%',             preTax: true,  step: 100 },
-    { key: 'privatehealth', label: 'Private Health Insurance', hint: 'Post-tax · avoids Medicare Levy Surcharge', preTax: false, step: 30  },
-    { key: 'union',         label: 'Union Dues',               hint: 'Post-tax · ACTU affiliated',                preTax: false, step: 10  },
-    { key: 'salary_sac',    label: 'Salary Sacrifice (other)', hint: 'Pre-tax · FBT-exempt benefits',             preTax: true,  step: 50  },
-  ],
-  ie: [
-    { key: 'pension', label: 'Pension (AVC)',          hint: 'Pre-tax · Additional Voluntary',   preTax: true,  step: 100 },
-    { key: 'health',  label: 'Health Insurance',       hint: 'Post-tax · VHI, Laya, Irish Life', preTax: false, step: 20  },
-    { key: 'union',   label: 'Union Dues',             hint: 'Post-tax · ICTU affiliated',       preTax: false, step: 5   },
-    { key: 'travel',  label: 'Travel Pass (TaxSaver)', hint: 'Pre-tax · public transport',       preTax: true,  step: 20  },
-  ],
-  nz: [
-    { key: 'kiwisaver', label: 'KiwiSaver Extra',    hint: 'Pre-tax · above 3% mandatory',        preTax: true,  step: 50 },
-    { key: 'health',    label: 'Health Insurance',    hint: 'Post-tax · Southern Cross, nib etc.', preTax: false, step: 20 },
-    { key: 'union',     label: 'Union Dues',          hint: 'Post-tax · CTU affiliated',           preTax: false, step: 5  },
-  ],
-}
 
 // ---------------------------------------------------------------------------
 // Tax calculation — returns { incomeTax, contributions, total }
@@ -159,7 +116,6 @@ function calcTaxDetail(gross, country) {
 // ---------------------------------------------------------------------------
 // Static data
 // ---------------------------------------------------------------------------
-const defaultSalaries = { us: 75000, ca: 80000, uk: 45000, au: 85000, ie: 55000, nz: 70000 }
 
 const periods = [
   { key: 'annual',   label: 'Annual',   divisor: 1    },
@@ -198,9 +154,9 @@ function Toggle({ on, onChange, color = 'green' }) {
 // ---------------------------------------------------------------------------
 export default function SalaryCalc({ country }) {
   const c = countries[country]
-  const deductionDefs = COUNTRY_DEDUCTIONS[country] || []
+  const deductionDefs = SALARY_DEDUCTIONS[country] || []
 
-  const [gross, setGross] = useState(defaultSalaries[country] || 60000)
+  const [gross, setGross] = useState(SALARY_DEFAULTS[country] || 60000)
   const [inputPeriod, setInputPeriod] = useState('annual')
   const [view, setView] = useState('breakdown')
   const [dedOpen, setDedOpen] = useState(false)
@@ -304,7 +260,7 @@ export default function SalaryCalc({ country }) {
           <h1 className="text-3xl font-display font-bold mb-2">
             {c.name} Salary Calculator
           </h1>
-          <p className="text-cw-gray">Convert gross income to net take-home. All pay periods.</p>
+          <p className="text-slate-500">Convert gross income to net take-home. All pay periods.</p>
         </div>
 
         {/* Main input card */}
@@ -320,11 +276,11 @@ export default function SalaryCalc({ country }) {
                 step={1000}
                 prefix={c.symbol}
                 showSlider
-                hint={`Median ${c.name}: ${fmtShort(defaultSalaries[country])}/yr`}
+                hint={`Median ${c.name}: ${fmtShort(SALARY_DEFAULTS[country])}/yr`}
               />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Income Period</label>
+              <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">Income Period</label>
               <select className="cw-input" value={inputPeriod} onChange={e => setInputPeriod(e.target.value)}>
                 {periods.map(p => (
                   <option key={p.key} value={p.key}>{p.label}</option>
@@ -433,16 +389,12 @@ export default function SalaryCalc({ country }) {
         )}
 
         {/* View tabs */}
-        <div className="flex gap-2 mb-4">
+        <div className="cw-tabs mb-4">
           {['breakdown', 'chart', 'periods'].map(v => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                view === v
-                  ? 'bg-primary text-white'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-primary hover:text-primary'
-              }`}
+              className={`cw-tab${view === v ? ' active' : ''}`}
             >
               {viewLabels[v]}
             </button>
@@ -452,19 +404,24 @@ export default function SalaryCalc({ country }) {
         {/* ---- Summary view ---- */}
         {annualGross > 0 && view === 'breakdown' && (
           <>
-            {/* 3 metric cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <div className="cw-card text-center" style={{ borderLeft: '4px solid #1A6AFF' }}>
-                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Annual Net</p>
-                <p className="font-display font-bold text-3xl text-slate-900">{fmtShort(annualNet)}</p>
-              </div>
-              <div className="cw-card text-center" style={{ borderLeft: '4px solid #22c55e' }}>
-                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Monthly Take-Home</p>
-                <p className="font-display font-bold text-2xl text-slate-900">{fmt(annualNet / 12)}</p>
-              </div>
-              <div className="cw-card text-center" style={{ borderLeft: '4px solid #f97316' }}>
-                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Effective Tax Rate</p>
-                <p className="font-display font-bold text-2xl text-slate-900">{effectiveRate.toFixed(1)}%</p>
+            {/* Hero result + metric cards */}
+            <div className="cw-result-hero mb-4">
+              <p className="cw-result-hero-label">Annual Net Income</p>
+              <p className="cw-result-hero-value">{fmtShort(annualNet)}</p>
+              <hr className="cw-result-hero-divider" />
+              <div className="cw-result-hero-grid">
+                <div>
+                  <p className="cw-result-hero-mini-label">Monthly Take-Home</p>
+                  <p className="cw-result-hero-mini-value">{fmt(annualNet / 12)}</p>
+                </div>
+                <div>
+                  <p className="cw-result-hero-mini-label">Effective Tax Rate</p>
+                  <p className="cw-result-hero-mini-value">{effectiveRate.toFixed(1)}%</p>
+                </div>
+                <div>
+                  <p className="cw-result-hero-mini-label">Total Deductions</p>
+                  <p className="cw-result-hero-mini-value">{fmtShort(incomeTax + contributions + postTaxTotal)}</p>
+                </div>
               </div>
             </div>
 
@@ -499,7 +456,7 @@ export default function SalaryCalc({ country }) {
         {annualGross > 0 && view === 'chart' && (
           <div className="cw-card space-y-8">
             <div>
-              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4 text-center">Income Breakdown</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">Income Breakdown</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
@@ -521,7 +478,7 @@ export default function SalaryCalc({ country }) {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4 text-center">Gross vs Net by Pay Period</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">Gross vs Net by Pay Period</h3>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={barData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -543,7 +500,7 @@ export default function SalaryCalc({ country }) {
         )}
 
         {annualGross <= 0 && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter a gross income above to see your take-home pay.
           </div>
         )}

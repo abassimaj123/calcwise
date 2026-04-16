@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   PieChart, Pie, Cell, BarChart, Bar,
   XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
@@ -13,6 +14,45 @@ import NumericInput from '../../components/NumericInput'
 
 const COLORS = { primary: '#1A6AFF', accent: '#00D4FF', success: '#1D9E75', warn: '#F5C842', red: '#EF4444' }
 const PIE_COLORS = [COLORS.success, COLORS.red, COLORS.warn, COLORS.accent]
+
+// ---------------------------------------------------------------------------
+// Country-specific optional deductions
+// ---------------------------------------------------------------------------
+const TAX_DEDUCTIONS = {
+  us: [
+    { key: 'rrsp_401k', label: '401(k) / IRA Contribution',  hint: 'Pre-tax · reduces AGI · 2026 max $23,000', step: 500  },
+    { key: 'hsa',       label: 'HSA Contribution',           hint: 'Pre-tax · max $4,150 single',               step: 100  },
+    { key: 'mortgage',  label: 'Mortgage Interest',          hint: 'Itemized deduction (if > std deduction)',    step: 500  },
+    { key: 'charity',   label: 'Charitable Donations',       hint: 'Up to 60% of AGI for cash donations',       step: 100  },
+    { key: 'medical',   label: 'Medical Expenses',           hint: 'Amount exceeding 7.5% of AGI',              step: 100  },
+  ],
+  ca: [
+    { key: 'rrsp',      label: 'Cotisation REER',            hint: 'Déduit avant impôt · limite 18% du revenu', step: 500  },
+    { key: 'union',     label: 'Cotisation syndicale',       hint: 'Déductible à 100%',                         step: 50   },
+    { key: 'medical',   label: 'Frais médicaux',             hint: 'Montant > 3% du revenu net',               step: 100  },
+    { key: 'charity',   label: 'Dons de bienfaisance',       hint: 'Crédit fédéral 15% / 29%',                 step: 100  },
+    { key: 'childcare', label: 'Frais de garde',             hint: 'Déductibles par le parent moins bien payé', step: 100  },
+  ],
+  uk: [
+    { key: 'pension',   label: 'Pension Contribution',       hint: 'Reduces taxable income',                    step: 100  },
+    { key: 'charity',   label: 'Gift Aid Donations',         hint: 'Treated as given from net income',          step: 50   },
+    { key: 'workexp',   label: 'Work Expenses',              hint: 'Uniform, tools, professional fees',         step: 50   },
+  ],
+  au: [
+    { key: 'super',     label: 'Extra Super Contribution',   hint: 'Pre-tax salary sacrifice',                  step: 100  },
+    { key: 'workded',   label: 'Work-related Deductions',    hint: 'Tools, uniform, home office, travel',       step: 100  },
+    { key: 'charity',   label: 'Charitable Donations',       hint: 'Donations to DGR organisations',            step: 50   },
+  ],
+  ie: [
+    { key: 'pension',   label: 'Pension (AVC)',              hint: 'Reduces income tax at marginal rate',       step: 100  },
+    { key: 'medical',   label: 'Medical Expenses',           hint: '20% tax relief on qualifying expenses',     step: 100  },
+    { key: 'rent',      label: 'Rent Tax Credit',            hint: '€1,000 credit for private renters (2026)', step: 250  },
+  ],
+  nz: [
+    { key: 'workded',   label: 'Work-related Deductions',    hint: 'Tools, travel, home office portion',        step: 100  },
+    { key: 'kiwi',      label: 'KiwiSaver Contribution',     hint: 'Employer contributions taxed separately',   step: 50   },
+  ],
+}
 
 // ── Tax calculation engines ────────────────────────────────────────
 
@@ -287,19 +327,62 @@ function calcNZ(gross) {
 const calcEngines = { us: calcUS, ca: calcCA, uk: calcUK, au: calcAU, ie: calcIE, nz: calcNZ }
 const defaultIncomes = { us: 75000, ca: 80000, uk: 45000, au: 85000, ie: 55000, nz: 70000 }
 
+// ---------------------------------------------------------------------------
+// Toggle switch
+// ---------------------------------------------------------------------------
+function Toggle({ on, onChange }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!on)}
+      className={`relative inline-flex w-10 h-5 rounded-full transition-colors focus:outline-none ${on ? 'bg-green-500' : 'bg-slate-300'}`}
+      aria-pressed={on}
+    >
+      <span
+        className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${on ? 'translate-x-5' : 'translate-x-0'}`}
+      />
+    </button>
+  )
+}
+
 export default function TaxCalc({ country }) {
   const c = countries[country]
+  const deductionDefs = TAX_DEDUCTIONS[country] || []
+
   const [gross, setGross] = useState(defaultIncomes[country] || 60000)
   const [view, setView] = useState('simple')
+  const [dedOpen, setDedOpen] = useState(false)
+  const [dedEnabled, setDedEnabled] = useState({})
+  const [dedAmounts, setDedAmounts] = useState(
+    Object.fromEntries(deductionDefs.map(d => [d.key, 0]))
+  )
+
+  const toggleDed = (key, val) => setDedEnabled(prev => ({ ...prev, [key]: val }))
+  const setDedAmt = (key, val) => setDedAmounts(prev => ({ ...prev, [key]: val }))
+
+  const totalDeductions = useMemo(() =>
+    deductionDefs
+      .filter(d => dedEnabled[d.key])
+      .reduce((sum, d) => sum + (dedAmounts[d.key] || 0), 0),
+    [deductionDefs, dedEnabled, dedAmounts]
+  )
+
+  const taxableGross = Math.max(0, gross - totalDeductions)
 
   const result = useMemo(() => {
-    if (!gross || gross <= 0) return null
+    if (!taxableGross || taxableGross <= 0) return null
     const engine = calcEngines[country]
-    return engine ? engine(gross) : null
-  }, [gross, country])
+    return engine ? engine(taxableGross) : null
+  }, [taxableGross, country])
+
+  const activeDeductions = deductionDefs.filter(d => dedEnabled[d.key] && dedAmounts[d.key] > 0)
+  const activeDedCount = activeDeductions.length
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(Math.abs(n))
+
+  const fmtShort = (n) =>
+    new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
 
   const pageTitle = `${c.name} Tax Calculator 2026 — Income Tax & Take-Home Pay | CalcWise`
 
@@ -316,27 +399,81 @@ export default function TaxCalc({ country }) {
           <h1 className="text-3xl font-display font-bold mb-2">
             {c.name} Tax Calculator
           </h1>
-          <p className="text-cw-gray">
+          <p className="text-slate-500">
             Calculate your take-home pay and effective tax rate. Updated for 2025-26.
           </p>
         </div>
 
-        <div className="cw-card mb-6">
-          <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">
+        <div className="cw-card mb-4">
+          <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">
             Annual Gross Income ({c.symbol})
           </label>
           <NumericInput value={gross} onChange={setGross} min={0} step={1000} prefix={c.symbol} />
-          <p className="text-xs text-cw-gray mt-2">Enter your gross (before-tax) annual income</p>
+          <p className="text-xs text-slate-500 mt-2">Enter your gross (before-tax) annual income</p>
         </div>
 
-        <div className="flex gap-2 mb-4">
+        {/* Optional Deductions collapsible */}
+        {deductionDefs.length > 0 && (
+          <div className="cw-card mb-6">
+            <button
+              type="button"
+              onClick={() => setDedOpen(o => !o)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-slate-800">Optional Deductions</span>
+                {activeDedCount > 0 && (
+                  <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
+                    {activeDedCount} active · -{fmtShort(totalDeductions)}/yr
+                  </span>
+                )}
+              </div>
+              {dedOpen ? <ChevronUp size={18} className="text-slate-400" /> : <ChevronDown size={18} className="text-slate-400" />}
+            </button>
+
+            {dedOpen && (
+              <div className="mt-5">
+                <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">Deductions reduce taxable income</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {deductionDefs.map(d => (
+                    <div
+                      key={d.key}
+                      className={`border rounded-xl p-3 transition-colors ${dedEnabled[d.key] ? 'border-green-300 bg-green-50' : 'border-slate-200 bg-white'}`}
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">{d.label}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">{d.hint}</p>
+                        </div>
+                        <Toggle on={!!dedEnabled[d.key]} onChange={v => toggleDed(d.key, v)} />
+                      </div>
+                      {dedEnabled[d.key] && (
+                        <div className="mt-2">
+                          <NumericInput
+                            label=""
+                            value={dedAmounts[d.key] || 0}
+                            onChange={v => setDedAmt(d.key, v)}
+                            min={0}
+                            max={500000}
+                            step={d.step}
+                            prefix={c.symbol}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="cw-tabs mb-4">
           {['simple', 'detailed'].map(v => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}
+              className={`cw-tab${view === v ? ' active' : ''}`}
             >
               {v}
             </button>
@@ -344,17 +481,51 @@ export default function TaxCalc({ country }) {
         </div>
 
         {result && view === 'simple' && (
-          <ResultSimple
-            metrics={[
-              { label: 'Net Annual Income', value: fmt(result.netAnnual), highlight: true },
-              { label: 'Monthly Take-Home', value: fmt(result.netAnnual / 12) },
-              { label: 'Effective Tax Rate', value: `${result.effectiveRate.toFixed(1)}%` },
-            ]}
-          />
+          <>
+            {totalDeductions > 0 && (
+              <div className="cw-card mb-4 border border-green-500/30 bg-green-500/5">
+                <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-2">Active Deductions</p>
+                <div className="space-y-1">
+                  {activeDeductions.map(d => (
+                    <div key={d.key} className="flex items-center justify-between text-sm">
+                      <span className="text-green-700 font-medium">{d.label}</span>
+                      <span className="text-slate-700 font-semibold">-{fmtShort(dedAmounts[d.key] || 0)}/yr</span>
+                    </div>
+                  ))}
+                  <div className="pt-2 mt-1 border-t border-green-100 text-xs text-green-700 font-semibold">
+                    Taxable income reduced by {fmtShort(totalDeductions)} → {fmtShort(taxableGross)}
+                  </div>
+                </div>
+              </div>
+            )}
+            <ResultSimple
+              metrics={[
+                { label: 'Net Annual Income', value: fmt(result.netAnnual), highlight: true },
+                { label: 'Monthly Take-Home', value: fmt(result.netAnnual / 12) },
+                { label: 'Effective Tax Rate', value: `${result.effectiveRate.toFixed(1)}%` },
+              ]}
+            />
+          </>
         )}
 
         {result && view === 'detailed' && (
           <>
+            {totalDeductions > 0 && (
+              <div className="cw-card mb-4 border border-green-500/30 bg-green-500/5">
+                <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-2">Optional Deductions Applied</p>
+                <div className="space-y-1">
+                  {activeDeductions.map(d => (
+                    <div key={d.key} className="flex items-center justify-between text-sm">
+                      <span className="text-green-700 font-medium">{d.label}</span>
+                      <span className="text-slate-700 font-semibold">-{fmtShort(dedAmounts[d.key] || 0)}</span>
+                    </div>
+                  ))}
+                  <div className="pt-2 mt-1 border-t border-green-100 text-xs text-green-700 font-semibold">
+                    Tax calculated on {fmtShort(taxableGross)} (gross {fmtShort(gross)} − deductions {fmtShort(totalDeductions)})
+                  </div>
+                </div>
+              </div>
+            )}
             <ResultDetailed
               title="Tax Breakdown"
               rows={result.rows.map(r => ({
@@ -367,7 +538,6 @@ export default function TaxCalc({ country }) {
 
             {/* Charts */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              {/* Pie: take-home vs taxes */}
               <div className="cw-card flex flex-col items-center">
                 <h3 className="font-semibold mb-4 text-sm self-start">Income Distribution</h3>
                 <ResponsiveContainer width="100%" height={220}>
@@ -394,7 +564,6 @@ export default function TaxCalc({ country }) {
                 </ResponsiveContainer>
               </div>
 
-              {/* Bar: tax components */}
               <div className="cw-card">
                 <h3 className="font-semibold mb-4 text-sm">Tax Components</h3>
                 <ResponsiveContainer width="100%" height={220}>
@@ -414,13 +583,13 @@ export default function TaxCalc({ country }) {
         )}
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter your annual income above to see the breakdown.
           </div>
         )}
 
-        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-cw-gray">
-          ℹ️ These are estimates based on standard deductions and average rates. Actual tax may differ based on filing status, deductions, credits, and jurisdiction. Consult a tax professional for advice.
+        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-slate-500">
+          These are estimates based on standard deductions and average rates. Actual tax may differ based on filing status, deductions, credits, and jurisdiction. Consult a tax professional for advice.
         </div>
 
         <AppDownloadBanner calcKey="tax" country={country} />

@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -22,9 +23,51 @@ const mileageRates = {
   nz: { rate: 0.27, unit: 'km', label: 'IRD $0.27/km' },
 }
 
+// ---------------------------------------------------------------------------
+// Country-specific additional monthly expenses
+// ---------------------------------------------------------------------------
+const EXTRA_EXPENSES = {
+  us: [
+    { key: 'phone',    label: 'Phone Plan (business %)',  hint: 'Deductible business portion · avg $40-80/mo', monthly: true,  step: 5   },
+    { key: 'parking',  label: 'Parking & Tolls',          hint: 'Monthly parking/toll costs',                  monthly: true,  step: 10  },
+    { key: 'supplies', label: 'Supplies (water, bags)',    hint: 'Monthly passenger supplies',                  monthly: true,  step: 5   },
+    { key: 'carwash',  label: 'Car Washes',               hint: 'Monthly cleaning costs',                      monthly: true,  step: 10  },
+    { key: 'insurance',label: 'Extra Insurance Premium',  hint: 'Rideshare coverage add-on',                   monthly: true,  step: 10  },
+  ],
+  ca: [
+    { key: 'phone',    label: 'Forfait téléphone',        hint: 'Portion affaires · $40-80/mois',              monthly: true,  step: 5   },
+    { key: 'parking',  label: 'Stationnement / péages',   hint: 'Frais mensuels',                              monthly: true,  step: 10  },
+    { key: 'supplies', label: 'Fournitures passagers',    hint: 'Eau, sacs, etc.',                             monthly: true,  step: 5   },
+    { key: 'carwash',  label: 'Lavage auto',              hint: 'Frais mensuels de nettoyage',                 monthly: true,  step: 10  },
+    { key: 'insurance',label: 'Surprime assurance',       hint: 'Couverture covoiturage',                      monthly: true,  step: 10  },
+    { key: 'deprec',   label: 'Dépréciation véhicule',   hint: '$0.05-0.15/km · valeur marchande perdue',     monthly: true,  step: 25  },
+  ],
+  uk: [
+    { key: 'phone',    label: 'Phone Plan (business)',    hint: 'Business portion deductible',                 monthly: true,  step: 5   },
+    { key: 'parking',  label: 'Parking & Congestion',     hint: 'London zone + parking monthly',               monthly: true,  step: 20  },
+    { key: 'insurance',label: 'Private Hire Insurance',   hint: 'PCO/PHV insurance add-on',                    monthly: true,  step: 15  },
+    { key: 'licences', label: 'Licences & MOT',           hint: 'PCO licence amortized monthly',               monthly: true,  step: 20  },
+  ],
+  au: [
+    { key: 'phone',    label: 'Phone Plan (business)',    hint: 'Work-related portion deductible',             monthly: true,  step: 5   },
+    { key: 'parking',  label: 'Parking & Tolls',          hint: 'Monthly road tolls + parking',                monthly: true,  step: 15  },
+    { key: 'insurance',label: 'Rideshare Insurance',      hint: 'Commercial vehicle cover add-on',             monthly: true,  step: 20  },
+  ],
+  ie: [
+    { key: 'phone',    label: 'Phone (business portion)', hint: 'Deductible business use',                     monthly: true,  step: 5   },
+    { key: 'insurance',label: 'Taxi/Rideshare Insurance', hint: 'PSV insurance monthly cost',                  monthly: true,  step: 30  },
+    { key: 'licence',  label: 'PSV / Taxi Licence',       hint: 'Amortized monthly cost',                      monthly: true,  step: 15  },
+  ],
+  nz: [
+    { key: 'phone',    label: 'Phone (business portion)', hint: 'Deductible business use',                     monthly: true,  step: 5   },
+    { key: 'parking',  label: 'Parking & Tolls',          hint: 'Monthly costs',                               monthly: true,  step: 10  },
+    { key: 'insurance',label: 'Rideshare Insurance',      hint: 'Additional coverage',                         monthly: true,  step: 20  },
+  ],
+}
+
 const platforms = ['Uber', 'Lyft', 'DoorDash', 'Uber Eats', 'Bolt', 'Deliveroo', 'Menulog', 'Skip The Dishes', 'Other']
 
-const COLORS = ['#6366f1', '#22d3ee', '#f59e0b', '#f43f5e']
+const COLORS = ['#6366f1', '#22d3ee', '#f59e0b', '#f43f5e', '#10b981', '#a855f7']
 
 const jsonLd = (country) => ({
   '@context': 'https://schema.org',
@@ -36,10 +79,29 @@ const jsonLd = (country) => ({
   description: `Calculate your real rideshare and delivery profit in ${country.toUpperCase()}. True hourly rate after fuel, wear & tear, and depreciation.`,
 })
 
+// ---------------------------------------------------------------------------
+// Toggle switch
+// ---------------------------------------------------------------------------
+function Toggle({ on, onChange }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!on)}
+      className={`relative inline-flex w-10 h-5 rounded-full transition-colors focus:outline-none ${on ? 'bg-green-500' : 'bg-slate-300'}`}
+      aria-pressed={on}
+    >
+      <span
+        className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${on ? 'translate-x-5' : 'translate-x-0'}`}
+      />
+    </button>
+  )
+}
+
 export default function RideProfitCalc({ country }) {
   const c = countries[country]
   const mr = mileageRates[country] || mileageRates.ca
   const isImperial = mr.unit === 'mile'
+  const expenseDefs = EXTRA_EXPENSES[country] || []
 
   const [revenue, setRevenue] = useState(1200)
   const [distance, setDistance] = useState(isImperial ? 600 : 900)
@@ -50,6 +112,28 @@ export default function RideProfitCalc({ country }) {
   const [hoursWorked, setHoursWorked] = useState(30)
   const [platform, setPlatform] = useState('Uber')
   const [view, setView] = useState('summary')
+  const [expOpen, setExpOpen] = useState(false)
+  const [expEnabled, setExpEnabled] = useState({})
+  const [expAmounts, setExpAmounts] = useState(
+    Object.fromEntries(expenseDefs.map(d => [d.key, 0]))
+  )
+
+  const toggleExp = (key, val) => setExpEnabled(prev => ({ ...prev, [key]: val }))
+  const setExpAmt = (key, val) => setExpAmounts(prev => ({ ...prev, [key]: val }))
+
+  const activeExpenses = expenseDefs.filter(d => expEnabled[d.key] && expAmounts[d.key] > 0)
+  const activeExpCount = activeExpenses.length
+
+  // Monthly extra expenses total (each item is monthly)
+  const monthlyExtraTotal = useMemo(() =>
+    expenseDefs
+      .filter(d => expEnabled[d.key])
+      .reduce((sum, d) => sum + (expAmounts[d.key] || 0), 0),
+    [expenseDefs, expEnabled, expAmounts]
+  )
+
+  // Weekly extra expenses (monthly / 4.33)
+  const weeklyExtraTotal = monthlyExtraTotal / 4.33
 
   const result = useMemo(() => {
     if (!revenue || !distance || !hoursWorked) return null
@@ -68,7 +152,7 @@ export default function RideProfitCalc({ country }) {
     const depreciation = distKm * 0.05
     // Platform fee approximation ~25% of gross
     const platformFee = revenue * 0.25
-    const totalCosts = fuelCost + wearTear + depreciation
+    const totalCosts = fuelCost + wearTear + depreciation + weeklyExtraTotal
     const netProfit = revenue - totalCosts
     const hourlyRate = netProfit / hoursWorked
 
@@ -78,11 +162,12 @@ export default function RideProfitCalc({ country }) {
     const annualTaxDeduction = taxDeduction * 52
 
     return {
-      revenue, fuelCost, wearTear, depreciation, platformFee, totalCosts,
+      revenue, fuelCost, wearTear, depreciation, platformFee,
+      weeklyExtraTotal, totalCosts,
       netProfit, hourlyRate, weeklyNet: netProfit, taxDeduction,
       annualNet, annualTaxDeduction, distKm,
     }
-  }, [revenue, distance, fuelConsumption, fuelPrice, hoursWorked, isImperial, mr.rate])
+  }, [revenue, distance, fuelConsumption, fuelPrice, hoursWorked, isImperial, mr.rate, weeklyExtraTotal])
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
@@ -105,6 +190,7 @@ export default function RideProfitCalc({ country }) {
     { name: 'Mileage Deduction', value: Math.round(result.taxDeduction) },
     { name: 'Platform Fees (est.)', value: Math.round(result.platformFee) },
     { name: 'Wear & Tear', value: Math.round(result.wearTear + result.depreciation) },
+    ...(result.weeklyExtraTotal > 0 ? [{ name: 'Additional Expenses', value: Math.round(result.weeklyExtraTotal) }] : []),
   ] : []
 
   const pageTitle = `${c.name} RideProfit Calculator — Real Uber/DoorDash Earnings | CalcWise`
@@ -123,7 +209,7 @@ export default function RideProfitCalc({ country }) {
           <h1 className="text-3xl font-display font-bold mb-2">
             {c.name} RideProfit Calculator
           </h1>
-          <p className="text-cw-gray">
+          <p className="text-slate-500">
             Find out what you actually earn driving for Uber, DoorDash, Deliveroo and more.
           </p>
           <div className="mt-2 inline-flex items-center gap-2 bg-cw-success/10 border border-cw-success/30 rounded-full px-4 py-1 text-xs text-cw-success">
@@ -133,36 +219,36 @@ export default function RideProfitCalc({ country }) {
 
         <CalcIntro intro="The RideProfit calculator shows your true earnings as a rideshare or delivery driver after all expenses. It accounts for fuel costs, mileage tax deductions, platform fees, and vehicle wear to reveal your real hourly rate." hiddenCost="Vehicle depreciation costs drivers $0.05-0.15/km" />
 
-        <div className="cw-card mb-6">
+        <div className="cw-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Platform</label>
+              <label className="block text-xs text-slate-500 mb-1">Platform</label>
               <select className="cw-input" value={platform} onChange={e => setPlatform(e.target.value)}>
                 {platforms.map(p => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Weekly Revenue ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Weekly Revenue ({c.symbol})</label>
               <NumericInput value={revenue} onChange={setRevenue} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">
+              <label className="block text-xs text-slate-500 mb-1">
                 Weekly Distance ({isImperial ? 'miles' : 'km'})
               </label>
               <NumericInput value={distance} onChange={setDistance} min={0} step={10} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Hours Worked per Week</label>
+              <label className="block text-xs text-slate-500 mb-1">Hours Worked per Week</label>
               <NumericInput value={hoursWorked} onChange={setHoursWorked} min={1} step={1} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">
+              <label className="block text-xs text-slate-500 mb-1">
                 {isImperial ? 'Fuel Efficiency (MPG)' : 'Fuel Consumption (L/100km)'}
               </label>
               <NumericInput value={fuelConsumption} onChange={setFuelConsumption} min={0.1} step={isImperial ? 1 : 0.5} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">
+              <label className="block text-xs text-slate-500 mb-1">
                 Fuel Price ({c.symbol}/{isImperial ? 'gallon' : 'litre'})
               </label>
               <NumericInput value={fuelPrice} onChange={setFuelPrice} min={0} step={0.01} prefix={c.symbol} />
@@ -170,14 +256,68 @@ export default function RideProfitCalc({ country }) {
           </div>
         </div>
 
-        <div className="flex gap-2 mb-4">
+        {/* Additional Expenses collapsible */}
+        {expenseDefs.length > 0 && (
+          <div className="cw-card mb-6">
+            <button
+              type="button"
+              onClick={() => setExpOpen(o => !o)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-slate-800">Additional Expenses</span>
+                {activeExpCount > 0 && (
+                  <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
+                    {activeExpCount} active · -{fmt0(monthlyExtraTotal)}/mo
+                  </span>
+                )}
+              </div>
+              {expOpen ? <ChevronUp size={18} className="text-slate-400" /> : <ChevronDown size={18} className="text-slate-400" />}
+            </button>
+
+            {expOpen && (
+              <div className="mt-5">
+                <p className="text-xs font-bold uppercase tracking-wider text-orange-600 mb-3">Monthly costs subtracted from profit</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {expenseDefs.map(d => (
+                    <div
+                      key={d.key}
+                      className={`border rounded-xl p-3 transition-colors ${expEnabled[d.key] ? 'border-orange-300 bg-orange-50' : 'border-slate-200 bg-white'}`}
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">{d.label}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">{d.hint}</p>
+                        </div>
+                        <Toggle on={!!expEnabled[d.key]} onChange={v => toggleExp(d.key, v)} />
+                      </div>
+                      {expEnabled[d.key] && (
+                        <div className="mt-2">
+                          <NumericInput
+                            label=""
+                            value={expAmounts[d.key] || 0}
+                            onChange={v => setExpAmt(d.key, v)}
+                            min={0}
+                            max={10000}
+                            step={d.step}
+                            prefix={c.symbol}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="cw-tabs mb-4">
           {['summary', 'chart', 'detailed'].map(v => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}
+              className={`cw-tab${view === v ? ' active' : ''}`}
             >
               {v}
             </button>
@@ -186,14 +326,29 @@ export default function RideProfitCalc({ country }) {
 
         {result && view === 'summary' && (
           <>
-            {/* True Hourly Rate — big highlighted metric */}
             <div className="cw-card mb-4 text-center py-6 border border-primary/30 bg-primary/5">
-              <p className="text-xs text-cw-gray uppercase tracking-widest mb-1">True Hourly Rate</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest mb-1">True Hourly Rate</p>
               <p className={`text-5xl font-display font-bold ${result.hourlyRate >= 15 ? 'text-cw-success' : result.hourlyRate >= 10 ? 'text-yellow-400' : 'text-cw-danger'}`}>
                 {fmt(result.hourlyRate)}
               </p>
-              <p className="text-xs text-cw-gray mt-2">After all expenses — {hoursWorked}h/week</p>
+              <p className="text-xs text-slate-500 mt-2">After all expenses — {hoursWorked}h/week</p>
             </div>
+            {activeExpenses.length > 0 && (
+              <div className="cw-card mb-4 border border-orange-500/30 bg-orange-500/5">
+                <p className="text-xs font-bold uppercase tracking-wider text-orange-600 mb-2">Additional Monthly Expenses</p>
+                <div className="space-y-1">
+                  {activeExpenses.map(d => (
+                    <div key={d.key} className="flex items-center justify-between text-sm">
+                      <span className="text-orange-700 font-medium">{d.label}</span>
+                      <span className="text-slate-700 font-semibold">-{fmt0(expAmounts[d.key] || 0)}/mo</span>
+                    </div>
+                  ))}
+                  <div className="pt-2 mt-1 border-t border-orange-100 text-xs text-orange-700 font-semibold">
+                    Weekly impact: -{fmt(weeklyExtraTotal)}/wk
+                  </div>
+                </div>
+              </div>
+            )}
             <ResultSimple
               metrics={[
                 { label: 'Weekly Net Profit', value: fmt0(result.netProfit) },
@@ -206,9 +361,8 @@ export default function RideProfitCalc({ country }) {
 
         {result && view === 'chart' && (
           <div className="space-y-8">
-            {/* Revenue vs Expenses vs Net Profit Bar Chart */}
             <div className="cw-card">
-              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4">Revenue vs Expenses vs Net Profit</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Revenue vs Expenses vs Net Profit</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={barData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
@@ -223,9 +377,8 @@ export default function RideProfitCalc({ country }) {
               </ResponsiveContainer>
             </div>
 
-            {/* Expense Breakdown Pie */}
             <div className="cw-card">
-              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4">Cost & Deduction Breakdown</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Cost & Deduction Breakdown</h3>
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
                   <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
@@ -239,9 +392,8 @@ export default function RideProfitCalc({ country }) {
               </ResponsiveContainer>
             </div>
 
-            {/* True Hourly Rate callout in chart view */}
             <div className="cw-card text-center py-5 border border-primary/30 bg-primary/5">
-              <p className="text-xs text-cw-gray uppercase tracking-widest mb-1">True Hourly Rate</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest mb-1">True Hourly Rate</p>
               <p className={`text-4xl font-display font-bold ${result.hourlyRate >= 15 ? 'text-cw-success' : result.hourlyRate >= 10 ? 'text-yellow-400' : 'text-cw-danger'}`}>
                 {fmt(result.hourlyRate)}
               </p>
@@ -257,6 +409,7 @@ export default function RideProfitCalc({ country }) {
               { label: 'Fuel Cost', value: `-${fmt(result.fuelCost)}` },
               { label: 'Wear & Tear', value: `-${fmt(result.wearTear)}`, sub: `${isImperial ? (result.distKm / 1.60934).toFixed(0) : result.distKm.toFixed(0)}${isImperial ? ' mi' : 'km'} × ${c.symbol}0.08` },
               { label: 'Depreciation', value: `-${fmt(result.depreciation)}`, sub: `${isImperial ? (result.distKm / 1.60934).toFixed(0) : result.distKm.toFixed(0)}${isImperial ? ' mi' : 'km'} × ${c.symbol}0.05` },
+              ...(result.weeklyExtraTotal > 0 ? [{ label: 'Additional Expenses (weekly)', value: `-${fmt(result.weeklyExtraTotal)}`, sub: `${fmt0(monthlyExtraTotal)}/mo ÷ 4.33` }] : []),
               { label: 'Total Costs', value: `-${fmt(result.totalCosts)}`, bold: true },
               { label: 'Net Profit', value: fmt(result.netProfit), bold: true },
               { label: 'Real Hourly Rate', value: fmt(result.hourlyRate), bold: true },
@@ -268,7 +421,7 @@ export default function RideProfitCalc({ country }) {
         )}
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter your weekly numbers above to see your real profit.
           </div>
         )}

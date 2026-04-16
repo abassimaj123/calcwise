@@ -14,16 +14,16 @@ export default function About() {
       <div className="max-w-3xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-display font-bold mb-4">About CalcWise</h1>
-          <p className="text-cw-gray text-lg">Financial clarity for everyone, everywhere.</p>
+          <p className="text-slate-500 text-lg">Financial clarity for everyone, everywhere.</p>
         </div>
 
         <div className="space-y-8">
           <div className="cw-card">
             <h2 className="text-xl font-display font-bold mb-4 text-primary">Our Mission</h2>
-            <p className="text-cw-gray leading-relaxed">
+            <p className="text-slate-500 leading-relaxed">
               CalcWise was built on a simple belief: everyone deserves to understand the true cost of their financial decisions — before they sign anything. Banks and lenders show you the number they want you to see. We show you the full picture.
             </p>
-            <p className="text-cw-gray leading-relaxed mt-4">
+            <p className="text-slate-500 leading-relaxed mt-4">
               From mortgage amortization to take-home salary to real rideshare profits, CalcWise gives you accurate, transparent calculations with zero signup required. All processing happens in your browser — we never see your data.
             </p>
           </div>
@@ -40,7 +40,7 @@ export default function About() {
                   <span className="text-2xl">{c.flag}</span>
                   <div>
                     <p className="font-semibold text-sm">{c.name}</p>
-                    <p className="text-xs text-cw-gray">{c.currency}</p>
+                    <p className="text-xs text-slate-500">{c.currency}</p>
                   </div>
                 </Link>
               ))}
@@ -49,7 +49,7 @@ export default function About() {
 
           <div className="cw-card">
             <h2 className="text-xl font-display font-bold mb-4 text-primary">What Makes Us Different</h2>
-            <ul className="space-y-3 text-cw-gray">
+            <ul className="space-y-3 text-slate-500">
               {[
                 { icon: '🔒', text: 'No account, no data collection — all calculations run locally in your browser' },
                 { icon: '🌍', text: '6 countries with country-specific rules: CMHC, SDLT, CPP, USC, LMI and more' },
@@ -68,13 +68,13 @@ export default function About() {
 
           <div className="cw-card">
             <h2 className="text-xl font-display font-bold mb-4 text-primary">Disclaimer</h2>
-            <p className="text-cw-gray text-sm leading-relaxed">
+            <p className="text-slate-500 text-sm leading-relaxed">
               CalcWise calculators are provided for informational and educational purposes only. Results are estimates based on the inputs you provide and publicly available rate information. They do not constitute financial, tax, legal or investment advice.
             </p>
-            <p className="text-cw-gray text-sm leading-relaxed mt-3">
+            <p className="text-slate-500 text-sm leading-relaxed mt-3">
               Always consult a qualified financial advisor, mortgage broker, tax professional or legal counsel before making financial decisions. Rates, tax laws and regulations change frequently — always verify with current official sources.
             </p>
-            <p className="text-cw-gray text-sm leading-relaxed mt-3">
+            <p className="text-slate-500 text-sm leading-relaxed mt-3">
               CalcWise is not affiliated with, endorsed by, or connected to any bank, lender, government agency, or financial institution.
             </p>
           </div>

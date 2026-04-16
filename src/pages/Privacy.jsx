@@ -12,10 +12,10 @@ export default function Privacy() {
       <div className="max-w-3xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-display font-bold mb-4">Privacy Policy</h1>
-          <p className="text-cw-gray">Last updated: January 1, 2026</p>
+          <p className="text-slate-500">Last updated: January 1, 2026</p>
         </div>
 
-        <div className="space-y-6 text-cw-gray">
+        <div className="space-y-6 text-slate-500">
 
           <div className="cw-card">
             <h2 className="text-xl font-semibold text-white mb-3">1. Overview</h2>

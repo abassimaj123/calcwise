@@ -144,7 +144,7 @@ export default function StampDutyCalc() {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">Stamp Duty Calculator</h1>
-          <p className="text-cw-gray">Calculate your UK Stamp Duty Land Tax (SDLT) — April 2025 rates.</p>
+          <p className="text-slate-500">Calculate your UK Stamp Duty Land Tax (SDLT) — April 2025 rates.</p>
         </div>
 
         <CalcIntro
@@ -155,11 +155,11 @@ export default function StampDutyCalc() {
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Property Price ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Property Price ({c.symbol})</label>
               <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Buyer Type</label>
+              <label className="block text-xs text-slate-500 mb-1">Buyer Type</label>
               <select className="cw-input" value={buyerType} onChange={e => setBuyerType(e.target.value)}>
                 {buyerTypes.map(t => (
                   <option key={t.value} value={t.value}>{t.label}</option>
@@ -169,23 +169,21 @@ export default function StampDutyCalc() {
           </div>
 
           {buyerType === 'ftb' && (
-            <div className="mt-3 p-3 bg-primary/10 rounded-lg text-xs text-cw-gray">
+            <div className="mt-3 p-3 bg-primary/10 rounded-lg text-xs text-slate-500">
               FTB relief: 0% up to £425,000; 5% on £425k–£625k. No relief above £625,000 — standard rates apply.
             </div>
           )}
           {buyerType === 'additional' && (
-            <div className="mt-3 p-3 bg-amber-500/10 rounded-lg text-xs text-cw-gray">
+            <div className="mt-3 p-3 bg-amber-500/10 rounded-lg text-xs text-slate-500">
               Additional property surcharge: standard SDLT rates + 3% on every band.
             </div>
           )}
         </div>
 
-        <div className="flex gap-2 mb-4">
+        <div className="cw-tabs mb-4">
           {['summary', 'bands', 'chart'].map(v => (
             <button key={v} onClick={() => setTab(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                tab === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}>
+              className={`cw-tab${tab === v ? ' active' : ''}`}>
               {v}
             </button>
           ))}
@@ -239,7 +237,7 @@ export default function StampDutyCalc() {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="cw-card text-center py-6 text-cw-gray text-sm">No SDLT due at this price.</div>
+              <div className="cw-card text-center py-6 text-slate-500 text-sm">No SDLT due at this price.</div>
             )}
 
             <div className="cw-card">
@@ -269,12 +267,12 @@ export default function StampDutyCalc() {
         )}
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter a property price above to calculate your stamp duty.
           </div>
         )}
 
-        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-cw-gray">
+        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-slate-500">
           ℹ️ Rates are for England and Northern Ireland (SDLT). Scotland uses LBTT; Wales uses LTT — different rates apply. Rates effective April 2025.
         </div>
 

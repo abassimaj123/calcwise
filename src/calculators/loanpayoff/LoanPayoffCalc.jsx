@@ -152,7 +152,7 @@ export default function LoanPayoffCalc({ country = 'us' }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">Loan Payoff Calculator</h1>
-          <p className="text-cw-gray">See how extra payments accelerate your payoff and save interest.</p>
+          <p className="text-slate-500">See how extra payments accelerate your payoff and save interest.</p>
         </div>
 
         <CalcIntro
@@ -163,38 +163,36 @@ export default function LoanPayoffCalc({ country = 'us' }) {
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Loan Balance ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Loan Balance ({c.symbol})</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Annual Interest Rate (APR %)</label>
+              <label className="block text-xs text-slate-500 mb-1">Annual Interest Rate (APR %)</label>
               <NumericInput value={apr} onChange={setApr} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Regular Monthly Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Regular Monthly Payment ({c.symbol})</label>
               <NumericInput value={minPayment} onChange={setMinPayment} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Extra Monthly Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">Extra Monthly Payment ({c.symbol})</label>
               <NumericInput value={extraPayment} onChange={setExtraPayment} min={0} step={50} prefix={c.symbol} />
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-4">
+        <div className="cw-tabs mb-4">
           {TABS.map(v => (
             <button key={v} onClick={() => setTab(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                tab === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}>
+              className={`cw-tab${tab === v ? ' active' : ''}`}>
               {v}
             </button>
           ))}
         </div>
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter valid loan details above to see your payoff plan.
           </div>
         )}
@@ -280,11 +278,11 @@ export default function LoanPayoffCalc({ country = 'us' }) {
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-slate-200">
-                  <th className="text-left py-2 pr-3 text-cw-gray font-medium">Month</th>
-                  <th className="text-right py-2 pr-3 text-cw-gray font-medium">Payment</th>
-                  <th className="text-right py-2 pr-3 text-cw-gray font-medium">Principal</th>
-                  <th className="text-right py-2 pr-3 text-cw-gray font-medium">Interest</th>
-                  <th className="text-right py-2 text-cw-gray font-medium">Balance</th>
+                  <th className="text-left py-2 pr-3 text-slate-500 font-medium">Month</th>
+                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">Payment</th>
+                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">Principal</th>
+                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">Interest</th>
+                  <th className="text-right py-2 text-slate-500 font-medium">Balance</th>
                 </tr>
               </thead>
               <tbody>

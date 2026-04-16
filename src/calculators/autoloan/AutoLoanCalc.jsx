@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { countries } from '../../config/countries'
+import { AUTOLOAN_DEFAULTS } from '../../config/calcDefaults'
+import { AUTOLOAN_RATES_2026 } from '../../config/rates2026'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -37,20 +39,12 @@ function buildSchedule(loanAmount, apr, termMonths) {
   return rows
 }
 
-const defaults = {
-  us: { price: 35000, down: 5000, tradeIn: 3000, apr: 7.5, term: 60, taxRate: 7.0 },
-  ca: { price: 40000, down: 5000, tradeIn: 3000, apr: 6.9, term: 60, taxRate: 13.0 },
-  uk: { price: 25000, down: 3000, tradeIn: 2000, apr: 8.5, term: 48, taxRate: 0 },
-  au: { price: 40000, down: 5000, tradeIn: 3000, apr: 7.5, term: 60, taxRate: 0 },
-  ie: { price: 30000, down: 5000, tradeIn: 2000, apr: 7.9, term: 60, taxRate: 0 },
-  nz: { price: 35000, down: 5000, tradeIn: 2000, apr: 9.5, term: 60, taxRate: 0 },
-}
 
 const termOptions = [24, 36, 48, 60, 72, 84]
 
 export default function AutoLoanCalc({ country }) {
   const c = countries[country]
-  const d = defaults[country] || defaults.us
+  const d = AUTOLOAN_DEFAULTS[country] || AUTOLOAN_DEFAULTS.us
 
   const [price, setPrice] = useState(d.price)
   const [down, setDown] = useState(d.down)
@@ -89,11 +83,7 @@ export default function AutoLoanCalc({ country }) {
     balance: Math.round(r.balance),
   }))
 
-  const aprHint = country === 'us'
-    ? '2026 avg: 7.5%'
-    : country === 'ca'
-    ? '2026 avg: 6.9%'
-    : '2026 avg: 8%'
+  const aprHint = (AUTOLOAN_RATES_2026[country] || AUTOLOAN_RATES_2026.us).hint
 
   const pageTitle = `${c.name} Auto Loan Calculator 2026 | Monthly Payment | CalcWise`
 
@@ -119,7 +109,7 @@ export default function AutoLoanCalc({ country }) {
           <h1 className="text-3xl font-display font-bold mb-2">
             {c.name} Auto Loan Calculator
           </h1>
-          <p className="text-cw-gray">Calculate your monthly car payment, total interest and true cost.</p>
+          <p className="text-slate-500">Calculate your monthly car payment, total interest and true cost.</p>
         </div>
 
         <div className="cw-card mb-6">
@@ -193,14 +183,12 @@ export default function AutoLoanCalc({ country }) {
           </div>
         </div>
 
-        <div className="flex gap-2 mb-4">
+        <div className="cw-tabs mb-4">
           {['summary', 'chart', 'schedule'].map(v => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
-              }`}
+              className={`cw-tab${view === v ? ' active' : ''}`}
             >
               {v}
             </button>
@@ -218,11 +206,11 @@ export default function AutoLoanCalc({ country }) {
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <div className="cw-card text-center">
-                <p className="text-cw-gray text-xs uppercase tracking-wider mb-1">Bi-Weekly Payment</p>
+                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Bi-Weekly Payment</p>
                 <p className="font-display font-bold text-2xl text-white">{fmtD(result.biWeekly)}</p>
               </div>
               <div className="cw-card text-center">
-                <p className="text-cw-gray text-xs uppercase tracking-wider mb-1">Loan Amount</p>
+                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Loan Amount</p>
                 <p className="font-display font-bold text-2xl text-white">{fmt(result.loanAmount)}</p>
               </div>
             </div>
@@ -232,7 +220,7 @@ export default function AutoLoanCalc({ country }) {
         {result && view === 'chart' && (
           <div className="cw-card space-y-8">
             <div>
-              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4 text-center">Principal vs Interest</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">Principal vs Interest</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
                   <Pie
@@ -254,7 +242,7 @@ export default function AutoLoanCalc({ country }) {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4 text-center">Loan Balance Over Time</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">Loan Balance Over Time</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                   <defs>
@@ -276,7 +264,7 @@ export default function AutoLoanCalc({ country }) {
 
         {result && view === 'schedule' && (
           <div className="cw-card">
-            <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4">Amortization Schedule</h3>
+            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Amortization Schedule</h3>
             <div className="max-h-96 overflow-y-auto rounded-lg border border-white/10">
               <table className="w-full text-sm">
                 <thead className="sticky top-0">
@@ -308,7 +296,7 @@ export default function AutoLoanCalc({ country }) {
         )}
 
         {!result && (
-          <div className="cw-card text-center py-8 text-cw-gray">
+          <div className="cw-card text-center py-8 text-slate-500">
             Enter valid values above to see your results.
           </div>
         )}

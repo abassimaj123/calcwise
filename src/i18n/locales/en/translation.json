@@ -4,81 +4,126 @@
     "lang": "EN"
   },
   "hero": {
-    "title": "Free Financial Calculators",
-    "titleHighlight": "for 6 Countries",
-    "subtitle": "Mortgage payments, taxes, salary, auto loans and more. Accurate, transparent, free. What your bank doesn't show you.",
+    "title": "Financial Calculators That Show",
+    "titleHighlight": "What Banks Hide",
+    "subtitle": "Mortgage, taxes, salary, auto loans — with all hidden costs revealed. 6 countries, 2026 rates, zero signup.",
     "cta_mortgage": "Mortgage Calculator",
-    "cta_tax": "Tax Calculator"
+    "cta_tax": "Tax Calculator",
+    "badge": "6 Countries · 47+ Calculators · Free Forever"
   },
   "home": {
     "chooseCountry": "Choose Your Country",
     "calculators": "calculators",
-    "popular": "Most Popular Calculators",
+    "popular": "Most Used Calculators",
     "howItWorks": "How It Works",
     "step1Title": "Choose your country",
-    "step1Desc": "Select US, CA, UK, AU, IE or NZ for country-specific calculations.",
+    "step1Desc": "Select US, CA, UK, AU, IE or NZ for country-specific rates, tax brackets, and regulations.",
     "step2Title": "Enter your numbers",
-    "step2Desc": "Input your details. All calculations happen instantly in your browser.",
-    "step3Title": "Get full breakdown",
-    "step3Desc": "See simple results or toggle to detailed view with full amortization."
+    "step2Desc": "Input your details. Results update instantly — no submissions, no waiting.",
+    "step3Title": "See what others miss",
+    "step3Desc": "Simple view for quick answers. Detailed view reveals hidden costs, amortization, and full breakdowns.",
+    "whyTitle": "Why CalcWise?",
+    "whyAccurateTitle": "Accurate 2026 Rates",
+    "whyAccurateDesc": "Updated tax brackets, mortgage rates, and contribution limits for all 6 countries.",
+    "whyInstantTitle": "Instant Results",
+    "whyInstantDesc": "Real-time calculations as you type. No page reloads, no email required.",
+    "whyHiddenTitle": "Hidden Costs Revealed",
+    "whyHiddenDesc": "We show PMI, CMHC, group insurance, union dues, property tax, and costs your bank leaves out.",
+    "trustAccuracy": "Bank-level accuracy",
+    "trustInstant": "Instant results",
+    "trustCountries": "6 countries",
+    "trustCalcs": "47+ calculators"
   },
   "countryHub": {
     "financialCalcs": "Financial Calculators",
     "subtitle": "free calculators — all updated for 2026",
-    "updated": "Updated 2026"
+    "updated": "Updated 2026",
+    "popular": "Popular"
   },
   "stats": {
     "calculators": "Calculators",
     "countries": "Countries",
-    "taxRates": "Tax Rates",
-    "noSignup": "Free"
+    "taxRates": "2026 Rates",
+    "noSignup": "Free · No Signup"
   },
   "calc": {
     "simple": "Simple",
     "detailed": "Detailed",
+    "summary": "Summary",
+    "chart": "Chart",
+    "schedule": "Schedule",
     "monthlyPayment": "Monthly Payment",
     "totalInterest": "Total Interest",
     "totalCost": "Total Cost",
-    "netAnnual": "Net Annual Income",
+    "netAnnual": "Annual Net Income",
     "monthlyTakeHome": "Monthly Take-Home",
     "effectiveRate": "Effective Tax Rate",
-    "enterValid": "Enter valid values above to see your results.",
-    "enterIncome": "Enter your annual income above to see the breakdown."
+    "enterValid": "Enter your values above to see results.",
+    "enterIncome": "Enter your income above to see the full breakdown.",
+    "optionalDeductions": "Optional Deductions",
+    "optionalCosts": "Optional Costs",
+    "preTax": "Pre-tax",
+    "postTax": "After-tax",
+    "preTaxDesc": "Reduce your taxable income",
+    "postTaxDesc": "Deducted from net pay",
+    "active": "active",
+    "hiddenCostRevealed": "Hidden cost revealed",
+    "trueMonthly": "True Monthly Cost",
+    "paymentStrategy": "Payment Strategy",
+    "minPayment": "Minimum Payment",
+    "fixedAmount": "Fixed Amount",
+    "payOffIn": "Pay Off In",
+    "extraPayment": "Extra Monthly Payment",
+    "payOffSooner": "You'll pay off {months} months sooner and save {amount} in interest.",
+    "benchmarkBelow": "Your rate is {pct}% below the 2026 average — good position.",
+    "benchmarkAbove": "Your rate is {pct}% above the 2026 average — consider shopping around.",
+    "alertPMI": "PMI applies when down payment is under 20%.",
+    "alertCMHC": "CMHC insurance required when down payment is under 20%.",
+    "shareResults": "Share Results",
+    "copyLink": "Copy link",
+    "print": "Print",
+    "resetDefaults": "Reset"
   },
   "mortgage": {
     "title": "Mortgage Calculator",
-    "desc": "Calculate your monthly payment, total interest and amortization schedule.",
+    "desc": "Monthly payment, true total cost, amortization schedule — with property tax, insurance, and PMI/CMHC.",
     "homePrice": "Home Price",
     "downPayment": "Down Payment",
-    "interestRate": "Annual Interest Rate (%)",
-    "loanTerm": "Loan Term (years)",
+    "interestRate": "Annual Interest Rate",
+    "loanTerm": "Loan Term",
     "purchasePrice": "Purchase Price",
     "loanAmount": "Loan Amount",
     "ltvRatio": "LTV Ratio",
     "totalPayments": "Total of All Payments",
     "amortTitle": "Principal vs Interest Over Time",
-    "pieTitle": "Total Cost Breakdown"
+    "pieTitle": "Total Cost Breakdown",
+    "piti": "P+I+T+I Monthly",
+    "closingCosts": "Closing Costs (est.)",
+    "trueCost": "True Cost of Ownership"
   },
   "tax": {
     "title": "Tax Calculator",
-    "desc": "Calculate your take-home pay and effective tax rate. Updated for 2025-26.",
+    "desc": "Take-home pay, effective rate, and full breakdown by income source. Updated 2026.",
     "annualIncome": "Annual Gross Income",
     "enterGross": "Enter your gross (before-tax) annual income",
-    "pieTitle": "Income Distribution",
+    "pieTitle": "Where Your Money Goes",
     "barTitle": "Tax Components",
-    "disclaimer": "These are estimates based on standard deductions and average rates. Actual tax may differ based on filing status, deductions, credits, and jurisdiction. Consult a tax professional for advice."
+    "disclaimer": "Estimates based on standard deductions and average rates for 2026. Actual tax may vary. Consult a tax professional for personalized advice."
   },
   "footer": {
-    "tagline": "Free financial calculators for 6 countries. What your bank doesn't show you.",
+    "tagline": "Free financial calculators for 6 countries. We show what banks leave out.",
     "countries": "Countries",
     "topCalcs": "Top Calculators",
     "legal": "Legal",
-    "disclaimer": "For informational purposes only. Not financial advice.",
-    "covering": "Covering US · CA · UK · AU · IE · NZ"
+    "disclaimer": "For informational purposes only. Not financial advice. Verify with a qualified professional.",
+    "covering": "Covering US · CA · UK · AU · IE · NZ",
+    "methodology": "All calculations use official 2026 tax brackets, government rate tables, and lender guidelines. No data is stored or transmitted."
   },
   "download": {
     "title": "Get the full experience on mobile",
+    "subtitle": "Charts, amortization tables, and all hidden costs — on the go.",
     "ios": "App Store",
-    "android": "Google Play"
+    "android": "Google Play",
+    "comingSoon": "Coming Soon"
   }
 }

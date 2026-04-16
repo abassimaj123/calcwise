@@ -40,19 +40,19 @@ export default function Contact() {
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-display font-bold mb-4">Contact Us</h1>
-          <p className="text-cw-gray">Bug report, feature request, or just saying hello — we read everything.</p>
+          <p className="text-slate-500">Bug report, feature request, or just saying hello — we read everything.</p>
         </div>
 
         {submitted ? (
           <div className="cw-card text-center py-12">
             <div className="text-6xl mb-6">✅</div>
             <h2 className="text-2xl font-display font-bold mb-3">Message Sent!</h2>
-            <p className="text-cw-gray">Thanks for reaching out. We'll get back to you within 2 business days.</p>
+            <p className="text-slate-500">Thanks for reaching out. We'll get back to you within 2 business days.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="cw-card space-y-5">
             <div>
-              <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Your Name</label>
+              <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">Your Name</label>
               <input
                 type="text"
                 name="name"
@@ -62,7 +62,7 @@ export default function Contact() {
               />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Email Address</label>
+              <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">Email Address</label>
               <input
                 type="email"
                 name="email"
@@ -72,7 +72,7 @@ export default function Contact() {
               />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Subject</label>
+              <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">Subject</label>
               <select name="subject" className="cw-input">
                 <option value="bug">Bug Report</option>
                 <option value="feature">Feature Request</option>
@@ -81,7 +81,7 @@ export default function Contact() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Message</label>
+              <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">Message</label>
               <textarea
                 name="message"
                 required
@@ -97,7 +97,7 @@ export default function Contact() {
             >
               {submitting ? 'Sending...' : 'Send Message'}
             </button>
-            <p className="text-xs text-cw-gray text-center">
+            <p className="text-xs text-slate-500 text-center">
               Messages are processed via Formspree. By submitting, you agree to our{' '}
               <a href="#/privacy" className="text-primary hover:text-accent">Privacy Policy</a>.
             </p>
