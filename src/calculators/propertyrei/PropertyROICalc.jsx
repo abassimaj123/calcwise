@@ -4,6 +4,7 @@ import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 function calcPropertyROI({ purchasePrice, downPayment, monthlyRent, expensePct, managementPct, vacancyRate, mortgageRate }) {
   if (purchasePrice <= 0 || monthlyRent <= 0) return null
@@ -85,32 +86,32 @@ export default function PropertyROICalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Purchase Price ({c.symbol})</label>
-              <input type="number" className="cw-input" value={price} min={0} onChange={e => setPrice(+e.target.value)} />
+              <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Down Payment ({c.symbol})</label>
-              <input type="number" className="cw-input" value={down} min={0} onChange={e => setDown(+e.target.value)} />
+              <NumericInput value={down} onChange={setDown} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Monthly Rent ({c.symbol})</label>
-              <input type="number" className="cw-input" value={rent} min={0} onChange={e => setRent(+e.target.value)} />
+              <NumericInput value={rent} onChange={setRent} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Mortgage Rate (%)</label>
-              <input type="number" step="0.1" className="cw-input" value={mortgageRate} min={0} onChange={e => setMortgageRate(+e.target.value)} />
+              <NumericInput value={mortgageRate} onChange={setMortgageRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Operating Expenses (% of rent)</label>
-              <input type="number" step="1" className="cw-input" value={expenses} min={0} max={100} onChange={e => setExpenses(+e.target.value)} />
+              <NumericInput value={expenses} onChange={setExpenses} min={0} max={100} step={1} suffix="%" />
               <p className="text-xs text-cw-gray mt-1">Taxes, insurance, maintenance</p>
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Property Mgmt (% of rent)</label>
-              <input type="number" step="1" className="cw-input" value={management} min={0} max={100} onChange={e => setManagement(+e.target.value)} />
+              <NumericInput value={management} onChange={setManagement} min={0} max={100} step={1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Vacancy Rate (%)</label>
-              <input type="number" step="1" className="cw-input" value={vacancy} min={0} max={100} onChange={e => setVacancy(+e.target.value)} />
+              <NumericInput value={vacancy} onChange={setVacancy} min={0} max={100} step={1} suffix="%" />
             </div>
           </div>
         </div>

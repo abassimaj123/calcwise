@@ -5,6 +5,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import NumericInput from '../../components/NumericInput'
 
 function calcAutoLoan({ vehiclePrice, downPayment, tradeIn, apr, termMonths, salesTaxRate }) {
   const taxAmount = vehiclePrice * (salesTaxRate / 100)
@@ -75,19 +76,19 @@ export default function AutoLoanCalc({ country }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Vehicle Price ({c.symbol})</label>
-              <input type="number" className="cw-input" value={price} min={0} onChange={e => setPrice(+e.target.value)} />
+              <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Down Payment ({c.symbol})</label>
-              <input type="number" className="cw-input" value={down} min={0} onChange={e => setDown(+e.target.value)} />
+              <NumericInput value={down} onChange={setDown} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Trade-In Value ({c.symbol})</label>
-              <input type="number" className="cw-input" value={tradeIn} min={0} onChange={e => setTradeIn(+e.target.value)} />
+              <NumericInput value={tradeIn} onChange={setTradeIn} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">APR (%)</label>
-              <input type="number" step="0.1" className="cw-input" value={apr} min={0} onChange={e => setApr(+e.target.value)} />
+              <NumericInput value={apr} onChange={setApr} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Loan Term</label>
@@ -101,15 +102,7 @@ export default function AutoLoanCalc({ country }) {
               <label className="block text-xs text-cw-gray mb-1">
                 {country === 'ca' ? 'HST/GST+PST (%)' : (country === 'uk' || country === 'au' || country === 'ie' || country === 'nz') ? 'Tax (included in price)' : 'Sales Tax (%)'}
               </label>
-              <input
-                type="number"
-                step="0.1"
-                className="cw-input"
-                value={taxRate}
-                min={0}
-                disabled={country === 'uk' || country === 'au' || country === 'ie' || country === 'nz'}
-                onChange={e => setTaxRate(+e.target.value)}
-              />
+              <NumericInput value={taxRate} onChange={setTaxRate} min={0} step={0.1} suffix="%" />
             </div>
           </div>
         </div>

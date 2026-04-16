@@ -4,6 +4,7 @@ import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 // SDLT rates as of April 2025
 function calcSDLT({ price, buyerType }) {
@@ -116,14 +117,7 @@ export default function StampDutyCalc() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Property Price ({c.symbol})</label>
-              <input
-                type="number"
-                className="cw-input"
-                value={price}
-                min={0}
-                step={1000}
-                onChange={e => setPrice(+e.target.value)}
-              />
+              <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Buyer Type</label>

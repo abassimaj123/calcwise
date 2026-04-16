@@ -4,6 +4,7 @@ import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 function calcRefinance({ currentBalance, currentRate, remainingMonths, newRate, newTermYears, closingCosts }) {
   const currentMonthlyRate = currentRate / 100 / 12
@@ -81,11 +82,11 @@ export default function RefinanceCalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Outstanding Balance ({c.symbol})</label>
-              <input type="number" className="cw-input" value={balance} min={0} onChange={e => setBalance(+e.target.value)} />
+              <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Current Rate (%)</label>
-              <input type="number" step="0.1" className="cw-input" value={currentRate} min={0} onChange={e => setCurrentRate(+e.target.value)} />
+              <NumericInput value={currentRate} onChange={setCurrentRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Remaining Term (years)</label>
@@ -99,7 +100,7 @@ export default function RefinanceCalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">New Rate (%)</label>
-              <input type="number" step="0.1" className="cw-input" value={newRate} min={0} onChange={e => setNewRate(+e.target.value)} />
+              <NumericInput value={newRate} onChange={setNewRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">New Term (years)</label>
@@ -109,7 +110,7 @@ export default function RefinanceCalc({ country = 'us' }) {
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Closing Costs ({c.symbol})</label>
-              <input type="number" className="cw-input" value={closingCosts} min={0} onChange={e => setClosingCosts(+e.target.value)} />
+              <NumericInput value={closingCosts} onChange={setClosingCosts} min={0} step={100} prefix={c.symbol} />
             </div>
           </div>
         </div>

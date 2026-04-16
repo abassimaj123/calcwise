@@ -5,6 +5,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import NumericInput from '../../components/NumericInput'
 
 // Mileage deduction rates 2025
 const mileageRates = {
@@ -110,29 +111,29 @@ export default function RideProfitCalc({ country }) {
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Weekly Revenue ({c.symbol})</label>
-              <input type="number" className="cw-input" value={revenue} min={0} onChange={e => setRevenue(+e.target.value)} />
+              <NumericInput value={revenue} onChange={setRevenue} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">
                 Weekly Distance ({isImperial ? 'miles' : 'km'})
               </label>
-              <input type="number" className="cw-input" value={distance} min={0} onChange={e => setDistance(+e.target.value)} />
+              <NumericInput value={distance} onChange={setDistance} min={0} step={10} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Hours Worked per Week</label>
-              <input type="number" className="cw-input" value={hoursWorked} min={1} onChange={e => setHoursWorked(+e.target.value)} />
+              <NumericInput value={hoursWorked} onChange={setHoursWorked} min={1} step={1} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">
                 {isImperial ? 'Fuel Efficiency (MPG)' : 'Fuel Consumption (L/100km)'}
               </label>
-              <input type="number" step="0.5" className="cw-input" value={fuelConsumption} min={0.1} onChange={e => setFuelConsumption(+e.target.value)} />
+              <NumericInput value={fuelConsumption} onChange={setFuelConsumption} min={0.1} step={isImperial ? 1 : 0.5} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">
                 Fuel Price ({c.symbol}/{isImperial ? 'gallon' : 'litre'})
               </label>
-              <input type="number" step="0.01" className="cw-input" value={fuelPrice} min={0} onChange={e => setFuelPrice(+e.target.value)} />
+              <NumericInput value={fuelPrice} onChange={setFuelPrice} min={0} step={0.01} prefix={c.symbol} />
             </div>
           </div>
         </div>

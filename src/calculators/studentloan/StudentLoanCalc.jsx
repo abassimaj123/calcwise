@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 const POVERTY_LINE = 15060  // 2025 federal poverty line, family of 1
 const POVERTY_MULTIPLIERS = { 1: 1, 2: 1.35, 3: 1.62, 4: 1.89 }
@@ -79,15 +80,15 @@ export default function StudentLoanCalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Loan Balance ($)</label>
-              <input type="number" className="cw-input" value={balance} min={0} onChange={e => setBalance(+e.target.value)} />
+              <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix="$" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Interest Rate (%)</label>
-              <input type="number" step="0.01" className="cw-input" value={rate} min={0} onChange={e => setRate(+e.target.value)} />
+              <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Annual Gross Income ($)</label>
-              <input type="number" className="cw-input" value={income} min={0} onChange={e => setIncome(+e.target.value)} />
+              <NumericInput value={income} onChange={setIncome} min={0} step={1000} prefix="$" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Family Size</label>

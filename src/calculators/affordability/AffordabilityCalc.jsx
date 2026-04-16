@@ -4,6 +4,7 @@ import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 function calcAffordabilityUS({ grossIncome, monthlyDebts, downPayment, rate, loanType }) {
   const frontEndLimits = { conventional: 0.28, fha: 0.31, va: 0.41 }
@@ -211,21 +212,19 @@ export default function AffordabilityCalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Annual Gross Income ({c.symbol})</label>
-              <input type="number" className="cw-input" value={grossIncome} min={0} step={1000} onChange={e => setGrossIncome(+e.target.value)} />
+              <NumericInput value={grossIncome} onChange={setGrossIncome} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Monthly Debts ({c.symbol})</label>
-              <input type="number" className="cw-input" value={monthlyDebts} min={0}
-                onChange={e => setMonthlyDebts(+e.target.value)}
-                placeholder="Car loan, student loan, etc." />
+              <NumericInput value={monthlyDebts} onChange={setMonthlyDebts} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Down Payment ({c.symbol})</label>
-              <input type="number" className="cw-input" value={downPayment} min={0} onChange={e => setDownPayment(+e.target.value)} />
+              <NumericInput value={downPayment} onChange={setDownPayment} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Mortgage Rate (%)</label>
-              <input type="number" step="0.1" className="cw-input" value={rate} min={0} onChange={e => setRate(+e.target.value)} />
+              <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             {country === 'us' && (
               <div className="sm:col-span-2">

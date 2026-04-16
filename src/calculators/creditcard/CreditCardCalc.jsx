@@ -4,6 +4,7 @@ import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 function calcCreditCard({ balance, apr, minType, minPct, minFixed, extraPayment }) {
   const monthlyRate = apr / 100 / 12
@@ -98,11 +99,11 @@ export default function CreditCardCalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Current Balance ({c.symbol})</label>
-              <input type="number" className="cw-input" value={balance} min={0} onChange={e => setBalance(+e.target.value)} />
+              <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">APR (%)</label>
-              <input type="number" step="0.01" className="cw-input" value={apr} min={0} onChange={e => setApr(+e.target.value)} />
+              <NumericInput value={apr} onChange={setApr} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Minimum Payment Type</label>
@@ -115,18 +116,18 @@ export default function CreditCardCalc({ country = 'us' }) {
               {minType === 'percent' ? (
                 <>
                   <label className="block text-xs text-cw-gray mb-1">Min Payment % (min {c.symbol}25)</label>
-                  <input type="number" step="0.5" className="cw-input" value={minPct} min={1} onChange={e => setMinPct(+e.target.value)} />
+                  <NumericInput value={minPct} onChange={setMinPct} min={1} step={0.5} suffix="%" />
                 </>
               ) : (
                 <>
                   <label className="block text-xs text-cw-gray mb-1">Fixed Monthly Payment ({c.symbol})</label>
-                  <input type="number" className="cw-input" value={minFixed} min={25} onChange={e => setMinFixed(+e.target.value)} />
+                  <NumericInput value={minFixed} onChange={setMinFixed} min={25} step={50} prefix={c.symbol} />
                 </>
               )}
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Extra Monthly Payment ({c.symbol})</label>
-              <input type="number" className="cw-input" value={extraPayment} min={0} onChange={e => setExtraPayment(+e.target.value)} />
+              <NumericInput value={extraPayment} onChange={setExtraPayment} min={0} step={50} prefix={c.symbol} />
             </div>
           </div>
         </div>

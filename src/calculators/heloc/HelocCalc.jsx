@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 const PRIME_RATE = 8.5 // Current US prime rate estimate
 
@@ -68,21 +69,19 @@ export default function HelocCalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Home Value ($)</label>
-              <input type="number" className="cw-input" value={homeValue} min={0} onChange={e => setHomeValue(+e.target.value)} />
+              <NumericInput value={homeValue} onChange={setHomeValue} min={0} step={1000} prefix="$" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Mortgage Balance ($)</label>
-              <input type="number" className="cw-input" value={mortgageBalance} min={0} onChange={e => setMortgageBalance(+e.target.value)} />
+              <NumericInput value={mortgageBalance} onChange={setMortgageBalance} min={0} step={1000} prefix="$" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Margin above Prime (%)</label>
-              <input type="number" step="0.25" className="cw-input" value={margin} min={0} onChange={e => setMargin(+e.target.value)} />
+              <NumericInput value={margin} onChange={setMargin} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Amount to Draw ($)</label>
-              <input type="number" className="cw-input" value={drawAmount} min={0}
-                max={result?.maxCredit || undefined}
-                onChange={e => setDrawAmount(+e.target.value)} />
+              <NumericInput value={drawAmount} onChange={setDrawAmount} min={0} step={1000} max={result?.maxCredit || undefined} prefix="$" />
               {result && <p className="text-xs text-cw-gray mt-1">Max available: {fmt(result.maxCredit)}</p>}
             </div>
             <div>

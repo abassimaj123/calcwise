@@ -10,6 +10,7 @@ import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
 import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
+import NumericInput from '../../components/NumericInput'
 
 const COLORS = { primary: '#1A6AFF', accent: '#00D4FF', success: '#1D9E75', warn: '#F5C842' }
 
@@ -250,15 +251,15 @@ export default function MortgageCalc({ country }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Home Price ({sym})</label>
-              <input type="number" className="cw-input" value={price} min={0} onChange={e => setPrice(+e.target.value)} />
+              <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={sym} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Down Payment ({sym}) — {downPct}%</label>
-              <input type="number" className="cw-input" value={down} min={0} onChange={e => setDown(+e.target.value)} />
+              <NumericInput value={down} onChange={setDown} min={0} step={1000} prefix={sym} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Annual Interest Rate (%)</label>
-              <input type="number" step="0.05" className="cw-input" value={rate} min={0} onChange={e => setRate(+e.target.value)} />
+              <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Loan Term (years)</label>

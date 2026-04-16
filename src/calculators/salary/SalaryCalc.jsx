@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { countries } from '../../config/countries'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 // Reuse tax logic inline (simplified)
 function calcTax(gross, country) {
@@ -135,14 +136,7 @@ export default function SalaryCalc({ country }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Gross Income ({c.symbol})</label>
-              <input
-                type="number"
-                className="cw-input text-xl"
-                value={gross}
-                min={0}
-                step={100}
-                onChange={e => setGross(+e.target.value)}
-              />
+              <NumericInput value={gross} onChange={setGross} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Income Period</label>

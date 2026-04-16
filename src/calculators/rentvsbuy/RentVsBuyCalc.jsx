@@ -4,6 +4,7 @@ import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import NumericInput from '../../components/NumericInput'
 
 function calcRentVsBuy({ homePrice, downPayment, mortgageRate, termYears, monthlyRent, rentIncrease, homeAppreciation }) {
   const principal = homePrice - downPayment
@@ -113,15 +114,15 @@ export default function RentVsBuyCalc({ country }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Home Price ({c.symbol})</label>
-              <input type="number" className="cw-input" value={homePrice} onChange={e => setHomePrice(+e.target.value)} />
+              <NumericInput value={homePrice} onChange={setHomePrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Down Payment ({c.symbol})</label>
-              <input type="number" className="cw-input" value={downPayment} onChange={e => setDownPayment(+e.target.value)} />
+              <NumericInput value={downPayment} onChange={setDownPayment} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Mortgage Rate (%)</label>
-              <input type="number" step="0.1" className="cw-input" value={rate} onChange={e => setRate(+e.target.value)} />
+              <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Loan Term (years)</label>
@@ -131,7 +132,7 @@ export default function RentVsBuyCalc({ country }) {
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Home Appreciation (%/yr)</label>
-              <input type="number" step="0.5" className="cw-input" value={appreciation} onChange={e => setAppreciation(+e.target.value)} />
+              <NumericInput value={appreciation} onChange={setAppreciation} min={0} step={0.1} suffix="%" />
             </div>
           </div>
 
@@ -139,11 +140,11 @@ export default function RentVsBuyCalc({ country }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Monthly Rent ({c.symbol})</label>
-              <input type="number" className="cw-input" value={rent} onChange={e => setRent(+e.target.value)} />
+              <NumericInput value={rent} onChange={setRent} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Annual Rent Increase (%)</label>
-              <input type="number" step="0.5" className="cw-input" value={rentIncrease} onChange={e => setRentIncrease(+e.target.value)} />
+              <NumericInput value={rentIncrease} onChange={setRentIncrease} min={0} step={0.1} suffix="%" />
             </div>
           </div>
         </div>

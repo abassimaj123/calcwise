@@ -9,6 +9,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import NumericInput from '../../components/NumericInput'
 
 const COLORS = { primary: '#1A6AFF', accent: '#00D4FF', success: '#1D9E75', warn: '#F5C842', red: '#EF4444' }
 const PIE_COLORS = [COLORS.success, COLORS.red, COLORS.warn, COLORS.accent]
@@ -324,14 +325,7 @@ export default function TaxCalc({ country }) {
           <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">
             Annual Gross Income ({c.symbol})
           </label>
-          <input
-            type="number"
-            className="cw-input text-2xl font-display"
-            value={gross}
-            min={0}
-            step={1000}
-            onChange={e => setGross(+e.target.value)}
-          />
+          <NumericInput value={gross} onChange={setGross} min={0} step={1000} prefix={c.symbol} />
           <p className="text-xs text-cw-gray mt-2">Enter your gross (before-tax) annual income</p>
         </div>
 
