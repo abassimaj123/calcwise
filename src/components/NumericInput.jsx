@@ -75,7 +75,7 @@ export default function NumericInput({
             max={max}
             step={step}
             className="flex-1 min-w-0 min-h-[44px] bg-white text-center text-slate-900 font-semibold text-sm focus:outline-none"
-            style={{ minWidth: '40px' }}
+            style={{ minWidth: '60px' }}
           />
           {suffix && (
             <span className="pr-2 text-slate-500 text-sm font-medium pointer-events-none select-none shrink-0 leading-none">

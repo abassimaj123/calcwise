@@ -125,7 +125,10 @@
     "shareResults": "Share Results",
     "copyLink": "Copy link",
     "print": "Print",
-    "resetDefaults": "Reset"
+    "resetDefaults": "Reset",
+    "years": "years",
+    "months": "months",
+    "yr": "yr"
   },
   "mortgage": {
     "title": "Mortgage Calculator",
@@ -519,7 +522,8 @@
     "annualROI": "Annual ROI",
     "grossYield": "Gross Yield",
     "propertyDetails": "Property Details",
-    "financials": "Financials"
+    "financials": "Financials",
+    "mortgageRate": "Mortgage Rate (%)"
   },
   "refinance": {
     "title": "Mortgage Refinance Calculator",
@@ -548,7 +552,9 @@
     "interestRate": "Interest Rate",
     "drawPayment": "Monthly Draw Payment",
     "repayPayment": "Monthly Repayment",
-    "availableCredit": "Available Credit"
+    "availableCredit": "Available Credit",
+    "marginAbovePrime": "Margin above Prime (%)",
+    "additionalCosts": "Additional Costs"
   },
   "studentloan": {
     "title": "Student Loan Calculator",

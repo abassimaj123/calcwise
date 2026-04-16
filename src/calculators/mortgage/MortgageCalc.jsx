@@ -1361,7 +1361,14 @@ export default function MortgageCalc({ country }) {
                     step={5000}
                     prefix={sym}
                     showSlider
-                    hint="Median 2026: $420k US · CA$650k · £295k UK"
+                    hint={
+                      country === 'us' ? 'Median 2026: $420k · 20% down avoids PMI'
+                      : country === 'ca' ? 'Median 2026: CA$650k · Min 5% down'
+                      : country === 'uk' ? 'Median 2026: £295k · SDLT applies above £250k'
+                      : country === 'au' ? 'Median 2026: A$750k · 20% down avoids LMI'
+                      : country === 'ie' ? 'Median 2026: €350k · Min 10% FTB'
+                      : 'Median 2026: NZ$700k · 20% standard minimum'
+                    }
                   />
                   <NumericInput
                     label={`${t('mortgage.downPayment')} — ${downPct}%`}

@@ -4,10 +4,10 @@
 // and CLS (Cumulative Layout Shift) score stays clean.
 
 const FORMAT_HEIGHT = {
-  rectangle:  250,
-  leaderboard: 90,
-  'in-article': 200,
-  auto: 90,
+  rectangle:  120,
+  leaderboard: 60,
+  'in-article': 100,
+  auto: 60,
 }
 
 export default function AdSenseSlot({ format = 'rectangle', slot, placement = '', className = '' }) {

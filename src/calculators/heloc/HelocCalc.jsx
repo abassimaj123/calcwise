@@ -219,7 +219,7 @@ export default function HelocCalc({ country = 'us' }) {
               <NumericInput value={mortgageBalance} onChange={setMortgageBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Margin above Prime (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('heloc.marginAbovePrime', { defaultValue: 'Margin above Prime (%)' })}</label>
               <NumericInput value={margin} onChange={setMargin} min={0} step={0.1} suffix="%" />
             </div>
             <div>
@@ -251,7 +251,7 @@ export default function HelocCalc({ country = 'us' }) {
               className="w-full flex items-center justify-between text-left"
             >
               <div className="flex items-center gap-3">
-                <span className="font-semibold text-slate-800">Additional Costs ({c.name})</span>
+                <span className="font-semibold text-slate-800">{t('heloc.additionalCosts', { defaultValue: 'Additional Costs' })} ({c.name})</span>
                 {activeOptCount > 0 && (
                   <span className="text-xs bg-indigo-100 border border-indigo-200 text-indigo-700 rounded-full px-2 py-0.5">
                     {activeOptCount} active · +{fmtD(extraMonthlyDraw)}/mo

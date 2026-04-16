@@ -304,7 +304,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('studentloan.loanBalance')} ($)</label>
-              <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={sym} />
+              <NumericInput value={balance} onChange={setBalance} min={5000} max={200000} step={1000} prefix={sym} showSlider hint="Range: $5k–$200k" />
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('studentloan.interestRate')} (%)</label>
@@ -312,7 +312,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">Annual Gross Income ($)</label>
-              <NumericInput value={income} onChange={setIncome} min={0} step={1000} prefix={sym} />
+              <NumericInput value={income} onChange={setIncome} min={20000} max={200000} step={1000} prefix={sym} showSlider hint="Range: $20k–$200k" />
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">Family Size</label>

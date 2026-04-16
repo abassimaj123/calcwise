@@ -271,7 +271,7 @@ export default function RentVsBuyCalc({ country }) {
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.timeHorizon')}</label>
               <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
-                {[15, 20, 25, 30].map(y => <option key={y} value={y}>{y} years</option>)}
+                {[15, 20, 25, 30].map(y => <option key={y} value={y}>{y} {t('calc.years', { defaultValue: 'years' })}</option>)}
               </select>
             </div>
             <div>

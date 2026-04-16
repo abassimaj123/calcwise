@@ -170,8 +170,8 @@ export default function AutoLoanCalc({ country }) {
               <div>
                 <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{t('autoloan.loanTerm')}</label>
                 <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
-                  {termOptions.map(t => (
-                    <option key={t} value={t}>{t} months ({(t / 12).toFixed(1)} yr)</option>
+                  {termOptions.map(mo => (
+                    <option key={mo} value={mo}>{mo} {t('calc.months', { defaultValue: 'months' })} ({(mo / 12).toFixed(1)} {t('calc.yr', { defaultValue: 'yr' })})</option>
                   ))}
                 </select>
               </div>

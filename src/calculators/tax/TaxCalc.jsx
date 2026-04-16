@@ -443,7 +443,7 @@ export default function TaxCalc({ country }) {
           <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">
             {t('tax.annualIncome')} ({c.symbol})
           </label>
-          <NumericInput value={gross} onChange={setGross} min={0} step={1000} prefix={c.symbol} />
+          <NumericInput value={gross} onChange={setGross} min={20000} max={300000} step={1000} prefix={c.symbol} showSlider hint="Typical range: $20k–$300k" />
           <p className="text-xs text-slate-500 mt-2">{t('tax.enterGross')}</p>
         </div>
 

@@ -125,7 +125,10 @@
     "shareResults": "Partager les résultats",
     "copyLink": "Copier le lien",
     "print": "Imprimer",
-    "resetDefaults": "Réinitialiser"
+    "resetDefaults": "Réinitialiser",
+    "years": "ans",
+    "months": "mois",
+    "yr": "an"
   },
   "mortgage": {
     "title": "Calculateur Hypothécaire",
@@ -519,7 +522,8 @@
     "annualROI": "ROI annuel",
     "grossYield": "Rendement brut",
     "propertyDetails": "Détails de la propriété",
-    "financials": "Finances"
+    "financials": "Finances",
+    "mortgageRate": "Taux hypothécaire (%)"
   },
   "refinance": {
     "title": "Calculateur de Refinancement Hypothécaire",
@@ -548,7 +552,9 @@
     "interestRate": "Taux d'intérêt",
     "drawPayment": "Paiement mensuel (tirage)",
     "repayPayment": "Paiement mensuel (remboursement)",
-    "availableCredit": "Crédit disponible"
+    "availableCredit": "Crédit disponible",
+    "marginAbovePrime": "Marge au-dessus du taux de base (%)",
+    "additionalCosts": "Coûts additionnels"
   },
   "studentloan": {
     "title": "Calculateur de Prêt Étudiant",

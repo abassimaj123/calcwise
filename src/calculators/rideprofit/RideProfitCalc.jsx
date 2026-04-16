@@ -17,10 +17,10 @@ import NumericInput from '../../components/NumericInput'
 
 // Mileage deduction rates 2025
 const mileageRates = {
-  us: { rate: 0.70, unit: 'mile', label: 'IRS $0.70/mile (2025)' },
-  ca: { rate: 0.72, unit: 'km', label: 'CRA $0.72/km (2025)' },
+  us: { rate: 0.70, unit: 'mile', label: 'IRS $0.70/mile (2026)' },
+  ca: { rate: 0.72, unit: 'km', label: 'CRA $0.72/km (2026)' },
   uk: { rate: 0.45, unit: 'mile', label: 'HMRC £0.45/mile (first 10k)' },
-  au: { rate: 0.88, unit: 'km', label: 'ATO $0.88/km (2024-25)' },
+  au: { rate: 0.88, unit: 'km', label: 'ATO $0.88/km (2025-26)' },
   ie: { rate: 0.43, unit: 'km', label: 'Revenue €0.43/km' },
   nz: { rate: 0.27, unit: 'km', label: 'IRD $0.27/km' },
 }
@@ -210,7 +210,7 @@ export default function RideProfitCalc({ country }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            {c.name} {t('rideprofit.title')}
+            {t(`nav.country_${country}`, { defaultValue: c.name })} {t('rideprofit.title')}
           </h1>
           <p className="text-slate-500">
             {t('rideprofit.desc')}

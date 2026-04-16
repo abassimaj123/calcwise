@@ -248,7 +248,7 @@ export default function PropertyROICalc({ country = 'us' }) {
               <NumericInput value={rent} onChange={setRent} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Mortgage Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('propertyroi.mortgageRate', { defaultValue: 'Mortgage Rate (%)' })}</label>
               <NumericInput value={mortgageRate} onChange={setMortgageRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>

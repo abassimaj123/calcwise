@@ -154,7 +154,7 @@ export default function RefinanceCalc({ country = 'us' }) {
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('refinance.remainingTerm')}</label>
               <select className="cw-input" value={remainingYears} onChange={e => setRemainingYears(+e.target.value)}>
-                {[5,10,15,20,25,30].map(y => <option key={y} value={y}>{y} years</option>)}
+                {[5,10,15,20,25,30].map(y => <option key={y} value={y}>{y} {t('calc.years', { defaultValue: 'years' })}</option>)}
               </select>
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function RefinanceCalc({ country = 'us' }) {
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('refinance.newTerm')}</label>
               <select className="cw-input" value={newTerm} onChange={e => setNewTerm(+e.target.value)}>
-                {[10,15,20,25,30].map(y => <option key={y} value={y}>{y} years</option>)}
+                {[10,15,20,25,30].map(y => <option key={y} value={y}>{y} {t('calc.years', { defaultValue: 'years' })}</option>)}
               </select>
             </div>
             <div>
