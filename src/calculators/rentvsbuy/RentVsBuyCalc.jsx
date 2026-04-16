@@ -104,7 +104,7 @@ export default function RentVsBuyCalc({ country }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            {c.flag} {c.name} Rent vs Buy Calculator
+            {c.name} Rent vs Buy Calculator
           </h1>
           <p className="text-cw-gray">Find the year when buying becomes financially smarter than renting.</p>
         </div>

@@ -88,7 +88,7 @@ export default function LoanPayoffCalc({ country = 'us' }) {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">{c.flag} Loan Payoff Calculator</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">Loan Payoff Calculator</h1>
           <p className="text-cw-gray">See how extra payments accelerate your payoff and save interest.</p>
         </div>
 

@@ -73,7 +73,7 @@ export default function RefinanceCalc({ country = 'us' }) {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">{c.flag} Refinance Calculator</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">Refinance Calculator</h1>
           <p className="text-cw-gray">Is it worth refinancing? Find your break-even point and lifetime savings.</p>
         </div>
 

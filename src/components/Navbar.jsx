@@ -54,10 +54,9 @@ export default function Navbar() {
             >
               <Link
                 to={`/${code}`}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-100 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
               >
-                <span className="text-base leading-none">{country.flag}</span>
-                <span>{code.toUpperCase()}</span>
+                {code.toUpperCase()}
               </Link>
               {activeDropdown === code && (
                 <div className="absolute top-full left-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-card-hover py-2 z-50">
@@ -148,7 +147,7 @@ export default function Navbar() {
                 className="flex items-center gap-2 px-4 py-3 font-semibold text-slate-900 border-b border-slate-100"
                 onClick={() => setMobileOpen(false)}
               >
-                <span>{country.flag}</span>
+                <span className="text-xs font-bold text-primary bg-blue-50 px-2 py-0.5 rounded">{code.toUpperCase()}</span>
                 <span>{country.name}</span>
               </Link>
               <div className="pl-4">
