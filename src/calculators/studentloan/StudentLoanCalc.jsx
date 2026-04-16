@@ -10,6 +10,7 @@ import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
 import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { countries } from '../../config/countries'
 
 // ---------------------------------------------------------------------------
 // Country-specific repayment options
@@ -183,6 +184,7 @@ function Toggle({ on, onChange }) {
 // ---------------------------------------------------------------------------
 export default function StudentLoanCalc({ country = 'us' }) {
   const { t } = useTranslation()
+  const sym = countries[country]?.symbol || '$'
   const [balance, setBalance] = useState(35000)
   const [rate, setRate] = useState(6.54)
   const [income, setIncome] = useState(55000)
@@ -302,7 +304,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('studentloan.loanBalance')} ($)</label>
-              <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix="$" />
+              <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={sym} />
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('studentloan.interestRate')} (%)</label>
@@ -310,7 +312,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">Annual Gross Income ($)</label>
-              <NumericInput value={income} onChange={setIncome} min={0} step={1000} prefix="$" />
+              <NumericInput value={income} onChange={setIncome} min={0} step={1000} prefix={sym} />
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">Family Size</label>
@@ -369,7 +371,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
                             onChange={v => setRepayAmt(def.key, v)}
                             min={0}
                             step={def.step}
-                            prefix="$"
+                            prefix={sym}
                           />
                         </div>
                       )}

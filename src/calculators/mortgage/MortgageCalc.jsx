@@ -1148,7 +1148,15 @@ export default function MortgageCalc({ country }) {
     ? '2026 avg: 6.8%'
     : country === 'ca'
     ? '2026 avg: 5.4%'
-    : '2026 avg: 4.8% UK'
+    : country === 'uk'
+    ? '2026 avg: 4.8%'
+    : country === 'au'
+    ? '2026 avg: 6.2%'
+    : country === 'ie'
+    ? '2026 avg: 4.2%'
+    : country === 'nz'
+    ? '2026 avg: 6.5%'
+    : '2026 avg: 5.0%'
 
   const pageTitle = `${c.name} Mortgage Calculator 2026 — Monthly Payment | CalcWise`
   const pageDesc = `Free ${c.name} mortgage calculator. Instant monthly payment, total interest, amortization.${country === 'uk' ? ' SDLT included.' : country === 'ca' ? ' CMHC & stress test.' : ''} Updated 2026.`

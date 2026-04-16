@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, BarChart2 } from 'lucide-react'
 import { countries, calcsByCountry, calcMeta } from '../config/countries'
@@ -13,11 +13,19 @@ const LANGS = [
 
 export default function Navbar() {
   const { t, i18n } = useTranslation()
+  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState(null)
   const [langOpen, setLangOpen] = useState(false)
   const langRef = useRef(null)
   const dropTimer = useRef(null)
+
+  // Close all menus on route change
+  useEffect(() => {
+    setMobileOpen(false)
+    setActiveDropdown(null)
+    setLangOpen(false)
+  }, [location.pathname, location.hash])
 
   const currentLang = LANGS.find(l => l.code === i18n.language) || LANGS[0]
 
@@ -123,9 +131,13 @@ export default function Navbar() {
             )}
           </div>
 
-          <Link to="/us/mortgage" className="hidden md:block cw-btn text-sm">
-            {t('nav.getApp')}
-          </Link>
+          <button
+            className="hidden md:block cw-btn text-sm opacity-80 cursor-default"
+            title="Mobile app coming soon — App Store & Google Play"
+            onClick={() => {}}
+          >
+            {t('nav.getApp')} ✦
+          </button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-slate-100 text-slate-700 text-lg"

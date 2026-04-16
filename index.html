@@ -27,14 +27,18 @@
     <!-- Twemoji: renders flag emojis correctly on all platforms incl. Windows -->
     <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
     <script>
+      // Bug fix: move MutationObserver setup inside DOMContentLoaded so #root exists
       document.addEventListener('DOMContentLoaded', function() {
         twemoji.parse(document.body, { folder: 'svg', ext: '.svg', base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/' });
+        // Re-parse after React renders new content
+        var _twRoot = document.getElementById('root');
+        if (_twRoot && _twRoot instanceof Node) {
+          var _twObserver = new MutationObserver(function() {
+            twemoji.parse(document.body, { folder: 'svg', ext: '.svg', base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/' });
+          });
+          _twObserver.observe(_twRoot, { childList: true, subtree: true });
+        }
       });
-      // Re-parse after React renders
-      var _twObserver = new MutationObserver(function() {
-        twemoji.parse(document.body, { folder: 'svg', ext: '.svg', base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/' });
-      });
-      _twObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
     </script>
   </head>
   <body>

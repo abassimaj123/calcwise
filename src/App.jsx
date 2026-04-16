@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Pages
 const Home = lazy(() => import('./pages/Home'))
@@ -45,6 +46,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">
+        <ErrorBoundary>
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             {/* Home */}
@@ -171,6 +173,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        </ErrorBoundary>
       </main>
       <Footer />
     </div>
