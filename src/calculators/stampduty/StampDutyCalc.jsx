@@ -272,7 +272,7 @@ export default function StampDutyCalc() {
           </div>
         )}
 
-        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-slate-500">
+        <div className="mt-4 p-3 bg-slate-50 rounded-lg text-xs text-slate-500">
           ℹ️ Rates are for England and Northern Ireland (SDLT). Scotland uses LBTT; Wales uses LTT — different rates apply. Rates effective April 2025.
         </div>
 

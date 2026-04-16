@@ -323,7 +323,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
               </div>
               {meterPct !== null && (
                 <>
-                  <div className="w-full bg-white/10 rounded-full h-5 overflow-hidden mt-3">
+                  <div className="w-full bg-slate-200 rounded-full h-5 overflow-hidden mt-3">
                     <div
                       className="h-5 rounded-full transition-all duration-500"
                       style={{

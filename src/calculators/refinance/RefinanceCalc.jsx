@@ -273,7 +273,7 @@ export default function RefinanceCalc({ country = 'us' }) {
           </div>
         )}
 
-        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-slate-500">
+        <div className="mt-4 p-3 bg-slate-50 rounded-lg text-xs text-slate-500">
           This calculator assumes you refinance the full remaining balance. Actual closing costs vary by lender and location. Rate buydowns and lender credits not included.
         </div>
 

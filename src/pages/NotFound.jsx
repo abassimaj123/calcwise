@@ -8,8 +8,8 @@ export default function NotFound() {
       <p className="text-slate-500 mb-8">This calculator doesn't exist yet. Try one of our popular ones.</p>
       <div className="flex gap-4 flex-wrap justify-center">
         <Link to="/" className="cw-btn">Back to Home</Link>
-        <Link to="/us/mortgage" className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-btn transition-colors">
-          🏠 Mortgage Calculator
+        <Link to="/us/mortgage" className="cw-btn-ghost">
+          Mortgage Calculator
         </Link>
       </div>
     </div>

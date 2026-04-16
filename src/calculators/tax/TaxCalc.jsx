@@ -588,7 +588,7 @@ export default function TaxCalc({ country }) {
           </div>
         )}
 
-        <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-slate-500">
+        <div className="mt-4 p-3 bg-slate-50 rounded-lg text-xs text-slate-500">
           These are estimates based on standard deductions and average rates. Actual tax may differ based on filing status, deductions, credits, and jurisdiction. Consult a tax professional for advice.
         </div>
 

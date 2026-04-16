@@ -205,13 +205,13 @@ export default function AutoLoanCalc({ country }) {
               ]}
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-              <div className="cw-card text-center">
-                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Bi-Weekly Payment</p>
-                <p className="font-display font-bold text-2xl text-white">{fmtD(result.biWeekly)}</p>
+              <div className="cw-metric">
+                <p className="cw-metric-label">Bi-Weekly Payment</p>
+                <p className="cw-metric-value">{fmtD(result.biWeekly)}</p>
               </div>
-              <div className="cw-card text-center">
-                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Loan Amount</p>
-                <p className="font-display font-bold text-2xl text-white">{fmt(result.loanAmount)}</p>
+              <div className="cw-metric green">
+                <p className="cw-metric-label">Loan Amount</p>
+                <p className="cw-metric-value">{fmt(result.loanAmount)}</p>
               </div>
             </div>
           </>
