@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -168,6 +168,17 @@ export default function App() {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+
+            {/* URL alias redirects — common typos / old slugs */}
+            {['us','ca','uk','au','ie','nz'].flatMap(c => [
+              <Route key={`${c}-al`}  path={`/${c}/auto-loan`}   element={<Navigate to={`/${c}/autoloan`}   replace />} />,
+              <Route key={`${c}-nw`}  path={`/${c}/networth`}    element={<Navigate to={`/${c}/net-worth`}  replace />} />,
+              <Route key={`${c}-dp`}  path={`/${c}/debt-payoff`} element={<Navigate to={`/${c}/debt-payoff`} replace />} />,
+              <Route key={`${c}-cc`}  path={`/${c}/creditcard`}  element={<Navigate to={`/${c}/credit-card`} replace />} />,
+              <Route key={`${c}-lp`}  path={`/${c}/loanpayoff`}  element={<Navigate to={`/${c}/loan-payoff`} replace />} />,
+              <Route key={`${c}-rvb`} path={`/${c}/rentvsbuy`}   element={<Navigate to={`/${c}/rent-vs-buy`} replace />} />,
+              <Route key={`${c}-pr`}  path={`/${c}/propertyroi`} element={<Navigate to={`/${c}/property-roi`} replace />} />,
+            ])}
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />

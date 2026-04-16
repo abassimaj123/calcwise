@@ -72,16 +72,37 @@ function optionMonthly(opt, val, loanAmount, homePrice) {
   }
 }
 
+// Canadian Mortgage Act: interest compounded semi-annually, not monthly
+// (Interest Act R.S.C. 1985, c. I-15, s.6)
+function getMonthlyRate(annualRatePct, country) {
+  if (country === 'ca') {
+    const semiAnnual = annualRatePct / 100 / 2
+    return Math.pow(1 + semiAnnual, 1 / 6) - 1
+  }
+  return annualRatePct / 100 / 12
+}
+
 function calcMortgage({ price, down, rate, termYears, country }) {
   const principal = price - down
-  const monthlyRate = rate / 100 / 12
+  const monthlyRate = getMonthlyRate(rate, country)
   const n = termYears * 12
   if (principal <= 0 || rate <= 0 || n <= 0) return null
 
-  const monthly = principal * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1)
-  const totalPaid = monthly * n
-  const totalInterest = totalPaid - principal
   const ltv = (principal / price) * 100
+
+  // CA CMHC premium — capitalized into the insured principal
+  let cmhc = 0
+  let insuredPrincipal = principal
+  if (country === 'ca') {
+    const dpPct = (down / price) * 100
+    const cmhcRate = dpPct < 10 ? 0.04 : dpPct < 15 ? 0.031 : dpPct < 20 ? 0.028 : 0
+    cmhc = principal * cmhcRate
+    insuredPrincipal = principal + cmhc  // CMHC added to loan balance
+  }
+
+  const monthly = insuredPrincipal * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1)
+  const totalPaid = monthly * n
+  const totalInterest = totalPaid - insuredPrincipal
 
   // UK SDLT — April 2025 rates
   let sdlt = 0
@@ -102,14 +123,6 @@ function calcMortgage({ price, down, rate, termYears, country }) {
     }
   }
 
-  // CA CMHC premium
-  let cmhc = 0
-  if (country === 'ca') {
-    const dpPct = (down / price) * 100
-    const cmhcRate = dpPct < 10 ? 0.04 : dpPct < 15 ? 0.031 : dpPct < 20 ? 0.028 : 0
-    cmhc = principal * cmhcRate
-  }
-
   // US PMI
   let pmi = 0
   if (country === 'us' && ltv > 80) {
@@ -122,7 +135,7 @@ function calcMortgage({ price, down, rate, termYears, country }) {
     lmi = principal * 0.02
   }
 
-  return { monthly, totalInterest, totalPaid, ltv, sdlt, cmhc, pmi, lmi, principal, n }
+  return { monthly, totalInterest, totalPaid, ltv, sdlt, cmhc, pmi, lmi, principal: insuredPrincipal, principalBase: principal, n, monthlyRate }
 }
 
 function buildAmortData(principal, monthlyRate, monthly, n) {
@@ -159,8 +172,8 @@ function buildScheduleData(principal, monthlyRate, monthly, n) {
   return rows
 }
 
-function calcMonthlyPayment(principal, rate, termYears) {
-  const monthlyRate = rate / 100 / 12
+function calcMonthlyPayment(principal, rate, termYears, country = 'us') {
+  const monthlyRate = getMonthlyRate(rate, country)
   const n = termYears * 12
   if (principal <= 0 || rate <= 0 || n <= 0) return 0
   return principal * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1)
@@ -268,7 +281,7 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
       ]
 
       loanTypes.forEach(lt => {
-        lt.monthly = calcMonthlyPayment(lt.loanAmt, rate, term) + lt.monthlyPMI
+        lt.monthly = calcMonthlyPayment(lt.loanAmt, rate, term, country) + lt.monthlyPMI
       })
 
       // PMI removal
@@ -276,9 +289,9 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
       let pmiMonth = null
       let pmiSavings = 0
       if (pmiApplies) {
-        const monthlyRate = rate / 100 / 12
+        const monthlyRate = getMonthlyRate(rate, country)
         const n = term * 12
-        const mp = calcMonthlyPayment(principal, rate, term)
+        const mp = calcMonthlyPayment(principal, rate, term, country)
         const targetBalance = price * 0.80
         let balance = principal
         const monthlyPMI = (principal * 0.0085) / 12
@@ -297,9 +310,9 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
       // ARM vs Fixed
       const armRate = Math.max(rate - 1.0, 1)
       const armRateAfter = rate + 1.5
-      const fixedMonthly = calcMonthlyPayment(principal, rate, term)
-      const armMonthly5yr = calcMonthlyPayment(principal, armRate, term)
-      const armMonthllyAfter = calcMonthlyPayment(principal, armRateAfter, term)
+      const fixedMonthly = calcMonthlyPayment(principal, rate, term, country)
+      const armMonthly5yr = calcMonthlyPayment(principal, armRate, term, country)
+      const armMonthllyAfter = calcMonthlyPayment(principal, armRateAfter, term, country)
       const arm5yrSavings = (fixedMonthly - armMonthly5yr) * 60
 
       return (
@@ -402,8 +415,8 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
     case 'ca': {
       // OSFI stress test
       const qualifyingRate = Math.max(rate + 2, 5.25)
-      const contractMonthly = calcMonthlyPayment(principal, rate, term)
-      const qualifyingMonthly = calcMonthlyPayment(principal, qualifyingRate, term)
+      const contractMonthly = calcMonthlyPayment(principal, rate, term, country)
+      const qualifyingMonthly = calcMonthlyPayment(principal, qualifyingRate, term, country)
       const requiredIncome = (qualifyingMonthly * 12) / 0.32
 
       // Payment frequencies
@@ -549,8 +562,8 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
     case 'uk': {
       // FCA Stress Test
       const stressRate = rate + 3
-      const contractMonthly = calcMonthlyPayment(principal, rate, term)
-      const stressedMonthly = calcMonthlyPayment(principal, stressRate, term)
+      const contractMonthly = calcMonthlyPayment(principal, rate, term, country)
+      const stressedMonthly = calcMonthlyPayment(principal, stressRate, term, country)
       const requiredIncome = (stressedMonthly * 12) / 0.35
 
       // Interest-only
@@ -683,8 +696,8 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
     case 'au': {
       // APRA buffer
       const apraRate = rate + 3
-      const contractMonthly = calcMonthlyPayment(principal, rate, term)
-      const apraMonthly = calcMonthlyPayment(principal, apraRate, term)
+      const contractMonthly = calcMonthlyPayment(principal, rate, term, country)
+      const apraMonthly = calcMonthlyPayment(principal, apraRate, term, country)
       const apraIncome = (apraMonthly * 12) / 0.30
 
       // Offset account
@@ -693,7 +706,7 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
       const offsetInterestYr = effectiveLoan * rate / 100
       const offsetSavingsYr = normalInterestYr - offsetInterestYr
       const approxMonthsOff = offsetAU > 0 && contractMonthly > 0
-        ? Math.round((offsetAU / contractMonthly) * (rate / 100 / 12 + 1) * 12)
+        ? Math.round((offsetAU / contractMonthly) * (getMonthlyRate(rate, country) + 1) * 12)
         : 0
 
       // LMI table
@@ -1076,13 +1089,13 @@ export default function MortgageCalc({ country }) {
 
   const amortData = useMemo(() => {
     if (!result) return []
-    return buildAmortData(result.principal, rate / 100 / 12, result.monthly, result.n)
-  }, [result, rate])
+    return buildAmortData(result.principal, result.monthlyRate, result.monthly, result.n)
+  }, [result])
 
   const scheduleData = useMemo(() => {
     if (!result) return []
-    return buildScheduleData(result.principal, rate / 100 / 12, result.monthly, result.n)
-  }, [result, rate])
+    return buildScheduleData(result.principal, result.monthlyRate, result.monthly, result.n)
+  }, [result])
 
   // Compute active optional monthly costs
   const activeOptMonthly = useMemo(() => {
