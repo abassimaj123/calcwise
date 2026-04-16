@@ -112,7 +112,7 @@ export default function RideProfitCalc({ country }) {
   const [hoursWorked, setHoursWorked] = useState(30)
   const [platform, setPlatform] = useState('Uber')
   const [view, setView] = useState('summary')
-  const [expOpen, setExpOpen] = useState(false)
+  const [expOpen, setExpOpen] = useState(true)
   const [expEnabled, setExpEnabled] = useState({})
   const [expAmounts, setExpAmounts] = useState(
     Object.fromEntries(expenseDefs.map(d => [d.key, 0]))

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, BarChart2 } from 'lucide-react'
@@ -17,8 +17,12 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null)
   const [langOpen, setLangOpen] = useState(false)
   const langRef = useRef(null)
+  const dropTimer = useRef(null)
 
   const currentLang = LANGS.find(l => l.code === i18n.language) || LANGS[0]
+
+  const openDrop  = useCallback((code) => { clearTimeout(dropTimer.current); setActiveDropdown(code) }, [])
+  const closeDrop = useCallback(() => { dropTimer.current = setTimeout(() => setActiveDropdown(null), 220) }, [])
 
   useEffect(() => {
     function handleClick(e) {
@@ -49,26 +53,36 @@ export default function Navbar() {
             <div
               key={code}
               className="relative"
-              onMouseEnter={() => setActiveDropdown(code)}
-              onMouseLeave={() => setActiveDropdown(null)}
+              onMouseEnter={() => openDrop(code)}
+              onMouseLeave={closeDrop}
             >
               <Link
                 to={`/${code}`}
-                className="flex items-center px-3 py-2 rounded-lg hover:bg-slate-100 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeDropdown === code
+                    ? 'bg-blue-50 text-primary'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
               >
                 {country.name}
+                <ChevronDown size={13} className={`ml-1 transition-transform ${activeDropdown === code ? 'rotate-180' : ''}`} />
               </Link>
               {activeDropdown === code && (
-                <div className="absolute top-full left-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-card-hover py-2 z-50">
+                <div
+                  className="absolute top-full left-0 w-56 bg-white border border-slate-200 rounded-xl py-2 z-50"
+                  style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06)', marginTop: '2px' }}
+                  onMouseEnter={() => openDrop(code)}
+                  onMouseLeave={closeDrop}
+                >
                   {calcsByCountry[code].map(calcKey => {
                     const Icon = calcIconMap[calcKey] || BarChart2
                     return (
                       <Link
                         key={calcKey}
                         to={`/${code}/${calcMeta[calcKey]?.slug}`}
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-blue-50 hover:text-primary transition-colors"
                       >
-                        <Icon size={16} color={ICON_COLOR} />
+                        <Icon size={15} color={ICON_COLOR} />
                         <span>{calcMeta[calcKey]?.label}</span>
                       </Link>
                     )

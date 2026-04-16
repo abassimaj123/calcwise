@@ -8,35 +8,37 @@
 :root {
   --blue:        #1A6AFF;
   --blue-hover:  #1455CC;
-  --blue-light:  #EFF6FF;
-  --blue-mid:    #DBEAFE;
+  --blue-light:  #EBF3FF;
+  --blue-mid:    #BFDBFE;
   --green:       #059669;
-  --green-light: #ECFDF5;
-  --orange:      #F59E0B;
-  --orange-light:#FFFBEB;
-  --red:         #EF4444;
-  --red-light:   #FEF2F2;
+  --green-light: #D1FAE5;
+  --orange:      #D97706;
+  --orange-light:#FEF3C7;
+  --red:         #DC2626;
+  --red-light:   #FEE2E2;
   --purple:      #7C3AED;
-  --purple-light:#F5F3FF;
+  --purple-light:#EDE9FE;
 
-  --bg:          #F1F5F9;
+  --bg:          #E8EFFE;       /* clearly blue-tinted, not white */
   --surface:     #FFFFFF;
-  --border:      #E2E8F0;
-  --border-hover:#94A3B8;
+  --input-bg:    #F5F9FF;       /* tinted input section bg */
+  --border:      #CBD5E1;       /* stronger than before */
+  --border-hover:#64748B;
+  --border-focus:#1A6AFF;
 
   --text-1:      #0F172A;
-  --text-2:      #334155;
-  --text-3:      #64748B;
+  --text-2:      #1E293B;
+  --text-3:      #475569;
   --text-4:      #94A3B8;
 
   --radius-sm:   8px;
   --radius:      14px;
   --radius-lg:   20px;
 
-  --shadow-sm:   0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow:      0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-lg:   0 12px 32px rgba(26,106,255,0.12), 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-hover:0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
+  --shadow-sm:   0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04);
+  --shadow:      0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-lg:   0 16px 40px rgba(26,106,255,0.18), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-hover:0 8px 28px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.07);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -77,7 +79,44 @@ input[type=number] { -moz-appearance: textfield; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow);
+}
+
+/* Input panel — tinted blue background for the left column */
+.cw-inputs-panel {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+/* Section group inside inputs */
+.cw-input-group {
+  background: var(--input-bg);
+  border: 1px solid #DBEAFE;
+  border-radius: 12px;
+  padding: 1.125rem 1.125rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.cw-input-group-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--blue);
+  margin-bottom: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.cw-input-group-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--blue);
+  border-radius: 2px;
 }
 
 .cw-card-hover {
@@ -93,14 +132,20 @@ input[type=number] { -moz-appearance: textfield; }
    INPUTS
    ──────────────────────────────────────────────────────────────────────────── */
 .cw-input {
-  @apply w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder-slate-400 transition-all;
+  @apply w-full rounded-lg px-4 py-2.5 text-slate-900 placeholder-slate-400 transition-all;
   height: 44px;
   font-size: 0.9375rem;
   outline: none;
+  background: #fff;
+  border: 1.5px solid #94A3B8;   /* clearly visible border */
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+.cw-input:hover {
+  border-color: #64748B;
 }
 .cw-input:focus {
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(26,106,255,0.12);
+  box-shadow: 0 0 0 3px rgba(26,106,255,0.15), inset 0 1px 2px rgba(0,0,0,0.03);
 }
 select.cw-input { height: 44px; cursor: pointer; }
 

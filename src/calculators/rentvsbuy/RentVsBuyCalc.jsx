@@ -160,7 +160,7 @@ export default function RentVsBuyCalc({ country }) {
   const [rentIncrease, setRentIncrease] = useState(3)
   const [appreciation, setAppreciation] = useState(4)
   const [view, setView] = useState('summary')
-  const [buyOptOpen, setBuyOptOpen] = useState(false)
+  const [buyOptOpen, setBuyOptOpen] = useState(true)
   const [buyOptEnabled, setBuyOptEnabled] = useState({})
   const [buyOptAmounts, setBuyOptAmounts] = useState(
     Object.fromEntries(buyOptionDefs.map(d => [d.key, d.defaultVal]))

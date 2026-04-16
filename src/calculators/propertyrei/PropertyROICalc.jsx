@@ -163,7 +163,7 @@ export default function PropertyROICalc({ country = 'us' }) {
   const [view, setView] = useState('summary')
 
   // Additional expenses collapsible state
-  const [extraOpen, setExtraOpen] = useState(false)
+  const [extraOpen, setExtraOpen] = useState(true)
   const [extraEnabled, setExtraEnabled] = useState({})
   const [extraAmounts, setExtraAmounts] = useState(
     Object.fromEntries(extraDefs.map(def => [def.key, def.defaultVal]))

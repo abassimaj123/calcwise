@@ -189,7 +189,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
 
   // Repayment options state
   const repayDefs = REPAYMENT_OPTIONS[country] || []
-  const [repayOpen, setRepayOpen] = useState(false)
+  const [repayOpen, setRepayOpen] = useState(true)
   const [repayEnabled, setRepayEnabled] = useState({})
   const [repayAmounts, setRepayAmounts] = useState(
     Object.fromEntries(repayDefs.filter(d => d.type === 'amount').map(d => [d.key, 0]))

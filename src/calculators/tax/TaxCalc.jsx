@@ -351,7 +351,7 @@ export default function TaxCalc({ country }) {
 
   const [gross, setGross] = useState(defaultIncomes[country] || 60000)
   const [view, setView] = useState('simple')
-  const [dedOpen, setDedOpen] = useState(false)
+  const [dedOpen, setDedOpen] = useState(true)
   const [dedEnabled, setDedEnabled] = useState({})
   const [dedAmounts, setDedAmounts] = useState(
     Object.fromEntries(deductionDefs.map(d => [d.key, 0]))

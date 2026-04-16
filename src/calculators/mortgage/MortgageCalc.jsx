@@ -1058,7 +1058,7 @@ export default function MortgageCalc({ country }) {
   const [activeTab, setActiveTab] = useState('summary')
 
   // Optional costs state
-  const [optOpen, setOptOpen] = useState(false)
+  const [optOpen, setOptOpen] = useState(true)
   const [optEnabled, setOptEnabled] = useState({})
   const [optValues, setOptValues] = useState(
     Object.fromEntries(optionDefs.map(o => [o.key, o.defaultVal]))
@@ -1245,89 +1245,93 @@ export default function MortgageCalc({ country }) {
         })}</script>
       </Helmet>
 
-      <div className="max-w-4xl mx-auto px-4 py-10">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-display font-bold mb-1 text-slate-900 tracking-tight">
             {c.name} Mortgage Calculator
           </h1>
-          <p className="text-slate-500">
-            Calculate your monthly payment, total interest and amortization schedule.
-          </p>
+          <p className="text-slate-500 text-sm">Monthly payment · total interest · amortization — 2026 rates</p>
         </div>
 
-        <CalcIntro intro={introText[country] || introText.us} hiddenCost={result ? hiddenCostLabel[country] : null} />
+        <div className="calc-grid">
+          {/* ── LEFT: Inputs ── */}
+          <div className="calc-inputs-panel">
+            <div className="cw-inputs-panel">
 
-        {/* Main inputs card */}
-        <div className="cw-card mb-4">
-          <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">Property Details</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <NumericInput
-              label={`Home Price (${sym})`}
-              value={price}
-              onChange={setPrice}
-              min={50000}
-              max={2000000}
-              step={5000}
-              prefix={sym}
-              showSlider
-              hint="Median 2026: $420k US · CA$650k · £295k UK"
-            />
-            <NumericInput
-              label={`Down Payment (${sym}) — ${downPct}%`}
-              value={down}
-              onChange={setDown}
-              min={0}
-              max={Math.min(price, 500000)}
-              step={1000}
-              prefix={sym}
-              showSlider
-              hint="Min: 3.5% FHA · 5% conventional · 20% avoids PMI"
-            />
-          </div>
-
-          <div className="border-t border-slate-100 mt-5 pt-5">
-            <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">Financing</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <NumericInput
-                label="Interest Rate (%)"
-                value={rate}
-                onChange={setRate}
-                min={2}
-                max={12}
-                step={0.05}
-                suffix="%"
-                showSlider
-                hint={rateHint}
-              />
-              <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Loan Term (years)</label>
-                <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
-                  {termOptions.map(y => <option key={y} value={y}>{y} years</option>)}
-                </select>
+              {/* Property Details group */}
+              <div className="cw-input-group">
+                <p className="cw-input-group-title">Property Details</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <NumericInput
+                    label={`Home Price (${sym})`}
+                    value={price}
+                    onChange={setPrice}
+                    min={50000}
+                    max={2000000}
+                    step={5000}
+                    prefix={sym}
+                    showSlider
+                    hint="Median 2026: $420k US · CA$650k · £295k UK"
+                  />
+                  <NumericInput
+                    label={`Down Payment — ${downPct}%`}
+                    value={down}
+                    onChange={setDown}
+                    min={0}
+                    max={Math.min(price, 500000)}
+                    step={1000}
+                    prefix={sym}
+                    showSlider
+                    hint="Min: 3.5% FHA · 5% conventional · 20% avoids PMI"
+                  />
+                </div>
               </div>
-            </div>
-          </div>
 
-          {country === 'ca' && (
-            <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-slate-500">
-              🇨🇦 <strong className="text-white">Stress test rate:</strong> {stressRate.toFixed(2)}% — lenders qualify you at the higher of (rate + 2%) or 5.25%
-            </div>
-          )}
-          {country === 'uk' && (
-            <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-slate-500">
-              🇬🇧 <strong className="text-white">SDLT:</strong> Stamp Duty Land Tax is calculated using April 2025 residential rates
-            </div>
-          )}
-          {country === 'us' && result && result.ltv > 80 && (
-            <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-xs text-slate-500">
-              ⚠️ <strong className="text-white">PMI applies:</strong> LTV {result.ltv.toFixed(1)}% &gt; 80% — PMI ~0.5%/yr until LTV reaches 80%
-            </div>
-          )}
-        </div>
+              {/* Financing group */}
+              <div className="cw-input-group">
+                <p className="cw-input-group-title">Financing</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <NumericInput
+                    label="Interest Rate (%)"
+                    value={rate}
+                    onChange={setRate}
+                    min={2}
+                    max={12}
+                    step={0.05}
+                    suffix="%"
+                    showSlider
+                    hint={rateHint}
+                  />
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Loan Term</label>
+                    <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
+                      {termOptions.map(y => <option key={y} value={y}>{y} years</option>)}
+                    </select>
+                  </div>
+                </div>
+              </div>
 
-        {/* Optional Costs collapsible card */}
-        {optionDefs.length > 0 && (
-          <div className="cw-card mb-6">
+              {/* Country notes inside input panel */}
+              {country === 'ca' && (
+                <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
+                  <strong>Stress test rate:</strong> {stressRate.toFixed(2)}% — lenders qualify you at the higher of (rate + 2%) or 5.25%
+                </div>
+              )}
+              {country === 'uk' && (
+                <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
+                  <strong>SDLT:</strong> Stamp Duty Land Tax is calculated using April 2025 residential rates
+                </div>
+              )}
+              {country === 'us' && result && result.ltv > 80 && (
+                <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+                  <strong>PMI applies:</strong> LTV {result.ltv.toFixed(1)}% &gt; 80% — PMI ~0.5%/yr until LTV reaches 80%
+                </div>
+              )}
+            </div>{/* /cw-inputs-panel */}
+
+            {/* Optional Costs — inside inputs panel */}
+            {optionDefs.length > 0 && (
+              <div className="cw-card mt-4" style={{ background: '#F5F9FF', border: '1px solid #BFDBFE' }}>
             <button
               type="button"
               onClick={() => setOptOpen(o => !o)}
@@ -1393,8 +1397,12 @@ export default function MortgageCalc({ country }) {
                 </div>
               </div>
             )}
-          </div>
-        )}
+            </div>
+          )}
+          </div>{/* /calc-inputs-panel */}
+
+          {/* ── RIGHT: Results ── */}
+          <div className="calc-results-panel">
 
         {/* Tab bar */}
         <div className="cw-tabs mb-4">
@@ -1578,10 +1586,15 @@ export default function MortgageCalc({ country }) {
         )}
 
         {!result && (
-          <div className="cw-card text-center py-8 text-slate-500">
-            Enter valid values above to see your results.
+          <div className="cw-result-hero" style={{ background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)' }}>
+            <p className="cw-result-hero-label">Monthly Payment</p>
+            <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>Enter details →</p>
+            <p className="cw-result-hero-sub">Fill in home price, down payment and rate to see your payment.</p>
           </div>
         )}
+
+          </div>{/* /calc-results-panel */}
+        </div>{/* /calc-grid */}
 
         <CalcFAQ faqs={faqs[country] || faqs.us} />
         <CalcAlsoAvailable calcSlug="mortgage" calcLabel="Mortgage" countries={otherCountries} />

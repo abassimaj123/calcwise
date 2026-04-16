@@ -159,7 +159,7 @@ export default function SalaryCalc({ country }) {
   const [gross, setGross] = useState(SALARY_DEFAULTS[country] || 60000)
   const [inputPeriod, setInputPeriod] = useState('annual')
   const [view, setView] = useState('breakdown')
-  const [dedOpen, setDedOpen] = useState(false)
+  const [dedOpen, setDedOpen] = useState(true)
   const [dedEnabled, setDedEnabled] = useState({})
   const [dedAmounts, setDedAmounts] = useState(
     Object.fromEntries(deductionDefs.map(d => [d.key, 0]))
@@ -254,41 +254,45 @@ export default function SalaryCalc({ country }) {
         })}</script>
       </Helmet>
 
-      <div className="max-w-4xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-display font-bold mb-1 text-slate-900 tracking-tight">
             {c.name} Salary Calculator
           </h1>
-          <p className="text-slate-500">Convert gross income to net take-home. All pay periods.</p>
+          <p className="text-slate-500 text-sm">Gross to net · all pay periods · 2026 tax rates</p>
         </div>
 
-        {/* Main input card */}
-        <div className="cw-card mb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <NumericInput
-                label={`Gross Income (${c.symbol})`}
-                value={gross}
-                onChange={setGross}
-                min={0}
-                max={2000000}
-                step={1000}
-                prefix={c.symbol}
-                showSlider
-                hint={`Median ${c.name}: ${fmtShort(SALARY_DEFAULTS[country])}/yr`}
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">Income Period</label>
-              <select className="cw-input" value={inputPeriod} onChange={e => setInputPeriod(e.target.value)}>
-                {periods.map(p => (
-                  <option key={p.key} value={p.key}>{p.label}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
+        <div className="calc-grid">
+          {/* LEFT: Inputs */}
+          <div className="calc-inputs-panel">
+            <div className="cw-inputs-panel">
+
+              {/* Income group */}
+              <div className="cw-input-group">
+                <p className="cw-input-group-title">Your Income</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <NumericInput
+                    label={`Gross Income (${c.symbol})`}
+                    value={gross}
+                    onChange={setGross}
+                    min={0}
+                    max={2000000}
+                    step={1000}
+                    prefix={c.symbol}
+                    showSlider
+                    hint={`Median ${c.name}: ${fmtShort(SALARY_DEFAULTS[country])}/yr`}
+                  />
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-1 uppercase tracking-wider">Income Period</label>
+                    <select className="cw-input" value={inputPeriod} onChange={e => setInputPeriod(e.target.value)}>
+                      {periods.map(p => (
+                        <option key={p.key} value={p.key}>{p.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
 
         {/* Deductions collapsible card */}
         {deductionDefs.length > 0 && (
@@ -387,6 +391,12 @@ export default function SalaryCalc({ country }) {
             )}
           </div>
         )}
+
+            </div>{/* /cw-inputs-panel */}
+          </div>{/* /calc-inputs-panel */}
+
+          {/* RIGHT: Results */}
+          <div className="calc-results-panel">
 
         {/* View tabs */}
         <div className="cw-tabs mb-4">
@@ -500,10 +510,15 @@ export default function SalaryCalc({ country }) {
         )}
 
         {annualGross <= 0 && (
-          <div className="cw-card text-center py-8 text-slate-500">
-            Enter a gross income above to see your take-home pay.
+          <div className="cw-result-hero" style={{ background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)' }}>
+            <p className="cw-result-hero-label">Annual Net Income</p>
+            <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>Enter income →</p>
+            <p className="cw-result-hero-sub">Enter your gross income on the left to see your take-home pay.</p>
           </div>
         )}
+
+          </div>{/* /calc-results-panel */}
+        </div>{/* /calc-grid */}
 
         <AdSenseSlot format="rectangle" />
         <AdSenseSlot format="leaderboard" />

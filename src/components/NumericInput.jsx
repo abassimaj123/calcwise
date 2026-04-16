@@ -30,16 +30,20 @@ export default function NumericInput({
     ? Math.round(((value - min) / (max - min)) * 100)
     : 50
 
-  const btnBase = 'flex items-center justify-center min-w-[44px] min-h-[44px] bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-semibold text-lg transition-colors select-none shrink-0'
+  const btnBase = 'flex items-center justify-center min-w-[44px] min-h-[44px] bg-slate-100 hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 text-slate-600 font-bold text-xl transition-colors select-none shrink-0'
 
   return (
     <div className={`${className}`}>
       {label && (
-        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+        <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
           {label}
         </label>
       )}
-      <div className="flex items-stretch border border-slate-200 rounded-lg overflow-hidden focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/10 transition-all">
+      <div className="flex items-stretch rounded-lg overflow-hidden transition-all"
+        style={{ border: '1.5px solid #94A3B8', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)' }}
+        onFocusCapture={e => { e.currentTarget.style.borderColor = '#1A6AFF'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(26,106,255,0.15)'; }}
+        onBlurCapture={e => { e.currentTarget.style.borderColor = '#94A3B8'; e.currentTarget.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05)'; }}
+      >
         <button type="button" onClick={decrement} disabled={value <= min}
           className={`${btnBase} border-r border-slate-200 rounded-none disabled:opacity-40 disabled:cursor-not-allowed`} aria-label="Decrease">−</button>
         <div className="relative flex-1 flex items-center">
