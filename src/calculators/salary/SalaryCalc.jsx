@@ -278,7 +278,7 @@ export default function SalaryCalc({ country }) {
                     label={`${t('salary.annualSalary')} (${c.symbol})`}
                     value={gross}
                     onChange={setGross}
-                    min={0}
+                    min={20000}
                     max={500000}
                     step={1000}
                     prefix={c.symbol}
@@ -328,12 +328,14 @@ export default function SalaryCalc({ country }) {
                           key={d.key}
                           className={`border rounded-xl p-3 transition-colors ${dedEnabled[d.key] ? 'border-green-300 bg-green-50' : 'border-slate-200 bg-white'}`}
                         >
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <div>
-                              <p className="text-sm font-semibold text-slate-800">{d.label}</p>
-                              <p className="text-xs text-slate-500 mt-0.5">{d.hint}</p>
+                          <div className="flex justify-between gap-2 mb-1" style={{ minHeight: '48px' }}>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-slate-800 leading-snug">{d.label}</p>
+                              <p className="text-xs text-slate-500 mt-0.5 leading-snug">{d.hint}</p>
                             </div>
-                            <Toggle on={!!dedEnabled[d.key]} onChange={v => toggleDed(d.key, v)} color="green" />
+                            <div className="shrink-0 pt-0.5">
+                              <Toggle on={!!dedEnabled[d.key]} onChange={v => toggleDed(d.key, v)} color="green" />
+                            </div>
                           </div>
                           {dedEnabled[d.key] && (
                             <div className="mt-2">
@@ -364,12 +366,14 @@ export default function SalaryCalc({ country }) {
                           key={d.key}
                           className={`border rounded-xl p-3 transition-colors ${dedEnabled[d.key] ? 'border-orange-300 bg-orange-50' : 'border-slate-200 bg-white'}`}
                         >
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <div>
-                              <p className="text-sm font-semibold text-slate-800">{d.label}</p>
-                              <p className="text-xs text-slate-500 mt-0.5">{d.hint}</p>
+                          <div className="flex justify-between gap-2 mb-1" style={{ minHeight: '48px' }}>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-slate-800 leading-snug">{d.label}</p>
+                              <p className="text-xs text-slate-500 mt-0.5 leading-snug">{d.hint}</p>
                             </div>
-                            <Toggle on={!!dedEnabled[d.key]} onChange={v => toggleDed(d.key, v)} color="orange" />
+                            <div className="shrink-0 pt-0.5">
+                              <Toggle on={!!dedEnabled[d.key]} onChange={v => toggleDed(d.key, v)} color="orange" />
+                            </div>
                           </div>
                           {dedEnabled[d.key] && (
                             <div className="mt-2">

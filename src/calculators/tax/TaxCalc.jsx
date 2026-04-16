@@ -427,7 +427,7 @@ export default function TaxCalc({ country }) {
     <>
       <Helmet>
         <title>{pageTitle}</title>
-        <meta name="description" content={`Free ${c.name} income tax calculator 2026. Calculate take-home pay, effective rate, ${country === 'us' ? 'federal + state + FICA' : country === 'ca' ? 'federal + provincial + CPP + EI' : country === 'uk' ? 'PAYE + National Insurance' : 'income tax + levies'}. Updated 2025-26 brackets.`} />
+        <meta name="description" content={`Free ${c.name} income tax calculator 2026. Calculate take-home pay, effective rate, ${country === 'us' ? 'federal + state + FICA' : country === 'ca' ? 'federal + provincial + CPP + EI' : country === 'uk' ? 'PAYE + National Insurance' : 'income tax + levies'}. Updated 2026 brackets.`} />
         <link rel="canonical" href={`https://calqwise.com/${country}/tax`} />
       </Helmet>
 

@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ErrorBoundary from './components/ErrorBoundary'
+import StickyAdBanner from './components/StickyAdBanner'
 
 // Pages
 const Home = lazy(() => import('./pages/Home'))
@@ -192,6 +193,7 @@ export default function App() {
         </ErrorBoundary>
       </main>
       <Footer />
+      <StickyAdBanner />
     </div>
   )
 }

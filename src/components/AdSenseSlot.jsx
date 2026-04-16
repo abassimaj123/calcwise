@@ -1,60 +1,52 @@
 // AdSense pub: ca-pub-5379540026739666
-// Slot IDs will be replaced with real ones after approval.
-// The wrapper always renders with a fixed minimum height so it never
-// creates invisible empty space while awaiting AdSense approval.
+// Slot IDs are placeholders — replace with real ones after AdSense approval.
+// The wrapper always has a fixed minHeight so the page layout never shifts
+// and CLS (Cumulative Layout Shift) score stays clean.
 
-const SLOTS = {
-  rectangle:   { id: '0000000001', w: 336, h: 250 },
-  leaderboard: { id: '0000000002', w: 728, h: 90  },
-  responsive:  { id: '0000000003', w: null, h: 100 },
+const FORMAT_HEIGHT = {
+  rectangle:  250,
+  leaderboard: 90,
+  'in-article': 200,
+  auto: 90,
 }
 
-export default function AdSenseSlot({ format = 'rectangle', className = '' }) {
-  const slot = SLOTS[format] || SLOTS.rectangle
+export default function AdSenseSlot({ format = 'rectangle', slot, placement = '', className = '' }) {
+  const minH = FORMAT_HEIGHT[format] || 90
 
   return (
     <div
-      className={`my-4 mx-auto ${className}`}
+      data-placement={placement}
+      className={className}
       style={{
         width: '100%',
-        maxWidth: slot.w ? `${slot.w}px` : '100%',
-        minHeight: `${slot.h}px`,
+        minHeight: `${minH}px`,
+        margin: '24px 0',
         position: 'relative',
-        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#FFFBEB',
+        border: '1.5px dashed #FCD34D',
+        borderRadius: '8px',
+        padding: '8px',
+        boxSizing: 'border-box',
       }}
     >
-      {/* Placeholder shown while AdSense is pending approval */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: '#FFFBEB',
-          border: '1.5px dashed #F59E0B',
-          borderRadius: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '2px',
-          pointerEvents: 'none',
-        }}
-      >
-        <span style={{ fontSize: '10px', fontWeight: 700, color: '#92400E', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-          Advertisement
-        </span>
-        <span style={{ fontSize: '10px', color: '#B45309' }}>
-          {slot.w ? `${slot.w}×${slot.h}` : 'Responsive'} · Pending AdSense approval
-        </span>
-      </div>
-
-      {/* Real AdSense tag — will activate and overlay the placeholder after approval */}
+      <span style={{
+        position: 'absolute', top: 4, left: 8,
+        fontSize: '10px', color: '#92400E',
+        fontWeight: 600, textTransform: 'uppercase',
+        letterSpacing: '0.05em', pointerEvents: 'none',
+      }}>
+        Advertisement
+      </span>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block', position: 'relative', zIndex: 1 }}
+        style={{ display: 'block', width: '100%', minHeight: `${minH - 20}px` }}
         data-ad-client="ca-pub-5379540026739666"
-        data-ad-slot={slot.id}
-        data-ad-format={format === 'responsive' ? 'auto' : format}
+        data-ad-slot={slot || '0000000000'}
+        data-ad-format={format === 'rectangle' ? 'auto' : format}
         data-full-width-responsive="true"
       />
     </div>
