@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ChevronDown, BarChart2 } from 'lucide-react'
 import { countries, calcsByCountry, calcMeta } from '../config/countries'
 import { calcIconMap } from '../config/calcIcons'
+import CountryFlag from './CountryFlag'
 
 const ICON_COLOR = '#1A6AFF'
 const LANGS = [
@@ -73,16 +74,20 @@ export default function Navbar() {
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                {t(`nav.country_${code}`, { defaultValue: country.name })}
+                {code.toUpperCase()}
                 <ChevronDown size={13} className={`ml-1 transition-transform ${activeDropdown === code ? 'rotate-180' : ''}`} />
               </Link>
               {activeDropdown === code && (
                 <div
-                  className="absolute top-full left-0 w-56 bg-white border border-slate-200 rounded-xl py-2 z-50"
+                  className="absolute top-full left-0 w-60 bg-white border border-slate-200 rounded-xl py-2 z-50"
                   style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06)', marginTop: '2px' }}
                   onMouseEnter={() => openDrop(code)}
                   onMouseLeave={closeDrop}
                 >
+                  <div className="flex items-center gap-2 px-4 py-2 border-b border-slate-100 mb-1">
+                    <CountryFlag code={code} size="sm" />
+                    <span className="text-xs font-bold text-slate-700">{t(`nav.country_${code}`, { defaultValue: country.name })}</span>
+                  </div>
                   {calcsByCountry[code].map(calcKey => {
                     const Icon = calcIconMap[calcKey] || BarChart2
                     return (

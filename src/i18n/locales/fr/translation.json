@@ -138,10 +138,38 @@
     "stressTestNote": "Test de résistance CA : qualification au taux contractuel +2% ou 5,25% (le plus élevé)",
     "optCosts": "Coûts optionnels",
     "monthlyCostEstimates": "Coûts mensuels estimés",
-    "oneTimeAdded": "Unique : {{amount}} ajouté au prêt"
+    "oneTimeAdded": "Unique : {{amount}} ajouté au prêt",
+    "opt": {
+      "pmi":       "PMI (Assurance hypothécaire)",
+      "propertax": "Taxe foncière",
+      "homeins":   "Assurance habitation",
+      "hoa":       "Frais de copropriété",
+      "cmhc":      "Assurance SCHL",
+      "lmi":       "Assurance prêt hypothécaire LMI",
+      "condo":     "Frais de condo / strata",
+      "lifeins":   "Assurance vie hypothécaire",
+      "service":   "Charges de service (emphytéose)",
+      "strata":    "Frais de strata / copropriété",
+      "body":      "Frais de copropriété"
+    },
+    "optHint": {
+      "pmi":       "Requis si mise de fonds < 20% · moy. 0,5–1,5% du prêt/an",
+      "propertax": "Taux annuel",
+      "homeins":   "Prime annuelle",
+      "hoa":       "Frais mensuels de copropriété",
+      "cmhc":      "Requis si mise de fonds < 20% · 2,8–4,0% du prêt",
+      "lmi":       "Requis si LVR > 80% · 1–3% du prêt",
+      "condo":     "Frais mensuels de condo/strata",
+      "lifeins":   "Police à terme décroissant mensuelle",
+      "service":   "Charges de service annuelles (bail emphytéotique)",
+      "strata":    "Frais de strata annuels (unités/appartements)",
+      "body":      "Frais annuels pour unités/appartements"
+    }
   },
   "tax": {
     "title": "Calculateur d'Impôts",
+    "subtitle": "Salaire net · taux d'imposition effectif · déductions complètes — taux 2026.",
+    "deductionsTip": "Les déductions réduisent le revenu imposable",
     "desc": "Salaire net, taux effectif et ventilation complète par source de revenus. Mis à jour 2026.",
     "annualIncome": "Revenu Brut Annuel",
     "enterGross": "Entrez votre revenu annuel brut (avant impôts et cotisations)",
@@ -548,5 +576,11 @@
     "vehicleDetails": "Détails du véhicule",
     "loanDetails": "Détails du prêt",
     "amortSchedule": "Tableau d'amortissement"
+  },
+  "notFound": {
+    "title": "Page Non Trouvée",
+    "desc": "Ce calculateur n'existe pas encore. Essayez un de nos calculateurs populaires.",
+    "home": "Retour à l'accueil",
+    "calc": "Calculateur Hypothécaire"
   }
 }

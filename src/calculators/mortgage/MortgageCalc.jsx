@@ -180,12 +180,21 @@ function calcMonthlyPayment(principal, rate, termYears, country = 'us') {
 }
 
 const defaultValues = {
-  us: { price: 400000, down: 80000, rate: 7.0, term: 30 },
-  ca: { price: 600000, down: 120000, rate: 5.0, term: 25 },
-  uk: { price: 300000, down: 60000, rate: 4.5, term: 25 },
-  au: { price: 750000, down: 150000, rate: 6.5, term: 30 },
-  ie: { price: 350000, down: 70000, rate: 4.0, term: 30 },
-  nz: { price: 700000, down: 140000, rate: 7.0, term: 30 },
+  us: { price: 420000, down: 84000, rate: 6.9, term: 30 },
+  ca: { price: 650000, down: 65000, rate: 5.45, term: 25 },
+  uk: { price: 295000, down: 59000, rate: 4.8, term: 25 },
+  au: { price: 750000, down: 150000, rate: 6.2, term: 30 },
+  ie: { price: 350000, down: 70000, rate: 4.2, term: 30 },
+  nz: { price: 700000, down: 140000, rate: 6.5, term: 30 },
+}
+
+const downHints = {
+  us: 'Min: 3.5% FHA · 5% conventional · 20% avoids PMI',
+  ca: 'Min: 5% (under $500K) · 10% ($500K-$999K) · 20% ($1M+) avoids CMHC',
+  uk: 'Min: 5% · 15-20% typical · SDLT applies',
+  au: 'Min: 5% (LMI applies) · 20% avoids LMI',
+  ie: 'Min: 10% FTB · 20% second home',
+  nz: 'Min: 20% · 10% for new builds (LVR rules)',
 }
 
 // ---------------------------------------------------------------------------
@@ -1305,7 +1314,7 @@ export default function MortgageCalc({ country }) {
                     step={1000}
                     prefix={sym}
                     showSlider
-                    hint="Min: 3.5% FHA · 5% conventional · 20% avoids PMI"
+                    hint={downHints[country] || downHints.us}
                   />
                 </div>
               </div>
@@ -1399,8 +1408,8 @@ export default function MortgageCalc({ country }) {
                       >
                         <div className="flex items-start justify-between gap-2 mb-1">
                           <div>
-                            <p className="text-sm font-semibold text-slate-800">{opt.label}</p>
-                            <p className="text-xs text-slate-500 mt-0.5">{opt.hint}</p>
+                            <p className="text-sm font-semibold text-slate-800">{t(`mortgage.opt.${opt.key}`, { defaultValue: opt.label })}</p>
+                            <p className="text-xs text-slate-500 mt-0.5">{t(`mortgage.optHint.${opt.key}_${country}`, { defaultValue: t(`mortgage.optHint.${opt.key}`, { defaultValue: opt.hint }) })}</p>
                           </div>
                           <Toggle on={enabled} onChange={v => toggleOpt(opt.key, v)} />
                         </div>

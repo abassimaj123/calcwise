@@ -135,13 +135,41 @@
     "interest": "Intereses",
     "balance": "Saldo",
     "stressTest": "Tasa de prueba",
-    "stressTestNote": "Prueba de resistencia CA",
+    "stressTestNote": "Prueba CA: calificar a tasa contractual +2% o 5,25% (la más alta)",
     "optCosts": "Costos opcionales",
     "monthlyCostEstimates": "Estimaciones de costos mensuales",
-    "oneTimeAdded": "Único: {{amount}} agregado al préstamo"
+    "oneTimeAdded": "Único: {{amount}} agregado al préstamo",
+    "opt": {
+      "pmi":       "PMI (Seguro hipotecario)",
+      "propertax": "Impuesto predial",
+      "homeins":   "Seguro de hogar",
+      "hoa":       "Cuotas HOA",
+      "cmhc":      "Seguro CMHC",
+      "lmi":       "LMI (Seguro hipotecario)",
+      "condo":     "Cuotas de condominio/strata",
+      "lifeins":   "Seguro de vida hipotecario",
+      "service":   "Cargo de servicio (arrendamiento)",
+      "strata":    "Cuotas de estrata / copropietarios",
+      "body":      "Cuotas de administración"
+    },
+    "optHint": {
+      "pmi":       "Requerido si entrada < 20% · prom. 0,5–1,5% del préstamo/año",
+      "propertax": "Tasa anual",
+      "homeins":   "Prima anual",
+      "hoa":       "Cuota mensual de propietarios",
+      "cmhc":      "Requerido si entrada < 20% · 2,8–4,0% del préstamo",
+      "lmi":       "Requerido si LVR > 80% · 1–3% del préstamo",
+      "condo":     "Cuotas mensuales de condo/strata",
+      "lifeins":   "Póliza de término decreciente mensual",
+      "service":   "Cargo de servicio anual (arrendamiento)",
+      "strata":    "Cuotas anuales de strata (unidades/apartamentos)",
+      "body":      "Cuotas anuales para unidades/apartamentos"
+    }
   },
   "tax": {
     "title": "Calculadora de Impuestos",
+    "subtitle": "Salario neto · tasa impositiva efectiva · deducciones completas — tasas 2026.",
+    "deductionsTip": "Las deducciones reducen la renta imponible",
     "desc": "Sueldo neto, tasa efectiva y desglose completo por fuente de ingreso. Actualizado 2026.",
     "annualIncome": "Ingreso Bruto Anual",
     "enterGross": "Ingresa tu ingreso anual bruto (antes de impuestos)",
@@ -548,5 +576,11 @@
     "vehicleDetails": "Detalles del vehículo",
     "loanDetails": "Detalles del préstamo",
     "amortSchedule": "Tabla de amortización"
+  },
+  "notFound": {
+    "title": "Página No Encontrada",
+    "desc": "Esta calculadora no existe aún. Prueba una de nuestras más populares.",
+    "home": "Volver al inicio",
+    "calc": "Calculadora de Hipoteca"
   }
 }

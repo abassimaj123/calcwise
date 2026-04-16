@@ -138,10 +138,38 @@
     "stressTestNote": "Canadian stress test: qualify at contract rate +2% or 5.25% (whichever higher)",
     "optCosts": "Optional Costs",
     "monthlyCostEstimates": "Monthly Cost Estimates",
-    "oneTimeAdded": "One-time: {{amount}} added to loan"
+    "oneTimeAdded": "One-time: {{amount}} added to loan",
+    "opt": {
+      "pmi":       "PMI (Mortgage Insurance)",
+      "propertax": "Property Tax",
+      "homeins":   "Home Insurance",
+      "hoa":       "HOA Fees",
+      "cmhc":      "CMHC Insurance",
+      "lmi":       "LMI (Lenders Mortgage Ins.)",
+      "condo":     "Condo / Strata Fees",
+      "lifeins":   "Life Insurance (mortgage)",
+      "service":   "Service Charge (leasehold)",
+      "strata":    "Strata / Body Corporate",
+      "body":      "Body Corporate Fees"
+    },
+    "optHint": {
+      "pmi":       "Required if down < 20% · avg 0.5–1.5% of loan/yr",
+      "propertax": "Annual rate",
+      "homeins":   "Annual premium",
+      "hoa":       "Monthly homeowners association fee",
+      "cmhc":      "Required if down < 20% · 2.8–4.0% of loan",
+      "lmi":       "Required if LVR > 80% · 1–3% of loan",
+      "condo":     "Monthly strata/condo fees",
+      "lifeins":   "Monthly decreasing term policy",
+      "service":   "Annual leasehold service charge",
+      "strata":    "Annual strata fees (units/apts)",
+      "body":      "Annual fees for units/apartments"
+    }
   },
   "tax": {
     "title": "Tax Calculator",
+    "subtitle": "Take-home pay, effective tax rate and full breakdown. Updated 2026.",
+    "deductionsTip": "Deductions reduce taxable income",
     "desc": "Take-home pay, effective rate, and full breakdown by income source. Updated 2026.",
     "annualIncome": "Annual Gross Income",
     "enterGross": "Enter your gross (before-tax) annual income",
@@ -548,5 +576,11 @@
     "vehicleDetails": "Vehicle Details",
     "loanDetails": "Loan Details",
     "amortSchedule": "Amortization Schedule"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "desc": "This calculator doesn't exist yet. Try one of our popular ones.",
+    "home": "Back to Home",
+    "calc": "Mortgage Calculator"
   }
 }

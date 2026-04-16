@@ -399,11 +399,9 @@ export default function TaxCalc({ country }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            {c.name} Tax Calculator
+            {t(`nav.country_${country}`, { defaultValue: c.name })} — {t('tax.title')}
           </h1>
-          <p className="text-slate-500">
-            Calculate your take-home pay and effective tax rate. Updated for 2025-26.
-          </p>
+          <p className="text-slate-500">{t('tax.subtitle')}</p>
         </div>
 
         <div className="cw-card mb-4">
@@ -435,7 +433,7 @@ export default function TaxCalc({ country }) {
 
             {dedOpen && (
               <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">Deductions reduce taxable income</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">{t('tax.deductionsTip')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {deductionDefs.map(d => (
                     <div

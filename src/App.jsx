@@ -61,6 +61,7 @@ export default function App() {
             <Route path="/nz" element={<CountryHub country="nz" />} />
 
             {/* US Calculators */}
+            <Route path="/us/rideprofit" element={<RideProfitCalc country="us" />} />
             <Route path="/us/mortgage" element={<MortgageCalc country="us" />} />
             <Route path="/us/tax" element={<TaxCalc country="us" />} />
             <Route path="/us/autoloan" element={<AutoLoanCalc country="us" />} />
