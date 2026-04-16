@@ -37,7 +37,7 @@ export default function NumericInput({
   ].join(' ')
 
   return (
-    <div className={`${className}`}>
+    <div className={`${className}`} style={{ overflow: 'visible' }}>
       {label && (
         <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
           {label}
@@ -95,7 +95,7 @@ export default function NumericInput({
 
       {/* ── Slider (always BELOW the input row, never overlapping) ── */}
       {showSlider && min !== -Infinity && max !== Infinity && (
-        <div className="mt-3 px-1">
+        <div className="px-1" style={{ marginTop: '6px', paddingTop: '10px', paddingBottom: '2px' }}>
           <input
             type="range"
             min={min}
@@ -103,9 +103,11 @@ export default function NumericInput({
             step={step}
             value={value}
             onChange={handleSlider}
-            className="w-full h-1.5 rounded-full appearance-none cursor-pointer block"
+            className="w-full appearance-none cursor-pointer block"
             style={{
+              height: '4px',
               background: `linear-gradient(to right, #1A6AFF ${sliderPct}%, #E2E8F0 ${sliderPct}%)`,
+              borderRadius: '4px',
             }}
           />
           <div className="flex justify-between text-[10px] text-slate-400 mt-1">
