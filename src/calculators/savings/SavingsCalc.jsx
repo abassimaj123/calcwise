@@ -11,6 +11,15 @@ import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import SmartAlert from '../../components/SmartAlert'
+import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+
+const SAVINGS_FAQS = [
+  { q: 'What is compound interest and why does it matter?', a: 'Compound interest is interest earned on both your principal and previously earned interest. Over time it creates exponential growth — $10,000 at 7% for 30 years grows to over $76,000 without adding a single dollar.' },
+  { q: 'What is the difference between APR and APY?', a: 'APR (Annual Percentage Rate) is the simple annual rate. APY (Annual Percentage Yield) accounts for compounding within the year and is always ≥ APR. Banks advertise savings rates as APY — it\'s the more accurate figure for growth calculations.' },
+  { q: 'What is the Rule of 72?', a: 'Divide 72 by your annual interest rate to estimate years to double your money. At 6% annual return, money doubles in approximately 12 years (72 ÷ 6 = 12). At 9%, it doubles in about 8 years.' },
+  { q: 'How much should I save?', a: 'The standard recommendation is to save at least 20% of take-home pay: 10% for retirement accounts and 10% for other goals. Build 3–6 months of expenses as an emergency fund first, then focus on long-term growth.' },
+  { q: 'How does inflation affect my savings?', a: 'Inflation reduces purchasing power over time. If your savings earn 2% but inflation runs at 3%, your real return is -1%. This calculator shows both your nominal balance and its inflation-adjusted "real" value in today\'s purchasing power.' },
+]
 
 // ---------------------------------------------------------------------------
 // Defaults
@@ -429,6 +438,12 @@ export default function SavingsCalc({ country = 'us' }) {
           </div>{/* /calc-results-panel */}
         </div>{/* /calc-grid */}
 
+        <CalcFAQ faqs={SAVINGS_FAQS} />
+        <CalcRelated links={[
+          { to: `/${country}/retirement`, label: 'Retirement Calculator' },
+          { to: `/${country}/net-worth`,  label: 'Net Worth Calculator' },
+          { to: `/${country}/budget`,     label: 'Budget Planner' },
+        ]} />
         <AdSenseSlot format="leaderboard" />
       </div>
     </>

@@ -8,6 +8,15 @@ import { countries } from '../../config/countries'
 import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+
+const NETWORTH_FAQS = [
+  { q: 'What is net worth and why should I track it?', a: 'Net worth = total assets − total liabilities. It\'s the most complete picture of your financial health — more meaningful than income alone. Tracking it monthly or quarterly shows whether you\'re building wealth or falling behind.' },
+  { q: 'What counts as an asset?', a: 'Assets include: cash and savings accounts, chequing accounts, investment accounts (stocks, ETFs, funds), retirement accounts (401k, RRSP, Super), real estate market value, vehicle value, business interests, and other valuables.' },
+  { q: 'What counts as a liability?', a: 'Liabilities include: mortgage remaining balance, home equity line of credit (HELOC), car loans, student loans, credit card balances, personal loans, and any other money you owe to lenders or individuals.' },
+  { q: 'Should I include my home in my net worth?', a: 'Yes — include current market value as an asset and your outstanding mortgage as a liability. The difference is your home equity. Note that real estate is illiquid; you can\'t spend it without selling or borrowing against it.' },
+  { q: 'What is a good net worth by age?', a: 'A common benchmark: net worth = age × 10% of annual income. At 40 earning $80K, target $320K. More practical: track your own trajectory and ensure net worth grows year over year rather than comparing to averages.' },
+]
 
 // ---------------------------------------------------------------------------
 // Pie chart colors
@@ -370,6 +379,13 @@ export default function NetWorthCalc({ country = 'us' }) {
           </div>{/* /calc-results-panel */}
         </div>{/* /calc-grid */}
 
+        <CalcFAQ faqs={NETWORTH_FAQS} />
+        <CalcRelated links={[
+          { to: `/${country}/savings`,    label: 'Savings Calculator' },
+          { to: `/${country}/retirement`, label: 'Retirement Calculator' },
+          { to: `/${country}/budget`,     label: 'Budget Planner' },
+          { to: `/${country}/debt-payoff`, label: 'Debt Payoff' },
+        ]} />
         <AdSenseSlot format="leaderboard" />
       </div>
     </>

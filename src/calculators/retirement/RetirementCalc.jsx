@@ -11,6 +11,15 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+
+const RETIREMENT_FAQS = [
+  { q: 'How much do I need to retire?', a: 'The 25× rule: save 25 times your expected annual expenses in retirement. This supports a 4% annual withdrawal rate. For $60,000/year spending, you need $1.5M. Adjust for state pension/government benefits you expect to receive.' },
+  { q: 'What is the 4% withdrawal rule?', a: 'Research by Bengen (1994) showed a 4% annual withdrawal from a balanced portfolio historically lasted 30+ years. It\'s a starting guideline — adjust based on your investment mix, health, and market conditions at retirement.' },
+  { q: 'When should I start saving for retirement?', a: 'Start as early as possible. $200/month from age 25 at 7% return grows to ~$525,000 by 65. Starting at 35 with the same parameters yields only ~$243,000. Time in the market is the most powerful retirement tool.' },
+  { q: 'What retirement accounts are available in my country?', a: 'US: 401(k) and IRA. Canada: RRSP and TFSA. UK: Workplace pension and SIPP. Australia: Superannuation. New Zealand: KiwiSaver. Ireland: ARF and PRSA. Check the Country Tips tab for 2026 limits and tax advantages for your country.' },
+  { q: 'What employer match should I always take?', a: 'Always contribute enough to get the full employer match — it\'s an immediate 50%–100% return. If your employer matches 50% up to 6% of salary, contributing 6% is an automatic 3% raise you shouldn\'t leave on the table.' },
+]
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -1108,6 +1117,12 @@ export default function RetirementCalc({ country = 'us' }) {
             <AdSenseSlot format="responsive" className="mt-6" />
           </div>
         )}
+        <CalcFAQ faqs={RETIREMENT_FAQS} />
+        <CalcRelated links={[
+          { to: `/${country}/savings`,   label: 'Savings Calculator' },
+          { to: `/${country}/net-worth`, label: 'Net Worth Calculator' },
+          { to: `/${country}/budget`,    label: 'Budget Planner' },
+        ]} />
       </div>
     </>
   )

@@ -9,7 +9,16 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
 import { Plus, Trash2 } from 'lucide-react'
+
+const DEBTPAYOFF_FAQS = [
+  { q: 'What is the difference between debt snowball and avalanche?', a: 'Snowball: pay off smallest balance first for quick psychological wins and momentum. Avalanche: pay off highest interest rate first to minimize total interest paid. Mathematically, avalanche saves more money. For motivation, snowball often works better.' },
+  { q: 'How much does an extra payment save?', a: 'Even $100 extra per month dramatically reduces total interest. On a $10,000 debt at 18% APR, an extra $100/month cuts payoff time from 4+ years to under 2 years and saves over $2,000 in interest.' },
+  { q: 'Should I pay off debt or invest?', a: 'If debt interest rate > expected investment return, pay debt first. High-interest debt (>7%) should generally be eliminated before investing beyond employer match. Low-interest debt (<4%) can coexist with long-term investing.' },
+  { q: 'What is debt-to-income ratio?', a: 'DTI = total monthly debt payments ÷ gross monthly income × 100. Lenders prefer under 36% for mortgage approval. Above 43% limits your borrowing options. Paying down debt improves DTI and opens financial opportunities.' },
+  { q: 'Which debts should I prioritize?', a: 'Priority order: (1) high-interest credit cards and payday loans; (2) personal loans; (3) car loans; (4) student loans; (5) mortgage. Always make minimum payments on all, then throw extra at the priority debt.' },
+]
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -538,6 +547,13 @@ export default function DebtPayoffCalc({ country = 'us' }) {
           </div>{/* /calc-results-panel */}
         </div>{/* /calc-grid */}
 
+        <CalcFAQ faqs={DEBTPAYOFF_FAQS} />
+        <CalcRelated links={[
+          { to: `/${country}/budget`,     label: 'Budget Planner' },
+          { to: `/${country}/net-worth`,  label: 'Net Worth Calculator' },
+          { to: `/${country}/credit-card`, label: 'Credit Card Payoff' },
+          { to: `/${country}/loan-payoff`, label: 'Loan Payoff Calculator' },
+        ]} />
         <AdSenseSlot format="leaderboard" />
       </div>
     </>

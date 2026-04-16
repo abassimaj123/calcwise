@@ -10,6 +10,15 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
+import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+
+const BUDGET_FAQS = [
+  { q: 'What is the 50/30/20 budgeting rule?', a: 'Allocate 50% of after-tax income to needs (housing, food, utilities, transport), 30% to wants (dining out, entertainment, hobbies), and 20% to savings and debt repayment. It\'s a flexible starting point, not a rigid rule.' },
+  { q: 'What counts as a "need" vs a "want"?', a: 'Needs are required for basic living: housing, groceries, utilities, essential transport, insurance, and minimum debt payments. Wants are lifestyle upgrades you could live without: subscriptions, dining out, travel, and entertainment.' },
+  { q: 'How much should I save per month?', a: 'Most financial advisors recommend saving at least 20% of take-home pay — roughly 10% for retirement and 10% for other goals. Start with whatever you can manage and increase it over time.' },
+  { q: 'How do I build an emergency fund?', a: 'Aim for 3–6 months of essential expenses in a high-interest savings account. If you have variable income or dependants, target 6–12 months. Build it gradually by treating it like a fixed monthly expense.' },
+  { q: 'What is a good savings rate?', a: 'Savings rate = monthly savings ÷ monthly income × 100. A 20% savings rate is considered healthy. FIRE (Financial Independence) seekers often target 40–60%. Even a 5–10% rate is a great starting point.' },
+]
 
 // ---------------------------------------------------------------------------
 // Country defaults (monthly amounts in local currency)
@@ -534,6 +543,13 @@ export default function BudgetCalc({ country = 'us' }) {
           </div>{/* /calc-results-panel */}
         </div>{/* /calc-grid */}
 
+        <CalcFAQ faqs={BUDGET_FAQS} />
+        <CalcRelated links={[
+          { to: `/${country}/salary`,      label: 'Salary Calculator' },
+          { to: `/${country}/tax`,         label: 'Tax Calculator' },
+          { to: `/${country}/debt-payoff`, label: 'Debt Payoff' },
+          { to: `/${country}/net-worth`,   label: 'Net Worth' },
+        ]} />
         <AdSenseSlot format="leaderboard" />
       </div>
     </>

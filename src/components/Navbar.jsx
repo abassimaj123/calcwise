@@ -5,6 +5,7 @@ import { ChevronDown, BarChart2 } from 'lucide-react'
 import { countries, calcsByCountry, calcMeta } from '../config/countries'
 import { calcIconMap } from '../config/calcIcons'
 import CountryFlag from './CountryFlag'
+import { trackLanguageSwitch } from '../utils/analytics'
 
 const ICON_COLOR = '#1A6AFF'
 const LANGS = [
@@ -46,6 +47,7 @@ export default function Navbar() {
 
   const switchLang = (code) => {
     i18n.changeLanguage(code)
+    trackLanguageSwitch(code)
     setLangOpen(false)
   }
 

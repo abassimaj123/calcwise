@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
+import { ChevronDown } from 'lucide-react'
 
 export function CalcIntro({ intro, hiddenCost }) {
   return (
@@ -14,18 +17,52 @@ export function CalcIntro({ intro, hiddenCost }) {
 }
 
 export function CalcFAQ({ faqs }) {
+  const [open, setOpen] = useState(null)
+  if (!faqs || !faqs.length) return null
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  }
+
   return (
-    <div className="mt-6 bg-white border border-slate-200 rounded-xl p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-      <h3 className="font-display font-bold text-lg mb-5 text-slate-900">Frequently Asked Questions</h3>
-      <div className="space-y-5">
-        {faqs.map(({ q, a }) => (
-          <div key={q}>
-            <p className="font-semibold text-sm text-slate-900 mb-1">{q}</p>
-            <p className="text-sm text-slate-500 leading-relaxed">{a}</p>
-          </div>
-        ))}
+    <>
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+
+      <div className="mt-6 bg-white border border-slate-200 rounded-xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+        <div className="px-6 pt-6 pb-2">
+          <h2 className="font-display font-bold text-lg text-slate-900">Frequently Asked Questions</h2>
+        </div>
+        <div className="px-6 pb-4 space-y-1">
+          {faqs.map(({ q, a }, i) => (
+            <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setOpen(open === i ? null : i)}
+                className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-slate-50 transition-colors"
+              >
+                <span className="font-semibold text-sm text-slate-800 pr-4">{q}</span>
+                <ChevronDown
+                  size={15}
+                  className={`shrink-0 text-slate-400 transition-transform duration-200 ${open === i ? 'rotate-180' : ''}`}
+                />
+              </button>
+              {open === i && (
+                <div className="px-4 pb-3 bg-slate-50 border-t border-slate-100">
+                  <p className="text-sm text-slate-600 leading-relaxed pt-3">{a}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

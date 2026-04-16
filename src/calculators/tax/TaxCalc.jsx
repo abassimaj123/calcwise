@@ -11,7 +11,41 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
 import NumericInput from '../../components/NumericInput'
+
+const TAX_FAQS = {
+  us: [
+    { q: 'What is the standard deduction for 2026?', a: 'The 2026 standard deduction is $14,600 for single filers, $29,200 for married filing jointly, and $21,900 for head of household. These amounts are inflation-adjusted annually by the IRS.' },
+    { q: 'How do US tax brackets work?', a: 'The US uses a progressive system — you only pay each rate on income within that bracket, not your entire income. Being in the 22% bracket does not mean all your income is taxed at 22%.' },
+    { q: 'What is FICA tax?', a: 'FICA funds Social Security (6.2%, up to $176,100 wage base) and Medicare (1.45%, no cap) — totaling 7.65% for employees. An additional 0.9% Medicare surtax applies above $200K ($250K married).' },
+  ],
+  ca: [
+    { q: 'How is Canadian income tax calculated?', a: 'Canadian income tax = federal tax (15%–33%) + provincial/territorial tax. Both are progressive. The combined top marginal rate ranges from 46% to 54% depending on your province.' },
+    { q: 'What is CPP and how much is deducted?', a: 'CPP contributions are 5.95% on earnings from $3,500–$68,500 in 2026 (max $3,867/yr). CPP2 adds 4% on earnings from $68,500–$73,200.' },
+    { q: 'What is EI?', a: 'Employment Insurance premiums are 1.66% of insurable earnings up to $65,700/year (max $1,090/yr). Your employer contributes 1.4× your premium.' },
+  ],
+  uk: [
+    { q: 'What are UK income tax rates for 2026?', a: 'UK rates: 0% on the Personal Allowance (£12,570); 20% Basic Rate (£12,571–£50,270); 40% Higher Rate (£50,271–£125,140); 45% Additional Rate above £125,140.' },
+    { q: 'What is National Insurance (NI)?', a: 'NI Class 1 employee contributions: 8% on earnings from £12,570–£50,270, then 2% above £50,270. NI funds the NHS, state pension, and other benefits.' },
+    { q: 'Can pension contributions reduce my tax?', a: 'Yes — workplace pension contributions come from pre-tax income, reducing your taxable earnings. A £500/month pension contribution in the 40% bracket saves £200/month in income tax.' },
+  ],
+  au: [
+    { q: 'What are Australian income tax rates for 2026?', a: 'Australian rates: 0% up to $18,200; 19% from $18,201–$45,000; 32.5% from $45,001–$120,000; 37% from $120,001–$180,000; 45% above $180,000. Plus 2% Medicare Levy.' },
+    { q: 'What is the Medicare Levy?', a: 'The Medicare Levy is 2% of taxable income and funds Australia\'s public health system (Medicare). A Medicare Levy Surcharge of 1%–1.5% applies to high earners without private hospital cover.' },
+    { q: 'What is PAYG withholding?', a: 'PAYG (Pay As You Go) is income tax your employer deducts each pay period and remits to the ATO. It\'s reconciled when you lodge your annual tax return — you may receive a refund or owe more.' },
+  ],
+  ie: [
+    { q: 'What are Irish income tax rates for 2026?', a: 'Ireland taxes income at 20% (Standard Rate) up to €42,000 for single individuals, and 40% (Higher Rate) above that. The Personal Tax Credit of €1,875 directly reduces your tax bill.' },
+    { q: 'What is PRSI?', a: 'Pay Related Social Insurance (PRSI) is 4% for employees earning over €352/week. It funds jobseeker\'s benefit, illness benefit, state pension, and other social welfare payments.' },
+    { q: 'What is USC (Universal Social Charge)?', a: 'USC: 0.5% on income up to €12,012; 2% from €12,013–€25,760; 4% from €25,761–€70,044; 8% above €70,044. Medical card holders and certain other groups have reduced rates.' },
+  ],
+  nz: [
+    { q: 'What are New Zealand income tax rates for 2026?', a: 'NZ rates: 10.5% on the first $14,000; 17.5% from $14,001–$48,000; 30% from $48,001–$70,000; 33% from $70,001–$180,000; 39% above $180,000.' },
+    { q: 'What is ACC?', a: 'The ACC earners levy (1.33% in 2026, capped at $142,283) funds no-fault accident compensation. It covers medical treatment and income replacement for accidental injuries regardless of fault.' },
+    { q: 'Do I need to file a tax return in NZ?', a: 'Most NZ employees have tax deducted automatically via PAYE. You may need an IR3 return if you have business income, rental income, overseas income, or significant investment returns.' },
+  ],
+}
 
 const COLORS = { primary: '#1A6AFF', accent: '#00D4FF', success: '#1D9E75', warn: '#F5C842', red: '#EF4444' }
 const PIE_COLORS = [COLORS.success, COLORS.red, COLORS.warn, COLORS.accent]
@@ -596,6 +630,12 @@ export default function TaxCalc({ country }) {
         </div>
 
         <AppDownloadBanner calcKey="tax" country={country} />
+        <CalcFAQ faqs={TAX_FAQS[country] || TAX_FAQS.us} />
+        <CalcRelated links={[
+          { to: `/${country}/salary`,       label: 'Salary Calculator' },
+          { to: `/${country}/affordability`, label: 'Affordability Calculator' },
+          { to: `/${country}/budget`,        label: 'Budget Planner' },
+        ]} />
         <AdSenseSlot format="rectangle" />
         <AdSenseSlot format="leaderboard" />
       </div>
