@@ -11,7 +11,7 @@ const Privacy = lazy(() => import('./pages/Privacy'))
 const Contact = lazy(() => import('./pages/Contact'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
-// Calculators
+// Calculators — existing
 const MortgageCalc = lazy(() => import('./calculators/mortgage/MortgageCalc'))
 const TaxCalc = lazy(() => import('./calculators/tax/TaxCalc'))
 const AutoLoanCalc = lazy(() => import('./calculators/autoloan/AutoLoanCalc'))
@@ -26,6 +26,13 @@ const PropertyROICalc = lazy(() => import('./calculators/propertyrei/PropertyROI
 const RefinanceCalc = lazy(() => import('./calculators/refinance/RefinanceCalc'))
 const AffordabilityCalc = lazy(() => import('./calculators/affordability/AffordabilityCalc'))
 const StampDutyCalc = lazy(() => import('./calculators/stampduty/StampDutyCalc'))
+
+// Calculators — new
+const SavingsCalc = lazy(() => import('./calculators/savings/SavingsCalc'))
+const RetirementCalc = lazy(() => import('./calculators/retirement/RetirementCalc'))
+const NetWorthCalc = lazy(() => import('./calculators/networth/NetWorthCalc'))
+const DebtPayoffCalc = lazy(() => import('./calculators/debtpayoff/DebtPayoffCalc'))
+const BudgetCalc = lazy(() => import('./calculators/budget/BudgetCalc'))
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -64,6 +71,11 @@ export default function App() {
             <Route path="/us/property-roi" element={<PropertyROICalc country="us" />} />
             <Route path="/us/refinance" element={<RefinanceCalc country="us" />} />
             <Route path="/us/affordability" element={<AffordabilityCalc country="us" />} />
+            <Route path="/us/savings" element={<SavingsCalc country="us" />} />
+            <Route path="/us/retirement" element={<RetirementCalc country="us" />} />
+            <Route path="/us/net-worth" element={<NetWorthCalc country="us" />} />
+            <Route path="/us/debt-payoff" element={<DebtPayoffCalc country="us" />} />
+            <Route path="/us/budget" element={<BudgetCalc country="us" />} />
 
             {/* CA Calculators */}
             <Route path="/ca/mortgage" element={<MortgageCalc country="ca" />} />
@@ -77,6 +89,11 @@ export default function App() {
             <Route path="/ca/affordability" element={<AffordabilityCalc country="ca" />} />
             <Route path="/ca/property-roi" element={<PropertyROICalc country="ca" />} />
             <Route path="/ca/refinance" element={<RefinanceCalc country="ca" />} />
+            <Route path="/ca/savings" element={<SavingsCalc country="ca" />} />
+            <Route path="/ca/retirement" element={<RetirementCalc country="ca" />} />
+            <Route path="/ca/net-worth" element={<NetWorthCalc country="ca" />} />
+            <Route path="/ca/debt-payoff" element={<DebtPayoffCalc country="ca" />} />
+            <Route path="/ca/budget" element={<BudgetCalc country="ca" />} />
 
             {/* UK Calculators */}
             <Route path="/uk/mortgage" element={<MortgageCalc country="uk" />} />
@@ -91,6 +108,11 @@ export default function App() {
             <Route path="/uk/property-roi" element={<PropertyROICalc country="uk" />} />
             <Route path="/uk/refinance" element={<RefinanceCalc country="uk" />} />
             <Route path="/uk/stamp-duty" element={<StampDutyCalc />} />
+            <Route path="/uk/savings" element={<SavingsCalc country="uk" />} />
+            <Route path="/uk/retirement" element={<RetirementCalc country="uk" />} />
+            <Route path="/uk/net-worth" element={<NetWorthCalc country="uk" />} />
+            <Route path="/uk/debt-payoff" element={<DebtPayoffCalc country="uk" />} />
+            <Route path="/uk/budget" element={<BudgetCalc country="uk" />} />
 
             {/* AU Calculators */}
             <Route path="/au/mortgage" element={<MortgageCalc country="au" />} />
@@ -102,6 +124,11 @@ export default function App() {
             <Route path="/au/loan-payoff" element={<LoanPayoffCalc country="au" />} />
             <Route path="/au/credit-card" element={<CreditCardCalc country="au" />} />
             <Route path="/au/affordability" element={<AffordabilityCalc country="au" />} />
+            <Route path="/au/savings" element={<SavingsCalc country="au" />} />
+            <Route path="/au/retirement" element={<RetirementCalc country="au" />} />
+            <Route path="/au/net-worth" element={<NetWorthCalc country="au" />} />
+            <Route path="/au/debt-payoff" element={<DebtPayoffCalc country="au" />} />
+            <Route path="/au/budget" element={<BudgetCalc country="au" />} />
 
             {/* IE Calculators */}
             <Route path="/ie/mortgage" element={<MortgageCalc country="ie" />} />
@@ -113,6 +140,11 @@ export default function App() {
             <Route path="/ie/loan-payoff" element={<LoanPayoffCalc country="ie" />} />
             <Route path="/ie/credit-card" element={<CreditCardCalc country="ie" />} />
             <Route path="/ie/affordability" element={<AffordabilityCalc country="ie" />} />
+            <Route path="/ie/savings" element={<SavingsCalc country="ie" />} />
+            <Route path="/ie/retirement" element={<RetirementCalc country="ie" />} />
+            <Route path="/ie/net-worth" element={<NetWorthCalc country="ie" />} />
+            <Route path="/ie/debt-payoff" element={<DebtPayoffCalc country="ie" />} />
+            <Route path="/ie/budget" element={<BudgetCalc country="ie" />} />
 
             {/* NZ Calculators */}
             <Route path="/nz/mortgage" element={<MortgageCalc country="nz" />} />
@@ -124,6 +156,11 @@ export default function App() {
             <Route path="/nz/loan-payoff" element={<LoanPayoffCalc country="nz" />} />
             <Route path="/nz/credit-card" element={<CreditCardCalc country="nz" />} />
             <Route path="/nz/affordability" element={<AffordabilityCalc country="nz" />} />
+            <Route path="/nz/savings" element={<SavingsCalc country="nz" />} />
+            <Route path="/nz/retirement" element={<RetirementCalc country="nz" />} />
+            <Route path="/nz/net-worth" element={<NetWorthCalc country="nz" />} />
+            <Route path="/nz/debt-payoff" element={<DebtPayoffCalc country="nz" />} />
+            <Route path="/nz/budget" element={<BudgetCalc country="nz" />} />
 
             {/* Static Pages */}
             <Route path="/privacy" element={<Privacy />} />
