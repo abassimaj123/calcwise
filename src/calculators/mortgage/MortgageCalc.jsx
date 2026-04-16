@@ -329,7 +329,7 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
           {/* Loan Type Comparison */}
           <div className="cw-card">
             <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wider">Loan Type Comparison</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-3">
               {loanTypes.map(lt => (
                 <div key={lt.name} className="border border-slate-200 rounded-xl p-3 bg-white">
                   <p className="font-bold text-slate-800 text-sm">{lt.name}</p>
@@ -1293,7 +1293,7 @@ export default function MortgageCalc({ country }) {
               {/* Property Details group */}
               <div className="cw-input-group">
                 <p className="cw-input-group-title">{t('mortgage.propertyDetails')}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
                   <NumericInput
                     label={`${t('mortgage.homePrice')} (${sym})`}
                     value={price}
@@ -1322,7 +1322,7 @@ export default function MortgageCalc({ country }) {
               {/* Financing group */}
               <div className="cw-input-group">
                 <p className="cw-input-group-title">{t('mortgage.financing')}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
                   <NumericInput
                     label={`${t('mortgage.interestRate')} (%)`}
                     value={rate}
@@ -1495,7 +1495,7 @@ export default function MortgageCalc({ country }) {
             </div>
             {/* True Monthly Cost card — shown when optional costs are active */}
             {totalOptMonthly > 0 && (
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
                 <div className="cw-metric green">
                   <p className="cw-metric-label">{t('calc.trueMonthly')}</p>
                   <p className="cw-metric-value">{fmtD(trueMonthly)}</p>
@@ -1531,7 +1531,7 @@ export default function MortgageCalc({ country }) {
 
         {/* Chart tab */}
         {activeTab === 'chart' && result && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-6">
             {/* Area Chart */}
             <div className="cw-card">
               <h3 className="font-semibold mb-4 text-sm">{t('mortgage.principalInterest')}</h3>

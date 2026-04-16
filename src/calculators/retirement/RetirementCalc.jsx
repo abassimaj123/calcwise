@@ -252,7 +252,7 @@ function US401k({ c }) {
       <div className="cw-inputs-panel">
         <div className="cw-input-group">
           <SectionTitle>Your 401(k) Details</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <NumericInput label="Annual Salary" value={salary} onChange={setSalary} min={0} max={1000000} step={1000} prefix={sym} showSlider hint="Your gross annual salary" />
             <NumericInput label="Your Contribution (%)" value={contribPct} onChange={setContribPct} min={1} max={23} step={0.5} suffix="%" showSlider hint="2026 limit: $23,500/yr" />
             <NumericInput label="Employer Match (%)" value={matchPct} onChange={setMatchPct} min={0} max={10} step={0.5} suffix="%" showSlider hint='Common: 3% match (50% on 6%)' />
@@ -360,7 +360,7 @@ function CARRSP({ c }) {
       <div className="cw-inputs-panel">
         <div className="cw-input-group">
           <SectionTitle>RRSP Details</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <NumericInput label="Annual Income" value={income} onChange={setIncome} min={0} max={500000} step={1000} prefix={sym} showSlider hint="Determines your RRSP room (18% of prior-year income)" />
             <NumericInput label="RRSP Contribution" value={rrspContrib} onChange={setRrspContrib} min={0} max={31560} step={500} prefix={sym} showSlider hint="2026 annual limit: $31,560" />
             <NumericInput label="Marginal Tax Rate (%)" value={marginalRate} onChange={setMarginalRate} min={20} max={54} step={1} suffix="%" showSlider hint="Combined federal + provincial rate" />
@@ -372,7 +372,7 @@ function CARRSP({ c }) {
 
         <div className="cw-input-group mt-4">
           <SectionTitle>TFSA Details</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <NumericInput label="Annual TFSA Contribution" value={tfsaContrib} onChange={setTfsaContrib} min={0} max={7000} step={500} prefix={sym} showSlider hint="2026 annual limit: $7,000" />
             <NumericInput label="Current TFSA Balance" value={tfsaBalance} onChange={setTfsaBalance} min={0} max={500000} step={1000} prefix={sym} showSlider />
             <NumericInput label="TFSA Rate of Return (%)" value={tfsaReturn} onChange={setTfsaReturn} min={1} max={15} step={0.1} suffix="%" showSlider />
@@ -452,7 +452,7 @@ function AUSuper({ c }) {
       <div className="cw-inputs-panel">
         <div className="cw-input-group">
           <SectionTitle>Superannuation Details</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <NumericInput label="Annual Salary (before super)" value={salary} onChange={setSalary} min={0} max={1000000} step={1000} prefix={sym} showSlider />
             <NumericInput label="Super Guarantee Rate (%)" value={sgrPct} onChange={setSgrPct} min={9} max={15} step={0.5} suffix="%" showSlider hint="Legislated 11.5% in 2025-26, rising to 12% in 2026-27" />
             <NumericInput label="Voluntary Contributions (monthly)" value={voluntary} onChange={setVoluntary} min={0} max={5000} step={50} prefix={sym} showSlider />
@@ -539,7 +539,7 @@ function NZKiwiSaver({ c }) {
       <div className="cw-inputs-panel">
         <div className="cw-input-group">
           <SectionTitle>KiwiSaver Details</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <NumericInput label="Annual Salary" value={salary} onChange={setSalary} min={0} max={500000} step={1000} prefix={sym} showSlider />
             <div>
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Your KiwiSaver Rate</label>
@@ -661,7 +661,7 @@ function UKISAPension({ c }) {
       <div className="cw-inputs-panel">
         <div className="cw-input-group">
           <SectionTitle>ISA Details</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <NumericInput label="Annual ISA Contribution" value={isaContrib} onChange={setIsaContrib} min={0} max={20000} step={500} prefix={sym} showSlider hint="2026 annual limit: £20,000" />
             <NumericInput label="Current ISA Balance" value={isaBalance} onChange={setIsaBalance} min={0} max={1000000} step={1000} prefix={sym} showSlider />
             <NumericInput label="ISA Rate of Return (%)" value={isaReturn} onChange={setIsaReturn} min={1} max={15} step={0.1} suffix="%" showSlider />
@@ -670,7 +670,7 @@ function UKISAPension({ c }) {
 
         <div className="cw-input-group mt-4">
           <SectionTitle>Pension Details</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <NumericInput label="Annual Pension Contribution" value={pensionContrib} onChange={setPensionContrib} min={0} max={60000} step={500} prefix={sym} showSlider />
             <NumericInput label="Employer Contribution (%)" value={employerPct} onChange={setEmployerPct} min={0} max={20} step={0.5} suffix="%" showSlider />
             <NumericInput label="Current Pension Balance" value={pensionBalance} onChange={setPensionBalance} min={0} max={2000000} step={1000} prefix={sym} showSlider />
@@ -756,7 +756,7 @@ function IEPension({ c }) {
       <div className="cw-inputs-panel">
         <div className="cw-input-group">
           <SectionTitle>Irish Pension Details</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <NumericInput label="Annual Income" value={income} onChange={setIncome} min={0} max={500000} step={1000} prefix={sym} showSlider />
             <NumericInput label="Your Pension Contribution (%)" value={contribPct} onChange={setContribPct} min={0} max={40} step={1} suffix="%" showSlider hint={ageHint} />
             <NumericInput label="Employer Contribution (%)" value={employerPct} onChange={setEmployerPct} min={0} max={20} step={0.5} suffix="%" showSlider />
@@ -905,7 +905,7 @@ export default function RetirementCalc({ country = 'us' }) {
                 {/* Profile group */}
                 <div className="cw-input-group">
                   <p className="cw-input-group-title">{t('retirement.yourProfile')}</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
                     <NumericInput
                       label={t('retirement.currentAge')}
                       value={currentAge}
@@ -953,7 +953,7 @@ export default function RetirementCalc({ country = 'us' }) {
                 {/* Retirement income group */}
                 <div className="cw-input-group">
                   <p className="cw-input-group-title">{t('retirement.retirementIncome')}</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
                     <NumericInput
                       label={`${t('retirement.monthlyIncomeNeeded')} (${sym})`}
                       value={monthlyNeed}

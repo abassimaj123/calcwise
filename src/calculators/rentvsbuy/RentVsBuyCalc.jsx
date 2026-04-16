@@ -255,7 +255,7 @@ export default function RentVsBuyCalc({ country }) {
 
         <div className="cw-card mb-4">
           <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-slate-500">{t('rentvsbuy.buying')} {t('rentvsbuy.scenario')}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.homePrice')} ({c.symbol})</label>
               <NumericInput value={homePrice} onChange={setHomePrice} min={0} step={1000} prefix={c.symbol} />
@@ -281,7 +281,7 @@ export default function RentVsBuyCalc({ country }) {
           </div>
 
           <h3 className="font-semibold mt-6 mb-4 text-sm uppercase tracking-wider text-slate-500">{t('rentvsbuy.renting')} {t('rentvsbuy.scenario')}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.monthlyRent')} ({c.symbol})</label>
               <NumericInput value={rent} onChange={setRent} min={0} step={50} prefix={c.symbol} />
@@ -315,7 +315,7 @@ export default function RentVsBuyCalc({ country }) {
             {buyOptOpen && (
               <div className="mt-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-3">Added to monthly buying cost</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-3">
                   {buyOptionDefs.map(d => (
                     <div
                       key={d.key}

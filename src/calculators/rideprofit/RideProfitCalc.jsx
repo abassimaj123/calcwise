@@ -222,7 +222,7 @@ export default function RideProfitCalc({ country }) {
         <CalcIntro intro="The RideProfit calculator shows your true earnings as a rideshare or delivery driver after all expenses. It accounts for fuel costs, mileage tax deductions, platform fees, and vehicle wear to reveal your real hourly rate." hiddenCost="Vehicle depreciation costs drivers $0.05-0.15/km" />
 
         <div className="cw-card mb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">Platform</label>
               <select className="cw-input" value={platform} onChange={e => setPlatform(e.target.value)}>
@@ -280,7 +280,7 @@ export default function RideProfitCalc({ country }) {
             {expOpen && (
               <div className="mt-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-orange-600 mb-3">Monthly costs subtracted from profit</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-3">
                   {expenseDefs.map(d => (
                     <div
                       key={d.key}

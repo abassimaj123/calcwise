@@ -301,7 +301,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
 
         {/* Main inputs */}
         <div className="cw-card mb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('studentloan.loanBalance')} ($)</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={sym} />
@@ -413,7 +413,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
         </div>
 
         {results && tab === 'summary' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4 mb-6">
             {[results.standard, results.ibr, results.paye, results.save].map((plan, i) => (
               <div key={i} className={`cw-card ${i === 0 ? '' : 'border-primary/20'}`}>
                 <h3 className="font-bold text-accent mb-3">

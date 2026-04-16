@@ -213,7 +213,7 @@ export default function CreditCardCalc({ country = 'us' }) {
 
         {/* Main inputs */}
         <div className="cw-card mb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('creditcard.balance')} ({c.symbol})</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />

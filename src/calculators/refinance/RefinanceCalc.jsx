@@ -142,7 +142,7 @@ export default function RefinanceCalc({ country = 'us' }) {
 
         <div className="cw-card mb-6">
           <h3 className="text-sm text-slate-500 uppercase tracking-wider mb-4">{t('refinance.currentLoan')}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('refinance.currentBalance')} ({c.symbol})</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />
@@ -160,7 +160,7 @@ export default function RefinanceCalc({ country = 'us' }) {
           </div>
 
           <h3 className="text-sm text-slate-500 uppercase tracking-wider mb-4 mt-6">{t('refinance.newLoan')}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('refinance.newRate')} (%)</label>
               <NumericInput value={newRate} onChange={setNewRate} min={0} step={0.1} suffix="%" />

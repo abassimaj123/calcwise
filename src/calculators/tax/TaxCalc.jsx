@@ -434,7 +434,7 @@ export default function TaxCalc({ country }) {
             {dedOpen && (
               <div className="mt-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">{t('tax.deductionsTip')}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-3">
                   {deductionDefs.map(d => (
                     <div
                       key={d.key}
@@ -540,7 +540,7 @@ export default function TaxCalc({ country }) {
             />
 
             {/* Charts */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-6 mt-6">
               <div className="cw-card flex flex-col items-center">
                 <h3 className="font-semibold mb-4 text-sm self-start">Income Distribution</h3>
                 <ResponsiveContainer width="100%" height={220}>

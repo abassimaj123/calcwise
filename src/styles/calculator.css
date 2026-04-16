@@ -1,0 +1,52 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   CALCULATOR INPUT ALIGNMENT
+   Each column in a 2-column input grid is fully independent.
+   Left column height NEVER affects right column vertical position.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* 2-column input grid — columns start independently (no stretch) */
+.calc-input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+/* Financing row: rate + term — columns start from top */
+.calc-input-grid-start {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+/* NumericInput wrapper always fills its column */
+.numeric-input-wrapper {
+  width: 100%;
+  overflow: visible;
+}
+
+/* Slider always full width under its input */
+.numeric-input-wrapper input[type="range"] {
+  width: 100%;
+  display: block;
+}
+
+/* Input text centered */
+.numeric-input-wrapper input[type="number"],
+.numeric-input-wrapper input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RESPONSIVE OVERRIDES
+   On mobile (<640px), all 2-col grids collapse to 1 column.
+   ──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .calc-input-grid,
+  .calc-input-grid-start {
+    grid-template-columns: 1fr;
+  }
+}

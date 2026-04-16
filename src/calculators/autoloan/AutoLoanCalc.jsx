@@ -117,7 +117,7 @@ export default function AutoLoanCalc({ country }) {
         <div className="cw-card mb-6">
           {/* Vehicle Details section */}
           <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">{t('autoloan.vehicleDetails')}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-5">
             <NumericInput
               label={`${t('autoloan.vehiclePrice')} (${c.symbol})`}
               value={price}
@@ -155,7 +155,7 @@ export default function AutoLoanCalc({ country }) {
           {/* Financing section */}
           <div className="border-t border-slate-100 mt-5 pt-5">
             <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">{t('autoloan.loanDetails')}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-5">
               <NumericInput
                 label="APR (%)"
                 value={apr}
@@ -206,7 +206,7 @@ export default function AutoLoanCalc({ country }) {
                 { label: t('autoloan.totalCost'), value: fmt(result.totalPaid) },
               ]}
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4 mt-4">
               <div className="cw-metric">
                 <p className="cw-metric-label">{t('autoloan.monthlyPayment')} (bi-weekly)</p>
                 <p className="cw-metric-value">{fmtD(result.biWeekly)}</p>
