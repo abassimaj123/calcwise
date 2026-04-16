@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { countries } from '../../config/countries'
 import { AUTOLOAN_DEFAULTS } from '../../config/calcDefaults'
@@ -43,6 +44,7 @@ function buildSchedule(loanAmount, apr, termMonths) {
 const termOptions = [24, 36, 48, 60, 72, 84]
 
 export default function AutoLoanCalc({ country }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const d = AUTOLOAN_DEFAULTS[country] || AUTOLOAN_DEFAULTS.us
 
@@ -107,17 +109,17 @@ export default function AutoLoanCalc({ country }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            {c.name} Auto Loan Calculator
+            {c.name} {t('autoloan.title')}
           </h1>
-          <p className="text-slate-500">Calculate your monthly car payment, total interest and true cost.</p>
+          <p className="text-slate-500">{t('autoloan.desc')}</p>
         </div>
 
         <div className="cw-card mb-6">
           {/* Vehicle Details section */}
-          <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">Vehicle Details</h3>
+          <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">{t('autoloan.vehicleDetails')}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <NumericInput
-              label={`Vehicle Price (${c.symbol})`}
+              label={`${t('autoloan.vehiclePrice')} (${c.symbol})`}
               value={price}
               onChange={setPrice}
               min={5000}
@@ -128,7 +130,7 @@ export default function AutoLoanCalc({ country }) {
               hint="Average new car: $48k US · $55k CA · £35k UK"
             />
             <NumericInput
-              label={`Down Payment (${c.symbol})`}
+              label={`${t('autoloan.downPayment')} (${c.symbol})`}
               value={down}
               onChange={setDown}
               min={0}
@@ -139,7 +141,7 @@ export default function AutoLoanCalc({ country }) {
               hint="Recommended: 10-20% of vehicle price"
             />
             <NumericInput
-              label={`Trade-In Value (${c.symbol})`}
+              label={`${t('autoloan.tradeIn')} (${c.symbol})`}
               value={tradeIn}
               onChange={setTradeIn}
               min={0}
@@ -152,7 +154,7 @@ export default function AutoLoanCalc({ country }) {
 
           {/* Financing section */}
           <div className="border-t border-slate-100 mt-5 pt-5">
-            <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">Financing</h3>
+            <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">{t('autoloan.loanDetails')}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <NumericInput
                 label="APR (%)"
@@ -166,7 +168,7 @@ export default function AutoLoanCalc({ country }) {
                 hint={aprHint}
               />
               <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Loan Term</label>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{t('autoloan.loanTerm')}</label>
                 <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
                   {termOptions.map(t => (
                     <option key={t} value={t}>{t} months ({(t / 12).toFixed(1)} yr)</option>
@@ -190,7 +192,7 @@ export default function AutoLoanCalc({ country }) {
               onClick={() => setView(v)}
               className={`cw-tab${view === v ? ' active' : ''}`}
             >
-              {v}
+              {v === 'summary' ? t('calc.summary') : v === 'chart' ? t('calc.chart') : t('calc.schedule')}
             </button>
           ))}
         </div>
@@ -199,18 +201,18 @@ export default function AutoLoanCalc({ country }) {
           <>
             <ResultSimple
               metrics={[
-                { label: 'Monthly Payment', value: fmtD(result.monthly), highlight: true },
-                { label: 'Total Interest', value: fmt(result.totalInterest) },
-                { label: 'Total Cost', value: fmt(result.totalPaid) },
+                { label: t('autoloan.monthlyPayment'), value: fmtD(result.monthly), highlight: true },
+                { label: t('autoloan.totalInterest'), value: fmt(result.totalInterest) },
+                { label: t('autoloan.totalCost'), value: fmt(result.totalPaid) },
               ]}
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <div className="cw-metric">
-                <p className="cw-metric-label">Bi-Weekly Payment</p>
+                <p className="cw-metric-label">{t('autoloan.monthlyPayment')} (bi-weekly)</p>
                 <p className="cw-metric-value">{fmtD(result.biWeekly)}</p>
               </div>
               <div className="cw-metric green">
-                <p className="cw-metric-label">Loan Amount</p>
+                <p className="cw-metric-label">{t('autoloan.loanAmount')}</p>
                 <p className="cw-metric-value">{fmt(result.loanAmount)}</p>
               </div>
             </div>
@@ -220,7 +222,7 @@ export default function AutoLoanCalc({ country }) {
         {result && view === 'chart' && (
           <div className="cw-card space-y-8">
             <div>
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">Principal vs Interest</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">{t('autoloan.loanAmount')} vs {t('autoloan.totalInterest')}</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
                   <Pie
@@ -242,7 +244,7 @@ export default function AutoLoanCalc({ country }) {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">Loan Balance Over Time</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">{t('autoloan.loanAmount')} — {t('calc.schedule')}</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                   <defs>
@@ -264,7 +266,7 @@ export default function AutoLoanCalc({ country }) {
 
         {result && view === 'schedule' && (
           <div className="cw-card">
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Amortization Schedule</h3>
+            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">{t('autoloan.amortSchedule')}</h3>
             <div className="max-h-96 overflow-y-auto rounded-lg border border-white/10">
               <table className="w-full text-sm">
                 <thead className="sticky top-0">
@@ -297,7 +299,7 @@ export default function AutoLoanCalc({ country }) {
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter valid values above to see your results.
+            {t('calc.enterValid')}
           </div>
         )}
 

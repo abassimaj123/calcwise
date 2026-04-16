@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
@@ -162,6 +163,7 @@ function calcDebtPayoff(debts, extraPayment, strategy) {
 // Component
 // ---------------------------------------------------------------------------
 export default function DebtPayoffCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country] || countries.us
   const names = DEBT_NAMES[country] || DEBT_NAMES.us
 
@@ -228,8 +230,8 @@ export default function DebtPayoffCalc({ country = 'us' }) {
       <div className="max-w-5xl mx-auto px-4 py-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Debt Payoff Calculator</h1>
-          <p className="text-slate-500">Snowball vs Avalanche — find your fastest path to debt freedom.</p>
+          <h1 className="text-3xl font-display font-bold mb-2">{t('debtpayoff.title')}</h1>
+          <p className="text-slate-500">{t('debtpayoff.desc')}</p>
         </div>
 
         <div className="calc-grid">
@@ -239,11 +241,11 @@ export default function DebtPayoffCalc({ country = 'us' }) {
 
               {/* Strategy selector */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Payoff Strategy</p>
+                <p className="cw-input-group-title">{t('debtpayoff.strategy')}</p>
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { key: 'avalanche', label: 'Avalanche', desc: 'Highest rate first — saves most interest', icon: '⚡' },
-                    { key: 'snowball', label: 'Snowball', desc: 'Lowest balance first — quick wins for motivation', icon: '❄️' },
+                    { key: 'avalanche', label: t('debtpayoff.avalanche'), desc: t('debtpayoff.avalancheDesc'), icon: '⚡' },
+                    { key: 'snowball', label: t('debtpayoff.snowball'), desc: t('debtpayoff.snowballDesc'), icon: '❄️' },
                   ].map(s => (
                     <button
                       key={s.key}
@@ -264,7 +266,7 @@ export default function DebtPayoffCalc({ country = 'us' }) {
 
               {/* Debt list */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Your Debts</p>
+                <p className="cw-input-group-title">{t('debtpayoff.debtName')}</p>
                 <div className="space-y-4">
                   {debts.map((debt, idx) => (
                     <div key={debt.id} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
@@ -285,7 +287,7 @@ export default function DebtPayoffCalc({ country = 'us' }) {
                             type="button"
                             onClick={() => removeDebt(debt.id)}
                             className="ml-2 text-slate-400 hover:text-red-500 transition-colors"
-                            aria-label="Remove debt"
+                            aria-label={t('debtpayoff.removeDebt')}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -293,7 +295,7 @@ export default function DebtPayoffCalc({ country = 'us' }) {
                       </div>
                       <div className="grid grid-cols-3 gap-2">
                         <div>
-                          <label className="block text-[10px] text-slate-500 mb-1">Balance ({c.symbol})</label>
+                          <label className="block text-[10px] text-slate-500 mb-1">{t('debtpayoff.balance')} ({c.symbol})</label>
                           <NumericInput
                             value={debt.balance}
                             onChange={v => updateDebt(debt.id, 'balance', v)}
@@ -304,7 +306,7 @@ export default function DebtPayoffCalc({ country = 'us' }) {
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] text-slate-500 mb-1">Rate (%)</label>
+                          <label className="block text-[10px] text-slate-500 mb-1">{t('debtpayoff.interestRate')}</label>
                           <NumericInput
                             value={debt.rate}
                             onChange={v => updateDebt(debt.id, 'rate', v)}
@@ -315,7 +317,7 @@ export default function DebtPayoffCalc({ country = 'us' }) {
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] text-slate-500 mb-1">Min Pay ({c.symbol})</label>
+                          <label className="block text-[10px] text-slate-500 mb-1">{t('debtpayoff.minPayment')} ({c.symbol})</label>
                           <NumericInput
                             value={debt.minPayment}
                             onChange={v => updateDebt(debt.id, 'minPayment', v)}
@@ -336,16 +338,16 @@ export default function DebtPayoffCalc({ country = 'us' }) {
                     onClick={addDebt}
                     className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 text-sm font-medium hover:border-blue-400 hover:text-blue-600 transition-colors"
                   >
-                    <Plus size={16} /> Add Debt ({debts.length}/6)
+                    <Plus size={16} /> {t('debtpayoff.addDebt')} ({debts.length}/6)
                   </button>
                 )}
               </div>
 
               {/* Extra payment */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Extra Monthly Payment</p>
+                <p className="cw-input-group-title">{t('debtpayoff.extraPayment')}</p>
                 <NumericInput
-                  label={`Extra Payment (${c.symbol}/month)`}
+                  label={`${t('debtpayoff.extraPayment')} (${c.symbol}/month)`}
                   value={extraPayment}
                   onChange={setExtraPayment}
                   min={0}
@@ -371,16 +373,16 @@ export default function DebtPayoffCalc({ country = 'us' }) {
                   onClick={() => setView(v)}
                   className={`cw-tab${view === v ? ' active' : ''}`}
                 >
-                  {v.charAt(0).toUpperCase() + v.slice(1)}
+                  {t(`calc.${v}`)}
                 </button>
               ))}
             </div>
 
             {!result && (
               <div className="cw-result-hero">
-                <p className="cw-result-hero-label">Debt Free In</p>
-                <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>Enter debts →</p>
-                <p className="cw-result-hero-sub">Add your debts above to see your payoff timeline.</p>
+                <p className="cw-result-hero-label">{t('debtpayoff.payoffDate')}</p>
+                <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>{t('calc.enterValid')}</p>
+                <p className="cw-result-hero-sub">{t('calc.enterValid')}</p>
               </div>
             )}
 
@@ -389,16 +391,16 @@ export default function DebtPayoffCalc({ country = 'us' }) {
               <div className="space-y-4">
                 <ResultSimple
                   metrics={[
-                    { label: 'Debt Free In', value: months2str(result.months), highlight: true },
-                    { label: 'Total Interest', value: fmt(result.totalInterest) },
-                    { label: 'Months Saved', value: `${result.monthsSaved}m`, sub: 'vs minimums only' },
-                    { label: 'Interest Saved', value: fmt(result.interestSaved) },
+                    { label: t('debtpayoff.payoffDate'), value: months2str(result.months), highlight: true },
+                    { label: t('debtpayoff.totalInterest'), value: fmt(result.totalInterest) },
+                    { label: t('debtpayoff.timeSaved'), value: `${result.monthsSaved}m` },
+                    { label: t('debtpayoff.interestSaved'), value: fmt(result.interestSaved) },
                   ]}
                 />
 
                 {result.interestSaved > 0 && (
                   <div className="cw-metric green">
-                    <p className="cw-metric-label">Interest Saved vs Paying Minimums Only</p>
+                    <p className="cw-metric-label">{t('debtpayoff.interestSaved')}</p>
                     <p className="cw-metric-value">{fmt(result.interestSaved)}</p>
                     <p className="cw-metric-sub">Pay off {months2str(result.monthsSaved)} sooner with {fmt(extraPayment)}/mo extra</p>
                   </div>
@@ -436,16 +438,16 @@ export default function DebtPayoffCalc({ country = 'us' }) {
                 </div>
 
                 <ResultDetailed
-                  title="Payoff Summary"
+                  title={t('calc.summary')}
                   rows={[
-                    { label: 'Total Debt', value: fmt(result.totalDebt) },
-                    { label: 'Monthly Payment', value: fmt(result.totalMonthlyPayment) },
-                    { label: 'Min-Only Payoff', value: months2str(result.minMonths) },
-                    { label: 'With Strategy', value: months2str(result.months), bold: true },
-                    { label: 'Min-Only Interest', value: fmt(result.minInterest) },
-                    { label: 'Strategy Interest', value: fmt(result.totalInterest) },
-                    { label: 'Interest Saved', value: fmt(result.interestSaved), bold: true },
-                    { label: 'Time Saved', value: months2str(result.monthsSaved), bold: true },
+                    { label: t('debtpayoff.balance'), value: fmt(result.totalDebt) },
+                    { label: t('calc.monthlyPayment'), value: fmt(result.totalMonthlyPayment) },
+                    { label: t('debtpayoff.minPayment'), value: months2str(result.minMonths) },
+                    { label: t('debtpayoff.strategy'), value: months2str(result.months), bold: true },
+                    { label: t('debtpayoff.totalInterest'), value: fmt(result.minInterest) },
+                    { label: t('calc.totalInterest'), value: fmt(result.totalInterest) },
+                    { label: t('debtpayoff.interestSaved'), value: fmt(result.interestSaved), bold: true },
+                    { label: t('debtpayoff.timeSaved'), value: months2str(result.monthsSaved), bold: true },
                   ]}
                 />
               </div>
@@ -497,7 +499,7 @@ export default function DebtPayoffCalc({ country = 'us' }) {
             {/* Schedule Tab */}
             {result && view === 'schedule' && (
               <div className="cw-card overflow-x-auto">
-                <p className="text-sm font-semibold text-slate-800 mb-4">Month-by-Month Schedule</p>
+                <p className="text-sm font-semibold text-slate-800 mb-4">{t('debtpayoff.payoffSchedule')}</p>
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b border-slate-200">

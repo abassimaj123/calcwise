@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import {
   AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -824,6 +825,7 @@ function CountryTab({ country, c }) {
 // Main RetirementCalc component
 // ---------------------------------------------------------------------------
 export default function RetirementCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country] || countries.us
   const sym    = c.symbol
   const locale  = c.locale
@@ -868,9 +870,9 @@ export default function RetirementCalc({ country = 'us' }) {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl md:text-3xl font-display font-bold text-slate-900 tracking-tight">
-              {c.flag} {c.name} Retirement Calculator
+              {c.flag} {c.name} {t('retirement.title')}
             </h1>
-            <p className="text-slate-500 text-sm mt-1">Retirement planner · {COUNTRY_TAB_LABEL[country]} · 2026 rates</p>
+            <p className="text-slate-500 text-sm mt-1">{t('retirement.desc')}</p>
           </div>
           <span className="cw-badge blue">Updated 2026</span>
         </div>
@@ -881,7 +883,7 @@ export default function RetirementCalc({ country = 'us' }) {
             onClick={() => setTopTab('planner')}
             className={`cw-tab${topTab === 'planner' ? ' active' : ''}`}
           >
-            Retirement Planner
+            {t('retirement.tabPlanner')}
           </button>
           <button
             onClick={() => setTopTab('country')}
@@ -902,10 +904,10 @@ export default function RetirementCalc({ country = 'us' }) {
 
                 {/* Profile group */}
                 <div className="cw-input-group">
-                  <p className="cw-input-group-title">Your Profile</p>
+                  <p className="cw-input-group-title">{t('retirement.yourProfile')}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <NumericInput
-                      label="Current Age"
+                      label={t('retirement.currentAge')}
                       value={currentAge}
                       onChange={setCurrentAge}
                       min={18} max={70} step={1}
@@ -913,7 +915,7 @@ export default function RetirementCalc({ country = 'us' }) {
                       showSlider
                     />
                     <NumericInput
-                      label="Retirement Age"
+                      label={t('retirement.retirementAge')}
                       value={retireAge}
                       onChange={v => setRetireAge(Math.max(v, currentAge + 1))}
                       min={50} max={75} step={1}
@@ -921,7 +923,7 @@ export default function RetirementCalc({ country = 'us' }) {
                       showSlider
                     />
                     <NumericInput
-                      label={`Current Savings (${sym})`}
+                      label={`${t('retirement.currentSavings')} (${sym})`}
                       value={currentSavings}
                       onChange={setCurrentSavings}
                       min={0} max={2000000} step={5000}
@@ -929,7 +931,7 @@ export default function RetirementCalc({ country = 'us' }) {
                       showSlider
                     />
                     <NumericInput
-                      label={`Monthly Contribution (${sym})`}
+                      label={`${t('retirement.monthlyContribution')} (${sym})`}
                       value={monthlyContrib}
                       onChange={setMonthlyContrib}
                       min={0} max={10000} step={50}
@@ -937,7 +939,7 @@ export default function RetirementCalc({ country = 'us' }) {
                       showSlider
                     />
                     <NumericInput
-                      label="Pre-Retirement Return (%)"
+                      label={t('retirement.preRetirementReturn')}
                       value={preRate}
                       onChange={setPreRate}
                       min={1} max={15} step={0.1}
@@ -950,10 +952,10 @@ export default function RetirementCalc({ country = 'us' }) {
 
                 {/* Retirement income group */}
                 <div className="cw-input-group">
-                  <p className="cw-input-group-title">Retirement Income</p>
+                  <p className="cw-input-group-title">{t('retirement.retirementIncome')}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <NumericInput
-                      label={`Monthly Income Needed (${sym})`}
+                      label={`${t('retirement.monthlyIncomeNeeded')} (${sym})`}
                       value={monthlyNeed}
                       onChange={setMonthlyNeed}
                       min={1000} max={20000} step={100}
@@ -961,7 +963,7 @@ export default function RetirementCalc({ country = 'us' }) {
                       showSlider
                     />
                     <NumericInput
-                      label="Post-Retirement Return (%)"
+                      label={t('retirement.postRetirementReturn')}
                       value={postRate}
                       onChange={setPostRate}
                       min={1} max={8} step={0.1}
@@ -969,7 +971,7 @@ export default function RetirementCalc({ country = 'us' }) {
                       showSlider
                     />
                     <NumericInput
-                      label="Inflation Rate (%)"
+                      label={t('retirement.inflationRate')}
                       value={inflation}
                       onChange={setInflation}
                       min={0} max={6} step={0.1}
@@ -977,7 +979,7 @@ export default function RetirementCalc({ country = 'us' }) {
                       showSlider
                     />
                     <NumericInput
-                      label={`Govt Pension/Benefit (${sym}/mo)`}
+                      label={t('retirement.govtPensionBenefit')}
                       value={govtBenefit}
                       onChange={setGovtBenefit}
                       min={0} max={5000} step={50}
@@ -996,16 +998,16 @@ export default function RetirementCalc({ country = 'us' }) {
 
               {/* SmartAlert */}
               {result.onTrack ? (
-                <Alert type="success" title="On track for retirement!" message={`Your projected ${fs(result.projectedSavings)} comfortably covers the estimated ${fs(result.savingsNeeded)} needed. Keep contributing ${f(monthlyContrib)}/month.`} />
+                <Alert type="success" title={t('retirement.onTrackAlertTitle')} message={`Your projected ${fs(result.projectedSavings)} comfortably covers the estimated ${fs(result.savingsNeeded)} needed. Keep contributing ${f(monthlyContrib)}/month.`} />
               ) : (
-                <Alert type="warning" title={`Shortfall of ${fs(Math.max(0, shortfallAmt))}`} message={`To close this gap, increase your monthly contribution or extend your retirement age. Target savings needed: ${fs(result.savingsNeeded)}.`} />
+                <Alert type="warning" title={`${t('retirement.shortfallAlertTitle')} ${fs(Math.max(0, shortfallAmt))}`} message={`To close this gap, increase your monthly contribution or extend your retirement age. Target savings needed: ${fs(result.savingsNeeded)}.`} />
               )}
 
               {/* Result sub-tabs */}
               <div className="cw-tabs mb-4">
                 {['overview', 'growth', 'yearly'].map(v => (
                   <button key={v} onClick={() => setView(v)} className={`cw-tab${view === v ? ' active' : ''}`}>
-                    {v === 'overview' ? 'Overview' : v === 'growth' ? 'Growth Chart' : 'Year by Year'}
+                    {v === 'overview' ? t('retirement.tabOverview') : v === 'growth' ? t('retirement.tabGrowthChart') : t('retirement.tabYearByYear')}
                   </button>
                 ))}
               </div>
@@ -1014,34 +1016,34 @@ export default function RetirementCalc({ country = 'us' }) {
               {view === 'overview' && (
                 <>
                   <div className="cw-result-hero mb-4">
-                    <p className="cw-result-hero-label">Projected at Retirement</p>
+                    <p className="cw-result-hero-label">{t('retirement.projectedAtRetirement')}</p>
                     <p className="cw-result-hero-value">{fs(result.projectedSavings)}</p>
                     <p className="cw-result-hero-sub">At age {retireAge} · {retireAge - currentAge} years of growth</p>
                     <hr className="cw-result-hero-divider" />
                     <div className="cw-result-hero-grid">
                       <div>
-                        <p className="cw-result-hero-mini-label">Monthly Need (inflation adj.)</p>
+                        <p className="cw-result-hero-mini-label">{t('retirement.monthlyNeedInflAdj')}</p>
                         <p className="cw-result-hero-mini-value">{f(result.realMonthlyNeed)}</p>
                       </div>
                       <div>
-                        <p className="cw-result-hero-mini-label">Years Savings Last</p>
+                        <p className="cw-result-hero-mini-label">{t('retirement.yearsSavingsLast')}</p>
                         <p className="cw-result-hero-mini-value">{fmtYears(result.monthsCanSustain)}</p>
                       </div>
                       <div>
-                        <p className="cw-result-hero-mini-label">Status</p>
-                        <p className="cw-result-hero-mini-value">{result.onTrack ? 'On Track' : 'Shortfall'}</p>
+                        <p className="cw-result-hero-mini-label">{t('retirement.status')}</p>
+                        <p className="cw-result-hero-mini-value">{result.onTrack ? t('retirement.onTrack') : t('retirement.shortfall')}</p>
                       </div>
                     </div>
                   </div>
 
-                  <ResultDetailed title="Retirement Snapshot" rows={[
-                    { label: 'Years Until Retirement',      value: `${retireAge - currentAge} yrs` },
-                    { label: 'Projected Savings',           value: fs(result.projectedSavings), bold: true },
-                    { label: 'Savings Needed (perpetuity)', value: fs(result.savingsNeeded) },
-                    { label: 'Monthly Shortfall (covered by savings)', value: f(result.monthlyShortfall) },
-                    { label: 'Govt Benefit/mo',            value: f(govtBenefit) },
-                    { label: 'Inflation-adj. Monthly Need', value: f(result.realMonthlyNeed) },
-                    { label: 'Savings Duration',           value: fmtYears(result.monthsCanSustain), total: true },
+                  <ResultDetailed title={t('retirement.retirementSnapshot')} rows={[
+                    { label: t('retirement.yearsUntilRetirement'),      value: `${retireAge - currentAge} yrs` },
+                    { label: t('retirement.projectedSavings'),           value: fs(result.projectedSavings), bold: true },
+                    { label: t('retirement.savingsNeededPerpetuity'),    value: fs(result.savingsNeeded) },
+                    { label: t('retirement.monthlyShortfallCovered'),    value: f(result.monthlyShortfall) },
+                    { label: t('retirement.govtBenefitMo'),             value: f(govtBenefit) },
+                    { label: t('retirement.inflAdjMonthlyNeed'),         value: f(result.realMonthlyNeed) },
+                    { label: t('retirement.savingsDuration'),            value: fmtYears(result.monthsCanSustain), total: true },
                   ]} />
                 </>
               )}
@@ -1049,7 +1051,7 @@ export default function RetirementCalc({ country = 'us' }) {
               {/* ---- Growth Chart ---- */}
               {view === 'growth' && (
                 <div className="cw-card">
-                  <p className="cw-section-title">Savings Growth: Balance vs Contributions</p>
+                  <p className="cw-section-title">{t('retirement.savingsGrowthBalanceVsContribs')}</p>
                   <ResponsiveContainer width="100%" height={320}>
                     <AreaChart data={result.yearData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -1061,21 +1063,21 @@ export default function RetirementCalc({ country = 'us' }) {
                       <Area type="monotone" dataKey="contributions" stroke={COLORS.success} fill={COLORS.success} fillOpacity={0.15} strokeWidth={2} name="Total Contributions" strokeDasharray="5 5" />
                     </AreaChart>
                   </ResponsiveContainer>
-                  <p className="text-xs text-slate-400 text-center mt-2">Shaded area = investment growth above contributions</p>
+                  <p className="text-xs text-slate-400 text-center mt-2">{t('retirement.shadedAreaNote')}</p>
                 </div>
               )}
 
               {/* ---- Year by Year ---- */}
               {view === 'yearly' && (
                 <div className="cw-card overflow-x-auto">
-                  <p className="cw-section-title">Year-by-Year Accumulation</p>
+                  <p className="cw-section-title">{t('retirement.yearByYearAccumulation')}</p>
                   <table className="w-full text-sm min-w-[320px]">
                     <thead>
                       <tr className="border-b border-slate-200">
-                        <th className="text-left py-2 px-2 text-xs font-bold text-slate-500 uppercase">Age</th>
-                        <th className="text-right py-2 px-2 text-xs font-bold text-slate-500 uppercase">Projected Balance</th>
-                        <th className="text-right py-2 px-2 text-xs font-bold text-slate-500 uppercase">Total Contributed</th>
-                        <th className="text-right py-2 px-2 text-xs font-bold text-slate-500 uppercase">Growth</th>
+                        <th className="text-left py-2 px-2 text-xs font-bold text-slate-500 uppercase">{t('retirement.age')}</th>
+                        <th className="text-right py-2 px-2 text-xs font-bold text-slate-500 uppercase">{t('retirement.projectedBalanceCol')}</th>
+                        <th className="text-right py-2 px-2 text-xs font-bold text-slate-500 uppercase">{t('retirement.totalContributed')}</th>
+                        <th className="text-right py-2 px-2 text-xs font-bold text-slate-500 uppercase">{t('retirement.growth')}</th>
                       </tr>
                     </thead>
                     <tbody>

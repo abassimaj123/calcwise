@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -149,6 +150,7 @@ const jsonLd = (country) => ({
 })
 
 export default function PropertyROICalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const d = defaultsByCountry[country] || defaultsByCountry.us
   const extraDefs = EXTRA_EXPENSES[country] || []
@@ -224,8 +226,8 @@ export default function PropertyROICalc({ country = 'us' }) {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Property ROI Calculator</h1>
-          <p className="text-slate-500">Calculate cash flow, cap rate, and return on your rental property.</p>
+          <h1 className="text-3xl font-display font-bold mb-2">{t('propertyroi.title')}</h1>
+          <p className="text-slate-500">{t('propertyroi.desc')}</p>
         </div>
 
         <CalcIntro intro="The property ROI calculator measures the return on investment of a rental property. Enter purchase price, rent, expenses and financing to see cap rate, cash-on-cash return, and total ROI including appreciation." hiddenCost="Vacancy costs reduce ROI by 8-10% annually" />
@@ -234,15 +236,15 @@ export default function PropertyROICalc({ country = 'us' }) {
         <div className="cw-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Purchase Price ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('propertyroi.purchasePrice')} ({c.symbol})</label>
               <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Down Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('propertyroi.downPayment')} ({c.symbol})</label>
               <NumericInput value={down} onChange={setDown} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Monthly Rent ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('propertyroi.monthlyRent')} ({c.symbol})</label>
               <NumericInput value={rent} onChange={setRent} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
@@ -336,7 +338,7 @@ export default function PropertyROICalc({ country = 'us' }) {
           {['summary', 'chart', 'detailed'].map(v => (
             <button key={v} onClick={() => setView(v)}
               className={`cw-tab${view === v ? ' active' : ''}`}>
-              {v}
+              {t(`calc.${v}`)}
             </button>
           ))}
         </div>
@@ -345,13 +347,13 @@ export default function PropertyROICalc({ country = 'us' }) {
           <ResultSimple
             metrics={[
               {
-                label: 'Monthly Cash Flow',
+                label: t('calc.monthlyPayment'),
                 value: fmtD(result.monthlyCashFlow),
                 highlight: true,
                 sub: result.monthlyCashFlow >= 0 ? '✓ Positive' : '⚠ Negative',
               },
-              { label: 'Cash-on-Cash Return', value: pct(result.cashOnCash) },
-              { label: 'Cap Rate', value: pct(result.capRate) },
+              { label: t('propertyroi.cashOnCash'), value: pct(result.cashOnCash) },
+              { label: t('propertyroi.capRate'), value: pct(result.capRate) },
             ]}
           />
         )}
@@ -435,7 +437,7 @@ export default function PropertyROICalc({ country = 'us' }) {
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter your property details above.
+            {t('calc.enterValid')}
           </div>
         )}
 

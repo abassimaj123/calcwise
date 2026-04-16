@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { countries } from '../../config/countries'
@@ -153,6 +154,7 @@ function Toggle({ on, onChange, color = 'green' }) {
 // Main component
 // ---------------------------------------------------------------------------
 export default function SalaryCalc({ country }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const deductionDefs = SALARY_DEDUCTIONS[country] || []
 
@@ -258,7 +260,7 @@ export default function SalaryCalc({ country }) {
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-display font-bold mb-1 text-slate-900 tracking-tight">
-            {c.name} Salary Calculator
+            {c.name} {t('salary.title')}
           </h1>
           <p className="text-slate-500 text-sm">Gross to net · all pay periods · 2026 tax rates</p>
         </div>
@@ -270,10 +272,10 @@ export default function SalaryCalc({ country }) {
 
               {/* Income group */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Your Income</p>
+                <p className="cw-input-group-title">{t('salary.incomeDetails')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <NumericInput
-                    label={`Gross Income (${c.symbol})`}
+                    label={`${t('salary.annualSalary')} (${c.symbol})`}
                     value={gross}
                     onChange={setGross}
                     min={0}
@@ -284,7 +286,7 @@ export default function SalaryCalc({ country }) {
                     hint={`Median ${c.name}: ${fmtShort(SALARY_DEFAULTS[country])}/yr`}
                   />
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1 uppercase tracking-wider">Income Period</label>
+                    <label className="block text-xs font-bold text-slate-600 mb-1 uppercase tracking-wider">{t('salary.payPeriod')}</label>
                     <select className="cw-input" value={inputPeriod} onChange={e => setInputPeriod(e.target.value)}>
                       {periods.map(p => (
                         <option key={p.key} value={p.key}>{p.label}</option>
@@ -304,7 +306,7 @@ export default function SalaryCalc({ country }) {
               className="w-full flex items-center justify-between text-left"
             >
               <div className="flex items-center gap-3">
-                <span className="font-semibold text-slate-800">Optional Deductions</span>
+                <span className="font-semibold text-slate-800">{t('calc.optionalDeductions')}</span>
                 {activeDedCount > 0 && (
                   <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
                     {activeDedCount} active · -{fmtShort(activeDedTotal)}/yr
@@ -319,7 +321,7 @@ export default function SalaryCalc({ country }) {
                 {/* Pre-tax section */}
                 {preDefs.length > 0 && (
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">Pre-tax deductions</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">{t('calc.preTax')} {t('salary.deductions')}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {preDefs.map(d => (
                         <div
@@ -355,7 +357,7 @@ export default function SalaryCalc({ country }) {
                 {/* Post-tax section */}
                 {postDefs.length > 0 && (
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-orange-600 mb-3">Post-tax deductions</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-orange-600 mb-3">{t('calc.postTax')} {t('salary.deductions')}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {postDefs.map(d => (
                         <div
@@ -406,7 +408,7 @@ export default function SalaryCalc({ country }) {
               onClick={() => setView(v)}
               className={`cw-tab${view === v ? ' active' : ''}`}
             >
-              {viewLabels[v]}
+              {v === 'breakdown' ? t('calc.summary') : v === 'chart' ? t('calc.chart') : t('salary.allPeriods')}
             </button>
           ))}
         </div>
@@ -416,20 +418,20 @@ export default function SalaryCalc({ country }) {
           <>
             {/* Hero result + metric cards */}
             <div className="cw-result-hero mb-4">
-              <p className="cw-result-hero-label">Annual Net Income</p>
+              <p className="cw-result-hero-label">{t('salary.annualNet')}</p>
               <p className="cw-result-hero-value">{fmtShort(annualNet)}</p>
               <hr className="cw-result-hero-divider" />
               <div className="cw-result-hero-grid">
                 <div>
-                  <p className="cw-result-hero-mini-label">Monthly Take-Home</p>
+                  <p className="cw-result-hero-mini-label">{t('salary.monthlyNet')}</p>
                   <p className="cw-result-hero-mini-value">{fmt(annualNet / 12)}</p>
                 </div>
                 <div>
-                  <p className="cw-result-hero-mini-label">Effective Tax Rate</p>
+                  <p className="cw-result-hero-mini-label">{t('calc.effectiveRate')}</p>
                   <p className="cw-result-hero-mini-value">{effectiveRate.toFixed(1)}%</p>
                 </div>
                 <div>
-                  <p className="cw-result-hero-mini-label">Total Deductions</p>
+                  <p className="cw-result-hero-mini-label">{t('salary.totalDeductions')}</p>
                   <p className="cw-result-hero-mini-value">{fmtShort(incomeTax + contributions + postTaxTotal)}</p>
                 </div>
               </div>
@@ -438,13 +440,13 @@ export default function SalaryCalc({ country }) {
             {/* Active deductions card */}
             {activeDeductions.length > 0 && (
               <div className="cw-card mb-6">
-                <p className="text-sm font-bold text-slate-700 mb-3">Active Deductions</p>
+                <p className="text-sm font-bold text-slate-700 mb-3">{t('salary.deductions')}</p>
                 <div className="space-y-2">
                   {activeDeductions.map(d => (
                     <div key={d.key} className="flex items-center justify-between text-sm">
                       <span className={`font-medium ${d.preTax ? 'text-green-700' : 'text-orange-700'}`}>
                         {d.label}
-                        <span className="ml-1 text-xs font-normal opacity-70">{d.preTax ? '(pre-tax)' : '(post-tax)'}</span>
+                        <span className="ml-1 text-xs font-normal opacity-70">{d.preTax ? `(${t('calc.preTax')})` : `(${t('calc.postTax')})`}</span>
                       </span>
                       <span className="text-slate-700 font-semibold">-{fmtShort(dedAmounts[d.key] || 0)}/yr</span>
                     </div>
@@ -458,7 +460,7 @@ export default function SalaryCalc({ country }) {
               </div>
             )}
 
-            <ResultDetailed title="Pay Period Breakdown (Net)" rows={rows} />
+            <ResultDetailed title={`${t('salary.netPay')} — ${t('salary.payPeriod')}`} rows={rows} />
           </>
         )}
 
@@ -466,7 +468,7 @@ export default function SalaryCalc({ country }) {
         {annualGross > 0 && view === 'chart' && (
           <div className="cw-card space-y-8">
             <div>
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">Income Breakdown</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">{t('salary.taxBreakdown')}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
@@ -488,7 +490,7 @@ export default function SalaryCalc({ country }) {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">Gross vs Net by Pay Period</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">{t('salary.grossPay')} vs {t('salary.netPay')} — {t('salary.payPeriod')}</h3>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={barData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -511,9 +513,9 @@ export default function SalaryCalc({ country }) {
 
         {annualGross <= 0 && (
           <div className="cw-result-hero" style={{ background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)' }}>
-            <p className="cw-result-hero-label">Annual Net Income</p>
-            <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>Enter income →</p>
-            <p className="cw-result-hero-sub">Enter your gross income on the left to see your take-home pay.</p>
+            <p className="cw-result-hero-label">{t('salary.annualNet')}</p>
+            <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>{t('calc.enterIncome')} →</p>
+            <p className="cw-result-hero-sub">{t('calc.enterIncome')}</p>
           </div>
         )}
 

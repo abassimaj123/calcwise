@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import {
   BarChart, Bar, PieChart, Pie, Cell,
@@ -97,6 +98,7 @@ const CHART_COLORS = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd']
 const PIE_COLORS = ['#6366f1', '#22d3ee']
 
 export default function StampDutyCalc() {
+  const { t } = useTranslation()
   const c = countries['uk']
   const [price, setPrice] = useState(285000)
   const [buyerType, setBuyerType] = useState('standard')
@@ -143,8 +145,8 @@ export default function StampDutyCalc() {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Stamp Duty Calculator</h1>
-          <p className="text-slate-500">Calculate your UK Stamp Duty Land Tax (SDLT) — April 2025 rates.</p>
+          <h1 className="text-3xl font-display font-bold mb-2">{t('stampduty.title')}</h1>
+          <p className="text-slate-500">{t('stampduty.desc')}</p>
         </div>
 
         <CalcIntro
@@ -155,11 +157,11 @@ export default function StampDutyCalc() {
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Property Price ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('stampduty.propertyPrice')} ({c.symbol})</label>
               <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Buyer Type</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('stampduty.buyerType')}</label>
               <select className="cw-input" value={buyerType} onChange={e => setBuyerType(e.target.value)}>
                 {buyerTypes.map(t => (
                   <option key={t.value} value={t.value}>{t.label}</option>
@@ -184,7 +186,7 @@ export default function StampDutyCalc() {
           {['summary', 'bands', 'chart'].map(v => (
             <button key={v} onClick={() => setTab(v)}
               className={`cw-tab${tab === v ? ' active' : ''}`}>
-              {v}
+              {v === 'summary' ? t('calc.summary') : v === 'chart' ? t('calc.chart') : t('stampduty.breakdown')}
             </button>
           ))}
         </div>
@@ -192,26 +194,26 @@ export default function StampDutyCalc() {
         {result && tab === 'summary' && (
           <ResultSimple
             metrics={[
-              { label: 'Stamp Duty (SDLT)', value: fmt(result.sdlt), highlight: true },
-              { label: 'Effective Rate', value: `${result.effectiveRate}%` },
-              { label: 'Total Cost', value: fmt(price + result.sdlt), sub: 'Property + SDLT' },
+              { label: t('stampduty.stampDuty'), value: fmt(result.sdlt), highlight: true },
+              { label: t('stampduty.effectiveRate'), value: `${result.effectiveRate}%` },
+              { label: t('calc.totalCost'), value: fmt(price + result.sdlt), sub: `${t('stampduty.propertyPrice')} + SDLT` },
             ]}
           />
         )}
 
         {result && tab === 'bands' && (
           <ResultDetailed
-            title="SDLT Breakdown by Band"
+            title={t('stampduty.breakdown')}
             rows={[
               ...result.bands.map(b => ({
                 label: `${b.label} @ ${b.rate}`,
                 value: fmt(b.tax),
                 sub: `On ${fmt(b.taxable)}`,
               })),
-              { label: 'Total SDLT', value: fmt(result.sdlt), bold: true },
-              { label: 'Effective Rate', value: `${result.effectiveRate}%`, bold: true },
-              { label: 'Property Price', value: fmt(price) },
-              { label: 'Total Cost (Price + SDLT)', value: fmt(price + result.sdlt), bold: true },
+              { label: t('stampduty.stampDuty'), value: fmt(result.sdlt), bold: true },
+              { label: t('stampduty.effectiveRate'), value: `${result.effectiveRate}%`, bold: true },
+              { label: t('stampduty.propertyPrice'), value: fmt(price) },
+              { label: t('calc.totalCost'), value: fmt(price + result.sdlt), bold: true },
             ]}
           />
         )}
@@ -220,7 +222,7 @@ export default function StampDutyCalc() {
           <div className="space-y-6">
             {barData.length > 0 ? (
               <div className="cw-card">
-                <h3 className="font-semibold text-sm mb-4">SDLT by Band</h3>
+                <h3 className="font-semibold text-sm mb-4">{t('stampduty.stampDuty')}</h3>
                 <ResponsiveContainer width="100%" height={260}>
                   <BarChart data={barData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
@@ -241,7 +243,7 @@ export default function StampDutyCalc() {
             )}
 
             <div className="cw-card">
-              <h3 className="font-semibold text-sm mb-4">Purchase Price vs SDLT</h3>
+              <h3 className="font-semibold text-sm mb-4">{t('stampduty.propertyPrice')} vs {t('stampduty.stampDuty')}</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
                   <Pie
@@ -268,7 +270,7 @@ export default function StampDutyCalc() {
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter a property price above to calculate your stamp duty.
+            {t('calc.enterValid')}
           </div>
         )}
 

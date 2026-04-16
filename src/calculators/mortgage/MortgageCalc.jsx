@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -1046,6 +1047,7 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
 }
 
 export default function MortgageCalc({ country }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const sym = c.symbol
   const defs = defaultValues[country] || defaultValues.us
@@ -1218,9 +1220,9 @@ export default function MortgageCalc({ country }) {
   }
 
   const TABS = [
-    { key: 'summary',    label: 'Summary' },
-    { key: 'chart',      label: 'Chart' },
-    { key: 'schedule',   label: 'Schedule' },
+    { key: 'summary',    label: t('calc.summary') },
+    { key: 'chart',      label: t('calc.chart') },
+    { key: 'schedule',   label: t('calc.schedule') },
     { key: 'specialist', label: 'Specialist', badge: true },
   ]
 
@@ -1260,10 +1262,10 @@ export default function MortgageCalc({ country }) {
 
               {/* Property Details group */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Property Details</p>
+                <p className="cw-input-group-title">{t('mortgage.propertyDetails')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <NumericInput
-                    label={`Home Price (${sym})`}
+                    label={`${t('mortgage.homePrice')} (${sym})`}
                     value={price}
                     onChange={setPrice}
                     min={50000}
@@ -1274,7 +1276,7 @@ export default function MortgageCalc({ country }) {
                     hint="Median 2026: $420k US · CA$650k · £295k UK"
                   />
                   <NumericInput
-                    label={`Down Payment — ${downPct}%`}
+                    label={`${t('mortgage.downPayment')} — ${downPct}%`}
                     value={down}
                     onChange={setDown}
                     min={0}
@@ -1289,10 +1291,10 @@ export default function MortgageCalc({ country }) {
 
               {/* Financing group */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Financing</p>
+                <p className="cw-input-group-title">{t('mortgage.financing')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <NumericInput
-                    label="Interest Rate (%)"
+                    label={`${t('mortgage.interestRate')} (%)`}
                     value={rate}
                     onChange={setRate}
                     min={2}
@@ -1303,7 +1305,7 @@ export default function MortgageCalc({ country }) {
                     hint={rateHint}
                   />
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Loan Term</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">{t('mortgage.loanTerm')}</label>
                     <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
                       {termOptions.map(y => <option key={y} value={y}>{y} years</option>)}
                     </select>
@@ -1314,7 +1316,7 @@ export default function MortgageCalc({ country }) {
               {/* Country notes inside input panel */}
               {country === 'ca' && (
                 <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
-                  <strong>Stress test rate:</strong> {stressRate.toFixed(2)}% — lenders qualify you at the higher of (rate + 2%) or 5.25%
+                  <strong>{t('mortgage.stressTest')}:</strong> {stressRate.toFixed(2)}% — {t('mortgage.stressTestNote')}
                 </div>
               )}
               {country === 'uk' && (
@@ -1338,7 +1340,7 @@ export default function MortgageCalc({ country }) {
               className="w-full flex items-center justify-between text-left"
             >
               <div className="flex items-center gap-3">
-                <span className="font-semibold text-slate-800">Optional Costs</span>
+                <span className="font-semibold text-slate-800">{t('mortgage.optCosts')}</span>
                 {activeOptCount > 0 && (
                   <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
                     {activeOptCount} active · +{fmtD(totalOptMonthly)}/mo
@@ -1423,28 +1425,28 @@ export default function MortgageCalc({ country }) {
           <>
             <ResultSimple
               metrics={[
-                { label: 'Monthly Payment (P&I)', value: fmtD(result.monthly), highlight: true },
-                { label: 'Total Interest', value: fmt(result.totalInterest) },
-                { label: 'Total Cost', value: fmt(result.totalPaid) },
+                { label: `${t('calc.monthlyPayment')} (P&I)`, value: fmtD(result.monthly), highlight: true },
+                { label: t('calc.totalInterest'), value: fmt(result.totalInterest) },
+                { label: t('calc.totalCost'), value: fmt(result.totalPaid) },
               ]}
             />
             <div className="mt-4">
               <ResultDetailed
-                title="Full Breakdown"
+                title={t('mortgage.monthlyBreakdown')}
                 rows={[
-                  { label: 'Purchase Price', value: fmt(price) },
-                  { label: 'Down Payment', value: `${fmt(down)} (${downPct}%)` },
-                  { label: 'Loan Amount', value: fmt(result.principal) },
-                  { label: 'Monthly Payment (P&I)', value: fmtD(result.monthly), bold: true },
+                  { label: t('mortgage.purchasePrice'), value: fmt(price) },
+                  { label: t('mortgage.downPayment'), value: `${fmt(down)} (${downPct}%)` },
+                  { label: t('mortgage.loanAmount'), value: fmt(result.principal) },
+                  { label: `${t('calc.monthlyPayment')} (P&I)`, value: fmtD(result.monthly), bold: true },
                   result.pmi > 0 && { label: 'PMI (monthly)', value: fmtD(result.pmi), sub: 'Removed when LTV < 80%' },
                   result.cmhc > 0 && { label: 'CMHC Premium', value: fmt(result.cmhc), sub: 'Added to mortgage balance' },
                   result.lmi > 0 && { label: 'LMI (est.)', value: fmt(result.lmi), sub: 'Lenders Mortgage Insurance' },
-                  { label: 'LTV Ratio', value: `${result.ltv.toFixed(1)}%` },
-                  { label: 'Total Interest', value: fmt(result.totalInterest) },
-                  { label: 'Total of All Payments', value: fmt(result.totalPaid), bold: true },
+                  { label: t('mortgage.ltvRatio'), value: `${result.ltv.toFixed(1)}%` },
+                  { label: t('calc.totalInterest'), value: fmt(result.totalInterest) },
+                  { label: t('mortgage.totalPayments'), value: fmt(result.totalPaid), bold: true },
                   result.sdlt > 0 && { label: 'Stamp Duty (SDLT)', value: fmt(result.sdlt), sub: 'April 2025 rates — paid upfront', bold: true },
-                  totalOptMonthly > 0 && { label: 'Optional Costs (monthly)', value: fmtD(totalOptMonthly), sub: activeOptLabels.join(', ') },
-                  totalOptMonthly > 0 && { label: 'True Monthly Cost (PITI)', value: fmtD(trueMonthly), bold: true, sub: 'P&I + all enabled optional costs' },
+                  totalOptMonthly > 0 && { label: `${t('calc.optionalCosts')} (monthly)`, value: fmtD(totalOptMonthly), sub: activeOptLabels.join(', ') },
+                  totalOptMonthly > 0 && { label: t('mortgage.piti'), value: fmtD(trueMonthly), bold: true, sub: 'P&I + all enabled optional costs' },
                 ].filter(Boolean)}
               />
             </div>
@@ -1452,7 +1454,7 @@ export default function MortgageCalc({ country }) {
             {totalOptMonthly > 0 && (
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="cw-metric green">
-                  <p className="cw-metric-label">True Monthly Cost</p>
+                  <p className="cw-metric-label">{t('calc.trueMonthly')}</p>
                   <p className="cw-metric-value">{fmtD(trueMonthly)}</p>
                   <p className="cw-metric-sub">P&amp;I + {activeOptCount} optional cost{activeOptCount !== 1 ? 's' : ''}</p>
                 </div>
@@ -1489,7 +1491,7 @@ export default function MortgageCalc({ country }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Area Chart */}
             <div className="cw-card">
-              <h3 className="font-semibold mb-4 text-sm">Principal vs Interest Over Time</h3>
+              <h3 className="font-semibold mb-4 text-sm">{t('mortgage.principalInterest')}</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <AreaChart data={amortData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                   <defs>
@@ -1517,7 +1519,7 @@ export default function MortgageCalc({ country }) {
             </div>
             {/* Pie Chart */}
             <div className="cw-card flex flex-col items-center">
-              <h3 className="font-semibold mb-4 text-sm self-start">Total Cost Breakdown</h3>
+              <h3 className="font-semibold mb-4 text-sm self-start">{t('mortgage.pieTitle')}</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
                   <Pie
@@ -1547,15 +1549,15 @@ export default function MortgageCalc({ country }) {
         {/* Schedule tab */}
         {activeTab === 'schedule' && result && (
           <div className="cw-card overflow-x-auto">
-            <h3 className="font-semibold text-slate-800 mb-4 text-sm uppercase tracking-wider">Amortization Schedule</h3>
+            <h3 className="font-semibold text-slate-800 mb-4 text-sm uppercase tracking-wider">{t('mortgage.yearlySchedule')}</h3>
             <table className="w-full text-sm min-w-[500px]">
               <thead>
                 <tr className="text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200">
                   <th className="text-left pb-2 pr-4">Month</th>
-                  <th className="text-right pb-2 pr-4">Year</th>
-                  <th className="text-right pb-2 pr-4">Principal</th>
-                  <th className="text-right pb-2 pr-4">Interest</th>
-                  <th className="text-right pb-2">Balance</th>
+                  <th className="text-right pb-2 pr-4">{t('mortgage.year')}</th>
+                  <th className="text-right pb-2 pr-4">{t('mortgage.principal')}</th>
+                  <th className="text-right pb-2 pr-4">{t('mortgage.interest')}</th>
+                  <th className="text-right pb-2">{t('mortgage.balance')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -1587,9 +1589,9 @@ export default function MortgageCalc({ country }) {
 
         {!result && (
           <div className="cw-result-hero" style={{ background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)' }}>
-            <p className="cw-result-hero-label">Monthly Payment</p>
-            <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>Enter details →</p>
-            <p className="cw-result-hero-sub">Fill in home price, down payment and rate to see your payment.</p>
+            <p className="cw-result-hero-label">{t('calc.monthlyPayment')}</p>
+            <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>{t('calc.enterValid')}</p>
+            <p className="cw-result-hero-sub">{t('calc.enterValid')}</p>
           </div>
         )}
 

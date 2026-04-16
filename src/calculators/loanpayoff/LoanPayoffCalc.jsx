@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import {
   AreaChart, Area, PieChart, Pie, Cell,
@@ -87,6 +88,7 @@ const defaultsByCountry = {
 const TABS = ['summary', 'chart', 'schedule']
 
 export default function LoanPayoffCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const d = defaultsByCountry[country] || defaultsByCountry.us
 
@@ -151,8 +153,8 @@ export default function LoanPayoffCalc({ country = 'us' }) {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Loan Payoff Calculator</h1>
-          <p className="text-slate-500">See how extra payments accelerate your payoff and save interest.</p>
+          <h1 className="text-3xl font-display font-bold mb-2">{t('loanpayoff.title')}</h1>
+          <p className="text-slate-500">{t('loanpayoff.desc')}</p>
         </div>
 
         <CalcIntro
@@ -163,19 +165,19 @@ export default function LoanPayoffCalc({ country = 'us' }) {
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Loan Balance ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('loanpayoff.loanBalance')} ({c.symbol})</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Annual Interest Rate (APR %)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('loanpayoff.interestRate')} (APR %)</label>
               <NumericInput value={apr} onChange={setApr} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Regular Monthly Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('calc.monthlyPayment')} ({c.symbol})</label>
               <NumericInput value={minPayment} onChange={setMinPayment} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Extra Monthly Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('calc.extraPayment')} ({c.symbol})</label>
               <NumericInput value={extraPayment} onChange={setExtraPayment} min={0} step={50} prefix={c.symbol} />
             </div>
           </div>
@@ -186,14 +188,14 @@ export default function LoanPayoffCalc({ country = 'us' }) {
           {TABS.map(v => (
             <button key={v} onClick={() => setTab(v)}
               className={`cw-tab${tab === v ? ' active' : ''}`}>
-              {v}
+              {t(`calc.${v}`)}
             </button>
           ))}
         </div>
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter valid loan details above to see your payoff plan.
+            {t('calc.enterValid')}
           </div>
         )}
 
@@ -202,25 +204,25 @@ export default function LoanPayoffCalc({ country = 'us' }) {
           <>
             <ResultSimple
               metrics={[
-                { label: 'Payoff Time', value: months2years(result.months), highlight: true },
-                { label: 'Total Interest', value: fmt(result.totalInterest) },
-                { label: 'Interest Saved', value: fmt(result.interestSaved), sub: result.monthsSaved > 0 ? `${months2years(result.monthsSaved)} faster` : undefined },
+                { label: t('loanpayoff.payoffDate'), value: months2years(result.months), highlight: true },
+                { label: t('calc.totalInterest'), value: fmt(result.totalInterest) },
+                { label: t('loanpayoff.interestSaved'), value: fmt(result.interestSaved), sub: result.monthsSaved > 0 ? `${months2years(result.monthsSaved)} faster` : undefined },
               ]}
             />
             <ResultDetailed
-              title="Payoff Comparison"
+              title={t('loanpayoff.payoffStrategy')}
               rows={[
-                { label: 'Loan Balance', value: fmt(balance) },
-                { label: '— With Extra Payment', value: '', bold: true },
-                { label: 'Monthly Payment', value: fmt(minPayment + extraPayment) },
-                { label: 'Payoff Time', value: months2years(result.months), bold: true },
-                { label: 'Total Interest Paid', value: fmt(result.totalInterest) },
-                { label: 'Total Paid', value: fmt(result.totalPaid) },
-                { label: '— Without Extra Payment', value: '', bold: true },
-                { label: 'Payoff Time', value: result.months2 > 0 && result.months2 < 600 ? months2years(result.months2) : '50+ years' },
-                { label: 'Total Interest', value: result.months2 > 0 && result.months2 < 600 ? fmt(result.totalInterest2) : 'N/A' },
-                { label: 'Interest Saved', value: fmt(result.interestSaved), bold: true },
-                { label: 'Time Saved', value: months2years(result.monthsSaved), bold: true },
+                { label: t('loanpayoff.loanBalance'), value: fmt(balance) },
+                { label: `— ${t('calc.extraPayment')}`, value: '', bold: true },
+                { label: t('calc.monthlyPayment'), value: fmt(minPayment + extraPayment) },
+                { label: t('loanpayoff.payoffDate'), value: months2years(result.months), bold: true },
+                { label: t('calc.totalInterest'), value: fmt(result.totalInterest) },
+                { label: t('loanpayoff.loanDetails'), value: fmt(result.totalPaid) },
+                { label: `— ${t('calc.minPayment')}`, value: '', bold: true },
+                { label: t('loanpayoff.payoffDate'), value: result.months2 > 0 && result.months2 < 600 ? months2years(result.months2) : '50+ years' },
+                { label: t('calc.totalInterest'), value: result.months2 > 0 && result.months2 < 600 ? fmt(result.totalInterest2) : 'N/A' },
+                { label: t('loanpayoff.interestSaved'), value: fmt(result.interestSaved), bold: true },
+                { label: t('calc.payOffSooner', { months: result.monthsSaved, amount: '' }).split('{')[0], value: months2years(result.monthsSaved), bold: true },
               ]}
             />
           </>
@@ -230,7 +232,7 @@ export default function LoanPayoffCalc({ country = 'us' }) {
         {result && tab === 'chart' && (
           <div className="space-y-6">
             <div className="cw-card">
-              <h3 className="font-semibold mb-4 text-sm">Remaining Balance Over Time</h3>
+              <h3 className="font-semibold mb-4 text-sm">{t('loanpayoff.loanBalance')} — {t('calc.schedule')}</h3>
               <ResponsiveContainer width="100%" height={280}>
                 <AreaChart data={areaData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
                   <defs>
@@ -255,7 +257,7 @@ export default function LoanPayoffCalc({ country = 'us' }) {
             </div>
 
             <div className="cw-card">
-              <h3 className="font-semibold mb-4 text-sm">Principal vs Total Interest</h3>
+              <h3 className="font-semibold mb-4 text-sm">{t('calc.totalInterest')}</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
                   <Pie data={pieData} cx="50%" cy="50%" outerRadius={100} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
@@ -274,15 +276,15 @@ export default function LoanPayoffCalc({ country = 'us' }) {
         {/* Schedule Tab */}
         {result && tab === 'schedule' && (
           <div className="cw-card overflow-x-auto">
-            <h3 className="font-semibold mb-4 text-sm">Amortization Schedule (with extra payment)</h3>
+            <h3 className="font-semibold mb-4 text-sm">{t('calc.schedule')} ({t('calc.extraPayment')})</h3>
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-slate-200">
-                  <th className="text-left py-2 pr-3 text-slate-500 font-medium">Month</th>
-                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">Payment</th>
-                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">Principal</th>
-                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">Interest</th>
-                  <th className="text-right py-2 text-slate-500 font-medium">Balance</th>
+                  <th className="text-left py-2 pr-3 text-slate-500 font-medium">{t('loanpayoff.monthsRemaining')}</th>
+                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">{t('calc.monthlyPayment')}</th>
+                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">{t('loanpayoff.loanDetails')}</th>
+                  <th className="text-right py-2 pr-3 text-slate-500 font-medium">{t('calc.totalInterest')}</th>
+                  <th className="text-right py-2 text-slate-500 font-medium">{t('loanpayoff.loanBalance')}</th>
                 </tr>
               </thead>
               <tbody>

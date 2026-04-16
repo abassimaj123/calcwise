@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { countries } from '../../config/countries'
@@ -149,6 +150,7 @@ function Toggle({ on, onChange }) {
 }
 
 export default function RentVsBuyCalc({ country }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const buyOptionDefs = BUY_OPTIONS[country] || []
 
@@ -241,9 +243,9 @@ export default function RentVsBuyCalc({ country }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            {c.name} Rent vs Buy Calculator
+            {c.name} {t('rentvsbuy.title')}
           </h1>
-          <p className="text-slate-500">Find the year when buying becomes financially smarter than renting.</p>
+          <p className="text-slate-500">{t('rentvsbuy.desc')}</p>
         </div>
 
         <CalcIntro
@@ -252,36 +254,36 @@ export default function RentVsBuyCalc({ country }) {
         />
 
         <div className="cw-card mb-4">
-          <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-slate-500">Buying Scenario</h3>
+          <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-slate-500">{t('rentvsbuy.buying')} {t('rentvsbuy.scenario')}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Home Price ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.homePrice')} ({c.symbol})</label>
               <NumericInput value={homePrice} onChange={setHomePrice} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Down Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.downPayment')} ({c.symbol})</label>
               <NumericInput value={downPayment} onChange={setDownPayment} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Mortgage Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.mortgageRate')} (%)</label>
               <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Loan Term (years)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.timeHorizon')}</label>
               <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
                 {[15, 20, 25, 30].map(y => <option key={y} value={y}>{y} years</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Home Appreciation (%/yr)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.appreciationRate')} (%/yr)</label>
               <NumericInput value={appreciation} onChange={setAppreciation} min={0} step={0.1} suffix="%" />
             </div>
           </div>
 
-          <h3 className="font-semibold mt-6 mb-4 text-sm uppercase tracking-wider text-slate-500">Renting Scenario</h3>
+          <h3 className="font-semibold mt-6 mb-4 text-sm uppercase tracking-wider text-slate-500">{t('rentvsbuy.renting')} {t('rentvsbuy.scenario')}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Monthly Rent ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('rentvsbuy.monthlyRent')} ({c.symbol})</label>
               <NumericInput value={rent} onChange={setRent} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
@@ -357,7 +359,7 @@ export default function RentVsBuyCalc({ country }) {
               onClick={() => setView(v)}
               className={`cw-tab${view === v ? ' active' : ''}`}
             >
-              {v}
+              {t(`calc.${v}`)}
             </button>
           ))}
         </div>
@@ -366,7 +368,7 @@ export default function RentVsBuyCalc({ country }) {
         {result && view === 'summary' && (
           <>
             <div className="cw-card text-center border-primary/40 bg-primary/10 mb-4">
-              <p className="text-slate-500 text-sm mb-2">Break-Even Year</p>
+              <p className="text-slate-500 text-sm mb-2">{t('rentvsbuy.breakEvenYear')}</p>
               <p className="text-6xl font-display font-bold text-white">
                 {result.breakEvenYear ? `Year ${result.breakEvenYear}` : 'Never'}
               </p>
@@ -415,7 +417,7 @@ export default function RentVsBuyCalc({ country }) {
         {result && view === 'chart' && (
           <>
             <div className="cw-card text-center border-primary/40 bg-primary/10 mb-6">
-              <p className="text-slate-500 text-sm mb-1">Break-Even Year</p>
+              <p className="text-slate-500 text-sm mb-1">{t('rentvsbuy.breakEvenYear')}</p>
               <p className="text-5xl font-display font-bold text-white">
                 {result.breakEvenYear ? `Year ${result.breakEvenYear}` : 'Never'}
               </p>
@@ -564,7 +566,7 @@ export default function RentVsBuyCalc({ country }) {
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter valid values above to compare renting vs buying.
+            {t('calc.enterValid')}
           </div>
         )}
 

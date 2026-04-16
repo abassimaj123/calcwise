@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
@@ -169,6 +170,7 @@ const meterColor = (pct) => {
 }
 
 export default function AffordabilityCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const d = defaultsByCountry[country] || defaultsByCountry.us
 
@@ -252,9 +254,9 @@ export default function AffordabilityCalc({ country = 'us' }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            Affordability Calculator
+            {t('affordability.title')}
           </h1>
-          <p className="text-slate-500">{descByCountry[country] || descByCountry.us}</p>
+          <p className="text-slate-500">{t('affordability.desc')}</p>
         </div>
 
         <CalcIntro
@@ -265,24 +267,24 @@ export default function AffordabilityCalc({ country = 'us' }) {
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Annual Gross Income ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('affordability.annualIncome')} ({c.symbol})</label>
               <NumericInput value={grossIncome} onChange={setGrossIncome} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Monthly Debts ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('affordability.monthlyDebts')} ({c.symbol})</label>
               <NumericInput value={monthlyDebts} onChange={setMonthlyDebts} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Down Payment ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('affordability.downPayment')} ({c.symbol})</label>
               <NumericInput value={downPayment} onChange={setDownPayment} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Mortgage Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('affordability.interestRate')} (%)</label>
               <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             {country === 'us' && (
               <div className="sm:col-span-2">
-                <label className="block text-xs text-slate-500 mb-1">Loan Type</label>
+                <label className="block text-xs text-slate-500 mb-1">{t('affordability.incomeDetails')}</label>
                 <select className="cw-input" value={loanType} onChange={e => setLoanType(e.target.value)}>
                   {loanTypes.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                 </select>
@@ -296,7 +298,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
           {['result', 'chart', 'breakdown'].map(v => (
             <button key={v} onClick={() => setView(v)}
               className={`cw-tab${view === v ? ' active' : ''}`}>
-              {v}
+              {v === 'result' ? t('calc.summary') : v === 'chart' ? t('calc.chart') : t('affordability.dtiRatio')}
             </button>
           ))}
         </div>
@@ -306,9 +308,9 @@ export default function AffordabilityCalc({ country = 'us' }) {
           <>
             <ResultSimple
               metrics={[
-                { label: 'Max Home Price', value: fmt(result.maxHomePrice), highlight: true },
-                { label: 'Max Loan', value: fmt(result.maxLoan) },
-                { label: 'Est. Monthly Payment', value: fmtD(result.maxMonthlyPayment) },
+                { label: t('affordability.maxHomePrice'), value: fmt(result.maxHomePrice), highlight: true },
+                { label: t('affordability.maxLoan'), value: fmt(result.maxLoan) },
+                { label: t('calc.monthlyPayment'), value: fmtD(result.maxMonthlyPayment) },
               ]}
             />
 
@@ -318,7 +320,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
                 Affordability Meter
               </h3>
               <div className="mb-2">
-                <label className="block text-xs text-slate-500 mb-1">Enter a target home price to check ({c.symbol})</label>
+                <label className="block text-xs text-slate-500 mb-1">{t('affordability.maxHomePrice')} ({c.symbol})</label>
                 <NumericInput value={homePrice} onChange={setHomePrice} min={0} step={1000} prefix={c.symbol} />
               </div>
               {meterPct !== null && (
@@ -521,7 +523,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter your income and details above to see how much you can afford.
+            {t('calc.enterValid')}
           </div>
         )}
 

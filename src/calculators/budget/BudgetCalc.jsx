@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
@@ -103,6 +104,7 @@ function BudgetRow({ label, value, onChange, min = 0, max = 20000, step = 50, sy
 // Component
 // ---------------------------------------------------------------------------
 export default function BudgetCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country] || countries.us
   const sym = c.symbol
   const d = BUDGET_DEFAULTS[country] || BUDGET_DEFAULTS.us
@@ -216,8 +218,8 @@ export default function BudgetCalc({ country = 'us' }) {
       <div className="max-w-5xl mx-auto px-4 py-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Monthly Budget Calculator</h1>
-          <p className="text-slate-500">Track your income vs expenses and see where your money goes.</p>
+          <h1 className="text-3xl font-display font-bold mb-2">{t('budget.title')}</h1>
+          <p className="text-slate-500">{t('budget.desc')}</p>
         </div>
 
         <div className="calc-grid">
@@ -284,16 +286,16 @@ export default function BudgetCalc({ country = 'us' }) {
                   onClick={() => setView(v)}
                   className={`cw-tab${view === v ? ' active' : ''}`}
                 >
-                  {v.charAt(0).toUpperCase() + v.slice(1)}
+                  {v === 'overview' ? t('calc.summary') : v === 'chart' ? t('calc.chart') : t('budget.expenseBreakdown')}
                 </button>
               ))}
             </div>
 
             {!result && (
               <div className="cw-result-hero">
-                <p className="cw-result-hero-label">Monthly Surplus</p>
-                <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>Enter income →</p>
-                <p className="cw-result-hero-sub">Add your income and expenses to see your budget.</p>
+                <p className="cw-result-hero-label">{t('budget.surplusDeficit')}</p>
+                <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>{t('calc.enterValid')}</p>
+                <p className="cw-result-hero-sub">{t('calc.enterValid')}</p>
               </div>
             )}
 
@@ -308,7 +310,7 @@ export default function BudgetCalc({ country = 'us' }) {
                     : undefined}
                 >
                   <p className="cw-result-hero-label">
-                    Monthly {isPositive ? 'Surplus' : 'Deficit'}
+                    {t('budget.surplusDeficit')}
                   </p>
                   <p className="cw-result-hero-value">
                     {isPositive ? '' : '−'}{fmt(Math.abs(result.surplus))}
@@ -321,15 +323,15 @@ export default function BudgetCalc({ country = 'us' }) {
                   <hr className="cw-result-hero-divider" />
                   <div className="cw-result-hero-grid">
                     <div>
-                      <p className="cw-result-hero-mini-label">Total Income</p>
+                      <p className="cw-result-hero-mini-label">{t('budget.totalIncome')}</p>
                       <p className="cw-result-hero-mini-value">{fmt(result.totalIncome)}</p>
                     </div>
                     <div>
-                      <p className="cw-result-hero-mini-label">Total Expenses</p>
+                      <p className="cw-result-hero-mini-label">{t('budget.totalExpenses')}</p>
                       <p className="cw-result-hero-mini-value">{fmt(result.totalExpenses)}</p>
                     </div>
                     <div>
-                      <p className="cw-result-hero-mini-label">Savings Rate</p>
+                      <p className="cw-result-hero-mini-label">{t('budget.savingsRate')}</p>
                       <p className="cw-result-hero-mini-value">{fmtPct(result.savingsRate)}</p>
                     </div>
                   </div>
@@ -337,54 +339,54 @@ export default function BudgetCalc({ country = 'us' }) {
 
                 {/* 50/30/20 Rule */}
                 <div className="cw-card">
-                  <p className="cw-section-title">50/30/20 Rule Assessment</p>
+                  <p className="cw-section-title">{t('budget.rule5030')}</p>
                   <RuleBar
-                    label="Needs (housing, transport, food, health)"
+                    label={t('budget.needs')}
                     pct={result.needsPct}
-                    target="≤50%"
+                    target={t('budget.needsTarget')}
                     positiveCondition={p => p <= 50}
                     color="#ef4444"
                   />
                   <RuleBar
-                    label="Wants (dining, subscriptions, entertainment)"
+                    label={t('budget.wants')}
                     pct={result.wantsPct}
-                    target="≤30%"
+                    target={t('budget.wantsTarget')}
                     positiveCondition={p => p <= 30}
                     color="#f59e0b"
                   />
                   <RuleBar
-                    label="Savings & Emergency Fund"
+                    label={t('budget.savingsGoal')}
                     pct={result.savingsPct}
-                    target="≥20%"
+                    target={t('budget.savingsTarget')}
                     positiveCondition={p => p >= 20}
                     color="#ef4444"
                   />
                   <p className="text-[10px] text-slate-400 mt-2">
-                    The 50/30/20 rule: spend 50% on needs, 30% on wants, save 20%.
+                    {t('budget.rule5030')}
                   </p>
                 </div>
 
                 {/* Category breakdown metrics */}
                 <div className="cw-metrics-grid">
                   <div className="cw-metric">
-                    <p className="cw-metric-label">Housing</p>
+                    <p className="cw-metric-label">{t('budget.housing')}</p>
                     <p className="cw-metric-value">{fmt(result.housingTotal)}</p>
-                    <p className="cw-metric-sub">{fmtPct(result.totalIncome > 0 ? (result.housingTotal / result.totalIncome) * 100 : 0)} of income</p>
+                    <p className="cw-metric-sub">{fmtPct(result.totalIncome > 0 ? (result.housingTotal / result.totalIncome) * 100 : 0)}</p>
                   </div>
                   <div className="cw-metric">
-                    <p className="cw-metric-label">Transport</p>
+                    <p className="cw-metric-label">{t('budget.transport')}</p>
                     <p className="cw-metric-value">{fmt(result.transportTotal)}</p>
-                    <p className="cw-metric-sub">{fmtPct(result.totalIncome > 0 ? (result.transportTotal / result.totalIncome) * 100 : 0)} of income</p>
+                    <p className="cw-metric-sub">{fmtPct(result.totalIncome > 0 ? (result.transportTotal / result.totalIncome) * 100 : 0)}</p>
                   </div>
                   <div className="cw-metric">
-                    <p className="cw-metric-label">Food</p>
+                    <p className="cw-metric-label">{t('budget.food')}</p>
                     <p className="cw-metric-value">{fmt(result.foodTotal)}</p>
-                    <p className="cw-metric-sub">{fmtPct(result.totalIncome > 0 ? (result.foodTotal / result.totalIncome) * 100 : 0)} of income</p>
+                    <p className="cw-metric-sub">{fmtPct(result.totalIncome > 0 ? (result.foodTotal / result.totalIncome) * 100 : 0)}</p>
                   </div>
                   <div className={`cw-metric ${result.savingsRate >= 20 ? 'green' : result.savingsRate >= 10 ? 'orange' : 'red'}`}>
-                    <p className="cw-metric-label">Savings Rate</p>
+                    <p className="cw-metric-label">{t('budget.savingsRate')}</p>
                     <p className="cw-metric-value">{fmtPct(result.savingsRate)}</p>
-                    <p className="cw-metric-sub">Target: 20%</p>
+                    <p className="cw-metric-sub">{t('budget.savingsTarget')}</p>
                   </div>
                 </div>
               </div>
@@ -394,7 +396,7 @@ export default function BudgetCalc({ country = 'us' }) {
             {result && view === 'chart' && (
               <div className="space-y-4">
                 <div className="cw-card">
-                  <p className="text-sm font-semibold text-slate-800 mb-4">Expense Breakdown</p>
+                  <p className="text-sm font-semibold text-slate-800 mb-4">{t('budget.expenseBreakdown')}</p>
                   {result.pieData.length > 0 ? (
                     <ResponsiveContainer width="100%" height={300}>
                       <PieChart>
@@ -429,11 +431,11 @@ export default function BudgetCalc({ country = 'us' }) {
 
                 {/* Income vs Expenses summary */}
                 <div className="cw-card">
-                  <p className="text-sm font-semibold text-slate-800 mb-3">Income vs Expenses</p>
+                  <p className="text-sm font-semibold text-slate-800 mb-3">{t('budget.totalIncome')} vs {t('budget.totalExpenses')}</p>
                   <div className="space-y-2">
                     {[
-                      { label: 'Total Income', value: result.totalIncome, color: '#10b981' },
-                      { label: 'Total Expenses', value: result.totalExpenses, color: '#ef4444' },
+                      { label: t('budget.totalIncome'), value: result.totalIncome, color: '#10b981' },
+                      { label: t('budget.totalExpenses'), value: result.totalExpenses, color: '#ef4444' },
                     ].map(item => (
                       <div key={item.label}>
                         <div className="flex justify-between text-xs mb-1">
@@ -460,69 +462,69 @@ export default function BudgetCalc({ country = 'us' }) {
             {result && view === 'breakdown' && (
               <div className="space-y-3">
                 <ResultDetailed
-                  title="Income"
+                  title={t('budget.monthlyIncome')}
                   rows={[
-                    { label: 'Take-Home Pay', value: fmt(takeHome) },
-                    { label: 'Other Income', value: fmt(otherIncome) },
-                    { label: 'Total Income', value: fmt(result.totalIncome), bold: true, total: true },
+                    { label: t('budget.monthlyIncome'), value: fmt(takeHome) },
+                    { label: t('budget.other'), value: fmt(otherIncome) },
+                    { label: t('budget.totalIncome'), value: fmt(result.totalIncome), bold: true, total: true },
                   ]}
                 />
                 <ResultDetailed
-                  title="Housing"
+                  title={t('budget.housing')}
                   rows={[
-                    { label: 'Rent / Mortgage', value: fmt(rent) },
-                    { label: 'Property Tax', value: fmt(propTax) },
-                    { label: 'Home Insurance', value: fmt(homeIns) },
-                    { label: 'Utilities', value: fmt(utilities) },
-                    { label: 'Internet & Phone', value: fmt(internet) },
-                    { label: 'Housing Subtotal', value: fmt(result.housingTotal), bold: true },
+                    { label: t('budget.housing'), value: fmt(rent) },
+                    { label: t('budget.utilities'), value: fmt(propTax) },
+                    { label: t('budget.insurance'), value: fmt(homeIns) },
+                    { label: t('budget.utilities'), value: fmt(utilities) },
+                    { label: t('budget.other'), value: fmt(internet) },
+                    { label: t('budget.housing'), value: fmt(result.housingTotal), bold: true },
                   ]}
                 />
                 <ResultDetailed
-                  title="Transportation"
+                  title={t('budget.transport')}
                   rows={[
-                    { label: 'Car Payment', value: fmt(carPayment) },
-                    { label: 'Car Insurance', value: fmt(carIns) },
-                    { label: 'Gas / Petrol', value: fmt(gas) },
-                    { label: 'Parking & Transit', value: fmt(parking) },
-                    { label: 'Transport Subtotal', value: fmt(result.transportTotal), bold: true },
+                    { label: t('budget.transport'), value: fmt(carPayment) },
+                    { label: t('budget.insurance'), value: fmt(carIns) },
+                    { label: t('budget.transport'), value: fmt(gas) },
+                    { label: t('budget.transport'), value: fmt(parking) },
+                    { label: t('budget.transport'), value: fmt(result.transportTotal), bold: true },
                   ]}
                 />
                 <ResultDetailed
-                  title="Food"
+                  title={t('budget.food')}
                   rows={[
-                    { label: 'Groceries', value: fmt(groceries) },
-                    { label: 'Dining Out / Takeaway', value: fmt(diningOut) },
-                    { label: 'Food Subtotal', value: fmt(result.foodTotal), bold: true },
+                    { label: t('budget.food'), value: fmt(groceries) },
+                    { label: t('budget.entertainment'), value: fmt(diningOut) },
+                    { label: t('budget.food'), value: fmt(result.foodTotal), bold: true },
                   ]}
                 />
                 <ResultDetailed
-                  title="Finance & Savings"
+                  title={t('budget.savings')}
                   rows={[
-                    { label: 'Debt Payments', value: fmt(debtPayments) },
-                    { label: 'Savings / Investments', value: fmt(savings) },
-                    { label: 'Emergency Fund', value: fmt(emergency) },
-                    { label: 'Finance Subtotal', value: fmt(result.financeTotal), bold: true },
+                    { label: t('budget.debtPayments'), value: fmt(debtPayments) },
+                    { label: t('budget.savings'), value: fmt(savings) },
+                    { label: t('budget.savings'), value: fmt(emergency) },
+                    { label: t('budget.savings'), value: fmt(result.financeTotal), bold: true },
                   ]}
                 />
                 <ResultDetailed
-                  title="Personal"
+                  title={t('budget.personal')}
                   rows={[
-                    { label: 'Health Insurance / Medical', value: fmt(health) },
-                    { label: 'Subscriptions', value: fmt(subscriptions) },
-                    { label: 'Clothing & Personal Care', value: fmt(clothing) },
-                    { label: 'Entertainment & Hobbies', value: fmt(entertainment) },
-                    { label: 'Other Expenses', value: fmt(other) },
-                    { label: 'Personal Subtotal', value: fmt(result.personalTotal), bold: true },
+                    { label: t('budget.insurance'), value: fmt(health) },
+                    { label: t('budget.entertainment'), value: fmt(subscriptions) },
+                    { label: t('budget.personal'), value: fmt(clothing) },
+                    { label: t('budget.entertainment'), value: fmt(entertainment) },
+                    { label: t('budget.other'), value: fmt(other) },
+                    { label: t('budget.personal'), value: fmt(result.personalTotal), bold: true },
                   ]}
                 />
                 <ResultDetailed
-                  title="Budget Summary"
+                  title={t('calc.summary')}
                   rows={[
-                    { label: 'Total Income', value: fmt(result.totalIncome) },
-                    { label: 'Total Expenses', value: fmt(result.totalExpenses) },
-                    { label: isPositive ? 'Monthly Surplus' : 'Monthly Deficit', value: `${isPositive ? '' : '−'}${fmt(Math.abs(result.surplus))}`, bold: true, total: true },
-                    { label: 'Savings Rate', value: fmtPct(result.savingsRate), bold: true },
+                    { label: t('budget.totalIncome'), value: fmt(result.totalIncome) },
+                    { label: t('budget.totalExpenses'), value: fmt(result.totalExpenses) },
+                    { label: t('budget.surplusDeficit'), value: `${isPositive ? '' : '−'}${fmt(Math.abs(result.surplus))}`, bold: true, total: true },
+                    { label: t('budget.savingsRate'), value: fmtPct(result.savingsRate), bold: true },
                   ]}
                 />
               </div>

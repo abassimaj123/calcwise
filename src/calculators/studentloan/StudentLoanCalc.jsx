@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -181,6 +182,7 @@ function Toggle({ on, onChange }) {
 // Main component
 // ---------------------------------------------------------------------------
 export default function StudentLoanCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const [balance, setBalance] = useState(35000)
   const [rate, setRate] = useState(6.54)
   const [income, setIncome] = useState(55000)
@@ -286,8 +288,8 @@ export default function StudentLoanCalc({ country = 'us' }) {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Student Loan Calculator</h1>
-          <p className="text-slate-500">Compare Standard, IBR, PAYE, and SAVE repayment plans.</p>
+          <h1 className="text-3xl font-display font-bold mb-2">{t('studentloan.title')}</h1>
+          <p className="text-slate-500">{t('studentloan.desc')}</p>
         </div>
 
         <CalcIntro
@@ -299,11 +301,11 @@ export default function StudentLoanCalc({ country = 'us' }) {
         <div className="cw-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Loan Balance ($)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('studentloan.loanBalance')} ($)</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix="$" />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Interest Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('studentloan.interestRate')} (%)</label>
               <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
@@ -403,7 +405,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
           {['summary', 'chart', 'schedule'].map(v => (
             <button key={v} onClick={() => setTab(v)}
               className={`cw-tab${tab === v ? ' active' : ''}`}>
-              {v}
+              {t(`calc.${v}`)}
             </button>
           ))}
         </div>
@@ -417,19 +419,19 @@ export default function StudentLoanCalc({ country = 'us' }) {
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Monthly Payment</span>
+                    <span className="text-slate-500">{t('studentloan.monthlyPayment')}</span>
                     <span className="font-semibold">{fmtD(plan.payment)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Payoff Time</span>
+                    <span className="text-slate-500">{t('studentloan.repaymentPlan')}</span>
                     <span>{years(plan.months)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Total Interest</span>
+                    <span className="text-slate-500">{t('studentloan.totalInterest')}</span>
                     <span>{fmt(plan.totalInterest)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Total Paid</span>
+                    <span className="text-slate-500">{t('studentloan.totalCost')}</span>
                     <span className="font-bold">{fmt(plan.totalPaid)}</span>
                   </div>
                   {plan.forgiveness > 0 && (
@@ -507,15 +509,15 @@ export default function StudentLoanCalc({ country = 'us' }) {
 
         {results && tab === 'schedule' && (
           <div className="cw-card overflow-x-auto">
-            <h3 className="font-semibold text-sm mb-4">Yearly Amortization — Standard Plan</h3>
+            <h3 className="font-semibold text-sm mb-4">{t('studentloan.repaymentPlan')} — Standard Plan</h3>
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-white/10 text-slate-500">
                   <th className="text-left py-2 pr-3">Year</th>
-                  <th className="text-right py-2 pr-3">Monthly Pmt</th>
+                  <th className="text-right py-2 pr-3">{t('studentloan.monthlyPayment')}</th>
                   <th className="text-right py-2 pr-3">Principal</th>
-                  <th className="text-right py-2 pr-3">Interest</th>
-                  <th className="text-right py-2">Balance</th>
+                  <th className="text-right py-2 pr-3">{t('calc.totalInterest')}</th>
+                  <th className="text-right py-2">{t('studentloan.loanBalance')}</th>
                 </tr>
               </thead>
               <tbody>

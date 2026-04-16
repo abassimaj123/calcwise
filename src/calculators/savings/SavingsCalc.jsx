@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import {
   AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -23,14 +24,12 @@ const DEFAULTS = {
   nz: { principal: 10000, monthly: 400,  rate: 6.0, years: 20, tax: 28 },
 }
 
-const COMPOUND_OPTIONS = [
-  { label: 'Monthly',       value: 12  },
-  { label: 'Quarterly',     value: 4   },
-  { label: 'Semi-annually', value: 2   },
-  { label: 'Annually',      value: 1   },
+const COMPOUND_VALUES = [
+  { tKey: 'savings.compoundMonthly',      value: 12 },
+  { tKey: 'savings.compoundQuarterly',    value: 4  },
+  { tKey: 'savings.compoundSemiAnnually', value: 2  },
+  { tKey: 'savings.compoundAnnually',     value: 1  },
 ]
-
-const TABS = ['Summary', 'Growth Chart', 'Year by Year']
 
 // ---------------------------------------------------------------------------
 // Calculation logic
@@ -97,8 +96,12 @@ function buildYearlyData(principal, monthly, rate, years, compoundFreq, inflatio
 // Component
 // ---------------------------------------------------------------------------
 export default function SavingsCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const d = DEFAULTS[country] ?? DEFAULTS.us
+
+  const COMPOUND_OPTIONS = COMPOUND_VALUES.map((o) => ({ label: t(o.tKey), value: o.value }))
+  const TABS = [t('savings.tabSummary'), t('savings.tabGrowthChart'), t('savings.tabYearByYear')]
 
   const [principal,    setPrincipal]    = useState(d.principal)
   const [monthly,      setMonthly]      = useState(d.monthly)
@@ -107,7 +110,7 @@ export default function SavingsCalc({ country = 'us' }) {
   const [years,        setYears]        = useState(d.years)
   const [inflation,    setInflation]    = useState(2.5)
   const [taxRate,      setTaxRate]      = useState(d.tax)
-  const [tab,          setTab]          = useState('Summary')
+  const [tab,          setTab]          = useState(t('savings.tabSummary'))
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, {
@@ -158,21 +161,27 @@ export default function SavingsCalc({ country = 'us' }) {
       <div className="max-w-5xl mx-auto px-4 py-10">
         {/* Page header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-display font-bold mb-1">{c.name} Savings Calculator</h1>
-          <p className="text-slate-500 text-sm">Compound interest · inflation-adjusted returns · tax on interest</p>
+          <h1 className="text-2xl font-display font-bold mb-1">{c.name} {t('savings.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('savings.desc')}</p>
         </div>
 
         {/* Rate benchmarks */}
         <SmartAlert
           type="warning"
-          title="High return assumption"
-          message="Stock market averages 7–10% annually but with volatility. High returns carry higher risk."
+          title={t('savings.alertHighReturnTitle')}
+          message={t('savings.alertHighReturnMsg')}
           show={rate > 8}
         />
         <SmartAlert
           type="info"
-          title="Low return rate"
-          message={`Consider a ${country === 'ca' ? 'TFSA' : country === 'uk' ? 'ISA' : 'high-interest savings account'} (2–4%) or index funds for better long-term growth.`}
+          title={t('savings.alertLowReturnTitle')}
+          message={
+            country === 'ca'
+              ? t('savings.alertLowReturnMsgTFSA')
+              : country === 'uk'
+              ? t('savings.alertLowReturnMsgISA')
+              : t('savings.alertLowReturnMsgDefault')
+          }
           show={rate < 2}
         />
 
@@ -183,10 +192,10 @@ export default function SavingsCalc({ country = 'us' }) {
 
               {/* Savings Details */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Savings Details</p>
+                <p className="cw-input-group-title">{t('savings.savingsDetails')}</p>
                 <div className="space-y-4">
                   <NumericInput
-                    label={`Initial Deposit (${c.symbol})`}
+                    label={`${t('savings.initialDeposit')} (${c.symbol})`}
                     value={principal}
                     onChange={setPrincipal}
                     min={0}
@@ -196,7 +205,7 @@ export default function SavingsCalc({ country = 'us' }) {
                     showSlider
                   />
                   <NumericInput
-                    label={`Monthly Contribution (${c.symbol})`}
+                    label={`${t('savings.monthlyContribution')} (${c.symbol})`}
                     value={monthly}
                     onChange={setMonthly}
                     min={0}
@@ -206,7 +215,7 @@ export default function SavingsCalc({ country = 'us' }) {
                     showSlider
                   />
                   <NumericInput
-                    label="Annual Interest Rate (%)"
+                    label={t('savings.annualInterestRate')}
                     value={rate}
                     onChange={setRate}
                     min={0.5}
@@ -217,7 +226,7 @@ export default function SavingsCalc({ country = 'us' }) {
                   />
                   <div>
                     <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
-                      Compounding Frequency
+                      {t('savings.compoundFreq')}
                     </label>
                     <select
                       className="cw-input"
@@ -234,10 +243,10 @@ export default function SavingsCalc({ country = 'us' }) {
 
               {/* Time & Options */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Time &amp; Options</p>
+                <p className="cw-input-group-title">{t('savings.timeAndOptions')}</p>
                 <div className="space-y-4">
                   <NumericInput
-                    label="Years"
+                    label={t('savings.years')}
                     value={years}
                     onChange={setYears}
                     min={1}
@@ -247,7 +256,7 @@ export default function SavingsCalc({ country = 'us' }) {
                     showSlider
                   />
                   <NumericInput
-                    label="Annual Inflation Rate (%)"
+                    label={t('savings.annualInflationRate')}
                     value={inflation}
                     onChange={setInflation}
                     min={0}
@@ -255,10 +264,10 @@ export default function SavingsCalc({ country = 'us' }) {
                     step={0.1}
                     suffix="%"
                     showSlider
-                    hint="Historical average: 2–3%"
+                    hint={t('savings.inflationHint')}
                   />
                   <NumericInput
-                    label="Tax on Interest (%)"
+                    label={t('savings.taxOnInterestPct')}
                     value={taxRate}
                     onChange={setTaxRate}
                     min={0}
@@ -281,17 +290,17 @@ export default function SavingsCalc({ country = 'us' }) {
             <ResultSimple
               metrics={[
                 {
-                  label: 'Final Balance',
+                  label: t('savings.finalBalance'),
                   value: fmt(result.finalBalance),
                   sub: `After ${years} years · ${COMPOUND_OPTIONS.find(o => o.value === compoundFreq)?.label} compounding`,
                   highlight: true,
                 },
                 {
-                  label: 'Total Interest Earned',
+                  label: t('savings.totalInterestEarned'),
                   value: fmt(Math.max(0, totalGain)),
                 },
                 {
-                  label: 'Total Contributions',
+                  label: t('savings.totalContributions'),
                   value: fmt(result.totalContributions),
                 },
               ]}
@@ -307,28 +316,28 @@ export default function SavingsCalc({ country = 'us' }) {
             </div>
 
             {/* ── Summary Tab ── */}
-            {tab === 'Summary' && (
+            {tab === t('savings.tabSummary') && (
               <ResultDetailed
-                title="Savings Breakdown"
+                title={t('savings.savingsBreakdown')}
                 rows={[
-                  { label: 'Initial Deposit',          value: fmt(principal) },
-                  { label: `Monthly Contribution × ${years * 12}`, value: fmt(monthly * years * 12) },
-                  { label: 'Total Contributions',       value: fmt(result.totalContributions), bold: true },
-                  { label: 'Total Interest Earned',     value: fmt(Math.max(0, result.totalInterest)) },
-                  { label: `Tax on Interest (${taxRate}%)`, value: `-${fmt(Math.max(0, result.totalInterest - result.interestAfterTax))}` },
-                  { label: 'Net Interest (after tax)',  value: fmt(result.interestAfterTax) },
-                  { label: 'Final Balance (before tax)',value: fmt(result.finalBalance), bold: true },
-                  { label: 'Final Balance (after tax)', value: fmt(result.finalAfterTax), bold: true, total: true },
-                  { label: `Real Value (${inflation}% inflation)`, value: fmt(result.realValue), sub: `Purchasing power in today's money` },
+                  { label: t('savings.initialDeposit'),                                   value: fmt(principal) },
+                  { label: `${t('savings.monthlyContribution')} × ${years * 12}`,         value: fmt(monthly * years * 12) },
+                  { label: t('savings.totalContributions'),                                value: fmt(result.totalContributions), bold: true },
+                  { label: t('savings.totalInterestEarned'),                               value: fmt(Math.max(0, result.totalInterest)) },
+                  { label: `${t('savings.taxOnInterest')} (${taxRate}%)`,                 value: `-${fmt(Math.max(0, result.totalInterest - result.interestAfterTax))}` },
+                  { label: t('savings.netInterestAfterTax'),                               value: fmt(result.interestAfterTax) },
+                  { label: t('savings.finalBalanceBeforeTax'),                             value: fmt(result.finalBalance), bold: true },
+                  { label: t('savings.finalBalanceAfterTax'),                              value: fmt(result.finalAfterTax), bold: true, total: true },
+                  { label: `${t('savings.realValue')} (${inflation}% ${t('savings.inflationRate')})`, value: fmt(result.realValue), sub: t('savings.purchasingPowerToday') },
                 ]}
               />
             )}
 
             {/* ── Growth Chart Tab ── */}
-            {tab === 'Growth Chart' && (
+            {tab === t('savings.tabGrowthChart') && (
               <div className="cw-card">
-                <h3 className="font-semibold text-sm mb-1">Savings Growth Over {years} Years</h3>
-                <p className="text-xs text-slate-400 mb-4">Stacked: contributions + interest earned · dashed line = inflation-adjusted value</p>
+                <h3 className="font-semibold text-sm mb-1">{t('savings.savingsGrowthOver', { years })}</h3>
+                <p className="text-xs text-slate-400 mb-4">{t('savings.chartSubtext')}</p>
                 <ResponsiveContainer width="100%" height={320}>
                   <AreaChart data={yearlyData} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
                     <defs>
@@ -389,16 +398,16 @@ export default function SavingsCalc({ country = 'us' }) {
             )}
 
             {/* ── Year by Year Tab ── */}
-            {tab === 'Year by Year' && (
+            {tab === t('savings.tabYearByYear') && (
               <div className="cw-card overflow-x-auto">
-                <h3 className="font-semibold text-sm mb-4">Year-by-Year Breakdown</h3>
+                <h3 className="font-semibold text-sm mb-4">{t('savings.yearByYearBreakdown')}</h3>
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b border-slate-200">
-                      <th className="text-left py-2 pr-3 text-slate-500 font-medium">Year</th>
-                      <th className="text-right py-2 pr-3 text-slate-500 font-medium">Contributions</th>
-                      <th className="text-right py-2 pr-3 text-slate-500 font-medium">Interest</th>
-                      <th className="text-right py-2 text-slate-500 font-medium">Balance</th>
+                      <th className="text-left py-2 pr-3 text-slate-500 font-medium">{t('savings.year')}</th>
+                      <th className="text-right py-2 pr-3 text-slate-500 font-medium">{t('savings.contributions')}</th>
+                      <th className="text-right py-2 pr-3 text-slate-500 font-medium">{t('savings.interestEarned')}</th>
+                      <th className="text-right py-2 text-slate-500 font-medium">{t('savings.balance')}</th>
                     </tr>
                   </thead>
                   <tbody>

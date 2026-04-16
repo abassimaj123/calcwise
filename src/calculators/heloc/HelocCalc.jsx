@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -128,6 +129,7 @@ function calcHELOC({ homeValue, mortgageBalance, margin, drawAmount, drawPeriodY
 // Main component
 // ---------------------------------------------------------------------------
 export default function HelocCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country] || { symbol: '$', locale: 'en-US', currency: 'USD', name: 'US' }
   const optionDefs = HELOC_OPTIONS[country] || []
 
@@ -195,8 +197,8 @@ export default function HelocCalc({ country = 'us' }) {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">HELOC Calculator</h1>
-          <p className="text-slate-500">Calculate available credit, draw period payments, and repayment schedule.</p>
+          <h1 className="text-3xl font-display font-bold mb-2">{t('heloc.title')}</h1>
+          <p className="text-slate-500">{t('heloc.desc')}</p>
           <p className="text-xs text-slate-500 mt-2">Prime Rate: {PRIME_RATE}% (estimate)</p>
         </div>
 
@@ -209,11 +211,11 @@ export default function HelocCalc({ country = 'us' }) {
         <div className="cw-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Home Value ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('heloc.homeValue')} ({c.symbol})</label>
               <NumericInput value={homeValue} onChange={setHomeValue} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Mortgage Balance ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('heloc.mortgageBalance')} ({c.symbol})</label>
               <NumericInput value={mortgageBalance} onChange={setMortgageBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
@@ -221,18 +223,18 @@ export default function HelocCalc({ country = 'us' }) {
               <NumericInput value={margin} onChange={setMargin} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Amount to Draw ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('heloc.drawAmount')} ({c.symbol})</label>
               <NumericInput value={drawAmount} onChange={setDrawAmount} min={0} step={1000} max={result?.maxCredit || undefined} prefix={c.symbol} />
               {result && <p className="text-xs text-slate-500 mt-1">Max available: {fmt(result.maxCredit)}</p>}
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Draw Period (years)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('heloc.drawPeriod')}</label>
               <select className="cw-input" value={drawPeriod} onChange={e => setDrawPeriod(+e.target.value)}>
                 {[5, 10, 15].map(y => <option key={y} value={y}>{y} years</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Repayment Period (years)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('heloc.repayPeriod')}</label>
               <select className="cw-input" value={repayPeriod} onChange={e => setRepayPeriod(+e.target.value)}>
                 {[10, 15, 20].map(y => <option key={y} value={y}>{y} years</option>)}
               </select>
@@ -319,7 +321,7 @@ export default function HelocCalc({ country = 'us' }) {
           {['summary', 'chart', 'detailed'].map(v => (
             <button key={v} onClick={() => setTab(v)}
               className={`cw-tab${tab === v ? ' active' : ''}`}>
-              {v}
+              {t(`calc.${v}`)}
             </button>
           ))}
         </div>
@@ -327,9 +329,9 @@ export default function HelocCalc({ country = 'us' }) {
         {result && tab === 'summary' && (
           <ResultSimple
             metrics={[
-              { label: 'Available Credit', value: fmt(result.maxCredit), highlight: true },
-              { label: 'Draw Period Payment', value: `${fmtD(result.drawMonthlyPayment)}/mo`, sub: 'Interest-only' },
-              { label: 'Repayment Payment', value: `${fmtD(result.repayMonthly)}/mo`, sub: 'P+I' },
+              { label: t('heloc.availableCredit'), value: fmt(result.maxCredit), highlight: true },
+              { label: t('heloc.drawPayment'), value: `${fmtD(result.drawMonthlyPayment)}/mo`, sub: 'Interest-only' },
+              { label: t('heloc.repayPayment'), value: `${fmtD(result.repayMonthly)}/mo`, sub: 'P+I' },
               ...(activeOptCount > 0 ? [
                 { label: 'True Cost (Draw)', value: `${fmtD(result.trueMonthlyCostDraw)}/mo`, sub: 'incl. fees' },
                 { label: 'True Cost (Repay)', value: `${fmtD(result.trueMonthlyCostRepay)}/mo`, sub: 'incl. fees' },
@@ -408,7 +410,7 @@ export default function HelocCalc({ country = 'us' }) {
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter your home details above. You need at least 15% equity (85% LTV limit).
+            {t('calc.enterValid')}
           </div>
         )}
 

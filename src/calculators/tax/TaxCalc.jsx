@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -346,6 +347,7 @@ function Toggle({ on, onChange }) {
 }
 
 export default function TaxCalc({ country }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const deductionDefs = TAX_DEDUCTIONS[country] || []
 
@@ -406,10 +408,10 @@ export default function TaxCalc({ country }) {
 
         <div className="cw-card mb-4">
           <label className="block text-xs text-slate-500 mb-1 uppercase tracking-wider">
-            Annual Gross Income ({c.symbol})
+            {t('tax.annualIncome')} ({c.symbol})
           </label>
           <NumericInput value={gross} onChange={setGross} min={0} step={1000} prefix={c.symbol} />
-          <p className="text-xs text-slate-500 mt-2">Enter your gross (before-tax) annual income</p>
+          <p className="text-xs text-slate-500 mt-2">{t('tax.enterGross')}</p>
         </div>
 
         {/* Optional Deductions collapsible */}
@@ -421,7 +423,7 @@ export default function TaxCalc({ country }) {
               className="w-full flex items-center justify-between text-left"
             >
               <div className="flex items-center gap-3">
-                <span className="font-semibold text-slate-800">Optional Deductions</span>
+                <span className="font-semibold text-slate-800">{t('calc.optionalDeductions')}</span>
                 {activeDedCount > 0 && (
                   <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
                     {activeDedCount} active · -{fmtShort(totalDeductions)}/yr
@@ -469,13 +471,16 @@ export default function TaxCalc({ country }) {
         )}
 
         <div className="cw-tabs mb-4">
-          {['simple', 'detailed'].map(v => (
+          {[
+            { key: 'simple', label: t('calc.simple') },
+            { key: 'detailed', label: t('calc.detailed') },
+          ].map(v => (
             <button
-              key={v}
-              onClick={() => setView(v)}
-              className={`cw-tab${view === v ? ' active' : ''}`}
+              key={v.key}
+              onClick={() => setView(v.key)}
+              className={`cw-tab${view === v.key ? ' active' : ''}`}
             >
-              {v}
+              {v.label}
             </button>
           ))}
         </div>
@@ -500,9 +505,9 @@ export default function TaxCalc({ country }) {
             )}
             <ResultSimple
               metrics={[
-                { label: 'Net Annual Income', value: fmt(result.netAnnual), highlight: true },
-                { label: 'Monthly Take-Home', value: fmt(result.netAnnual / 12) },
-                { label: 'Effective Tax Rate', value: `${result.effectiveRate.toFixed(1)}%` },
+                { label: t('calc.netAnnual'), value: fmt(result.netAnnual), highlight: true },
+                { label: t('calc.monthlyTakeHome'), value: fmt(result.netAnnual / 12) },
+                { label: t('calc.effectiveRate'), value: `${result.effectiveRate.toFixed(1)}%` },
               ]}
             />
           </>
@@ -527,7 +532,7 @@ export default function TaxCalc({ country }) {
               </div>
             )}
             <ResultDetailed
-              title="Tax Breakdown"
+              title={t('tax.incomeTax')}
               rows={result.rows.map(r => ({
                 label: r.label,
                 value: r.value < 0 ? `-${fmt(r.value)}` : fmt(r.value),
@@ -584,12 +589,12 @@ export default function TaxCalc({ country }) {
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter your annual income above to see the breakdown.
+            {t('calc.enterIncome')}
           </div>
         )}
 
         <div className="mt-4 p-3 bg-slate-50 rounded-lg text-xs text-slate-500">
-          These are estimates based on standard deductions and average rates. Actual tax may differ based on filing status, deductions, credits, and jurisdiction. Consult a tax professional for advice.
+          {t('tax.disclaimer')}
         </div>
 
         <AppDownloadBanner calcKey="tax" country={country} />

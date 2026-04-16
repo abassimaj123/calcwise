@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import {
   PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
@@ -18,10 +19,10 @@ const LIAB_COLORS  = ['#ef4444', '#f97316', '#f59e0b', '#a855f7', '#64748b']
 // Financial health badge
 // ---------------------------------------------------------------------------
 function healthBadge(netWorth) {
-  if (netWorth > 500000) return { label: 'Excellent',  bg: 'bg-green-100',  text: 'text-green-800',  border: 'border-green-300'  }
-  if (netWorth > 100000) return { label: 'Strong',     bg: 'bg-blue-100',   text: 'text-blue-800',   border: 'border-blue-300'   }
-  if (netWorth > 0)      return { label: 'Building',   bg: 'bg-amber-100',  text: 'text-amber-800',  border: 'border-amber-300'  }
-  return                        { label: 'In Debt',    bg: 'bg-red-100',    text: 'text-red-800',    border: 'border-red-300'    }
+  if (netWorth > 500000) return { labelKey: 'networth.excellent',  bg: 'bg-green-100',  text: 'text-green-800',  border: 'border-green-300'  }
+  if (netWorth > 100000) return { labelKey: 'networth.strong',     bg: 'bg-blue-100',   text: 'text-blue-800',   border: 'border-blue-300'   }
+  if (netWorth > 0)      return { labelKey: 'networth.building',   bg: 'bg-amber-100',  text: 'text-amber-800',  border: 'border-amber-300'  }
+  return                        { labelKey: 'networth.inDebt',     bg: 'bg-red-100',    text: 'text-red-800',    border: 'border-red-300'    }
 }
 
 // ---------------------------------------------------------------------------
@@ -45,13 +46,32 @@ const LIAB_FIELDS = [
   { key: 'otherLoans',  label: 'Other Loans',       step: 1000  },
 ]
 
-const TABS = ['Summary', 'Assets Chart', 'Liabilities Chart']
-
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 export default function NetWorthCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country]
+
+  const TABS = [t('networth.tabSummary'), t('networth.tabAssetsChart'), t('networth.tabLiabilitiesChart')]
+
+  const ASSET_LABELS = {
+    residence:   t('networth.primaryResidence'),
+    investments: t('networth.investmentAccounts'),
+    retirement:  t('networth.retirementSavings'),
+    cash:        t('networth.cashAndSavings'),
+    vehicles:    t('networth.vehicles'),
+    realEstate:  t('networth.otherRealEstate'),
+    otherAssets: t('networth.otherAssets'),
+  }
+
+  const LIAB_LABELS = {
+    mortgage:    t('networth.mortgageBalance2'),
+    carLoan:     t('networth.carLoans'),
+    creditCard:  t('networth.creditCardDebt'),
+    studentLoan: t('networth.studentLoans'),
+    otherLoans:  t('networth.otherLoans'),
+  }
 
   // Assets state
   const [assets, setAssets] = useState(
@@ -62,7 +82,7 @@ export default function NetWorthCalc({ country = 'us' }) {
     Object.fromEntries(LIAB_FIELDS.map((f) => [f.key, 0]))
   )
 
-  const [tab, setTab] = useState('Summary')
+  const [tab, setTab] = useState(t('networth.tabSummary'))
 
   const setAsset = (key, val) => setAssets((prev) => ({ ...prev, [key]: val }))
   const setLiab  = (key, val) => setLiabs((prev)  => ({ ...prev, [key]: val  }))
@@ -88,11 +108,11 @@ export default function NetWorthCalc({ country = 'us' }) {
 
   // Pie data — filter out zeros for cleaner charts
   const assetsPieData = ASSET_FIELDS
-    .map((f, i) => ({ name: f.label.split('(')[0].trim(), value: assets[f.key], color: ASSET_COLORS[i] }))
+    .map((f, i) => ({ name: ASSET_LABELS[f.key] ?? f.label.split('(')[0].trim(), value: assets[f.key], color: ASSET_COLORS[i] }))
     .filter((d) => d.value > 0)
 
   const liabsPieData = LIAB_FIELDS
-    .map((f, i) => ({ name: f.label, value: liabs[f.key], color: LIAB_COLORS[i] }))
+    .map((f, i) => ({ name: LIAB_LABELS[f.key] ?? f.label, value: liabs[f.key], color: LIAB_COLORS[i] }))
     .filter((d) => d.value > 0)
 
   const isPositive = netWorth >= 0
@@ -123,8 +143,8 @@ export default function NetWorthCalc({ country = 'us' }) {
       <div className="max-w-5xl mx-auto px-4 py-10">
         {/* Page header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-display font-bold mb-1">{c.name} Net Worth Calculator</h1>
-          <p className="text-slate-500 text-sm">Assets minus liabilities · financial health score</p>
+          <h1 className="text-2xl font-display font-bold mb-1">{c.name} {t('networth.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('networth.desc')}</p>
         </div>
 
         <div className="calc-grid">
@@ -134,12 +154,12 @@ export default function NetWorthCalc({ country = 'us' }) {
 
               {/* Assets */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Assets</p>
+                <p className="cw-input-group-title">{t('networth.assets')}</p>
                 <div className="space-y-4">
                   {ASSET_FIELDS.map((f) => (
                     <NumericInput
                       key={f.key}
-                      label={f.label}
+                      label={ASSET_LABELS[f.key] ?? f.label}
                       value={assets[f.key]}
                       onChange={(v) => setAsset(f.key, v)}
                       min={0}
@@ -152,12 +172,12 @@ export default function NetWorthCalc({ country = 'us' }) {
 
               {/* Liabilities */}
               <div className="cw-input-group">
-                <p className="cw-input-group-title">Liabilities</p>
+                <p className="cw-input-group-title">{t('networth.liabilities')}</p>
                 <div className="space-y-4">
                   {LIAB_FIELDS.map((f) => (
                     <NumericInput
                       key={f.key}
-                      label={f.label}
+                      label={LIAB_LABELS[f.key] ?? f.label}
                       value={liabs[f.key]}
                       onChange={(v) => setLiab(f.key, v)}
                       min={0}
@@ -180,12 +200,12 @@ export default function NetWorthCalc({ country = 'us' }) {
                 className="cw-result-hero mb-4"
                 style={{ background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)' }}
               >
-                <p className="cw-result-hero-label">Net Worth</p>
+                <p className="cw-result-hero-label">{t('networth.netWorth')}</p>
                 <p className="cw-result-hero-value" style={{ fontSize: '1.5rem', opacity: 0.4 }}>
                   {fmt(0)}
                 </p>
                 <p className="cw-result-hero-sub">
-                  Enter your assets and liabilities above to see your net worth.
+                  {t('networth.enterToSeeNetWorth')}
                 </p>
               </div>
             )}
@@ -200,19 +220,19 @@ export default function NetWorthCalc({ country = 'us' }) {
                     : { background: 'linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)' }
                 }
               >
-                <p className="cw-result-hero-label">Net Worth</p>
+                <p className="cw-result-hero-label">{t('networth.netWorth')}</p>
                 <p className="cw-result-hero-value">{fmt(netWorth)}</p>
                 <p className="cw-result-hero-sub">
-                  Total Assets minus Total Liabilities
+                  {t('networth.totalAssetsMinusLiabs')}
                 </p>
                 <hr className="cw-result-hero-divider" />
                 <div className="cw-result-hero-grid">
                   <div>
-                    <p className="cw-result-hero-mini-label">Total Assets</p>
+                    <p className="cw-result-hero-mini-label">{t('networth.totalAssets')}</p>
                     <p className="cw-result-hero-mini-value">{fmt(totalAssets)}</p>
                   </div>
                   <div>
-                    <p className="cw-result-hero-mini-label">Total Liabilities</p>
+                    <p className="cw-result-hero-mini-label">{t('networth.totalLiabilities')}</p>
                     <p className="cw-result-hero-mini-value">{fmt(totalLiabs)}</p>
                   </div>
                 </div>
@@ -223,7 +243,7 @@ export default function NetWorthCalc({ country = 'us' }) {
             {hasData && (
               <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold mb-4 ${badge.bg} ${badge.text} ${badge.border}`}>
                 <span className={`w-2 h-2 rounded-full ${isPositive ? 'bg-green-500' : 'bg-red-500'}`} />
-                Financial Health: {badge.label}
+                {t('networth.financialHealth')}: {t(badge.labelKey)}
               </div>
             )}
 
@@ -239,38 +259,38 @@ export default function NetWorthCalc({ country = 'us' }) {
                 </div>
 
                 {/* ── Summary Tab ── */}
-                {tab === 'Summary' && (
+                {tab === t('networth.tabSummary') && (
                   <>
                     <ResultDetailed
-                      title="Assets"
+                      title={t('networth.assets')}
                       rows={[
                         ...ASSET_FIELDS.map((f) => ({
-                          label: f.label.split('(')[0].trim(),
+                          label: ASSET_LABELS[f.key] ?? f.label.split('(')[0].trim(),
                           value: fmt(assets[f.key]),
                         })),
-                        { label: 'Total Assets', value: fmt(totalAssets), bold: true, total: true },
+                        { label: t('networth.totalAssets'), value: fmt(totalAssets), bold: true, total: true },
                       ]}
                     />
                     <div className="mt-4">
                       <ResultDetailed
-                        title="Liabilities"
+                        title={t('networth.liabilities')}
                         rows={[
                           ...LIAB_FIELDS.map((f) => ({
-                            label: f.label,
+                            label: LIAB_LABELS[f.key] ?? f.label,
                             value: fmt(liabs[f.key]),
                           })),
-                          { label: 'Total Liabilities', value: fmt(totalLiabs), bold: true, total: true },
+                          { label: t('networth.totalLiabilities'), value: fmt(totalLiabs), bold: true, total: true },
                         ]}
                       />
                     </div>
                     <div className="mt-4">
                       <ResultDetailed
-                        title="Net Worth Summary"
+                        title={t('networth.netWorthSummary')}
                         rows={[
-                          { label: 'Total Assets',      value: fmt(totalAssets) },
-                          { label: 'Total Liabilities', value: `-${fmt(totalLiabs)}` },
-                          { label: 'Net Worth',         value: fmt(netWorth), bold: true, total: true },
-                          ...(totalAssets > 0 ? [{ label: 'Debt-to-Asset Ratio', value: `${((totalLiabs / totalAssets) * 100).toFixed(1)}%` }] : []),
+                          { label: t('networth.totalAssets'),      value: fmt(totalAssets) },
+                          { label: t('networth.totalLiabilities'), value: `-${fmt(totalLiabs)}` },
+                          { label: t('networth.netWorth'),         value: fmt(netWorth), bold: true, total: true },
+                          ...(totalAssets > 0 ? [{ label: t('networth.debtToAsset'), value: `${((totalLiabs / totalAssets) * 100).toFixed(1)}%` }] : []),
                         ]}
                       />
                     </div>
@@ -278,11 +298,11 @@ export default function NetWorthCalc({ country = 'us' }) {
                 )}
 
                 {/* ── Assets Chart Tab ── */}
-                {tab === 'Assets Chart' && (
+                {tab === t('networth.tabAssetsChart') && (
                   <div className="cw-card">
-                    <h3 className="font-semibold text-sm mb-4">Assets Breakdown</h3>
+                    <h3 className="font-semibold text-sm mb-4">{t('networth.assetsBreakdown')}</h3>
                     {assetsPieData.length === 0 ? (
-                      <p className="text-sm text-slate-400 text-center py-8">No asset values entered yet.</p>
+                      <p className="text-sm text-slate-400 text-center py-8">{t('networth.noAssetsEntered')}</p>
                     ) : (
                       <ResponsiveContainer width="100%" height={320}>
                         <PieChart>
@@ -313,11 +333,11 @@ export default function NetWorthCalc({ country = 'us' }) {
                 )}
 
                 {/* ── Liabilities Chart Tab ── */}
-                {tab === 'Liabilities Chart' && (
+                {tab === t('networth.tabLiabilitiesChart') && (
                   <div className="cw-card">
-                    <h3 className="font-semibold text-sm mb-4">Liabilities Breakdown</h3>
+                    <h3 className="font-semibold text-sm mb-4">{t('networth.liabilitiesBreakdown')}</h3>
                     {liabsPieData.length === 0 ? (
-                      <p className="text-sm text-slate-400 text-center py-8">No liability values entered yet.</p>
+                      <p className="text-sm text-slate-400 text-center py-8">{t('networth.noLiabilitiesEntered')}</p>
                     ) : (
                       <ResponsiveContainer width="100%" height={320}>
                         <PieChart>

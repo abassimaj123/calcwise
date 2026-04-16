@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -98,6 +99,7 @@ function Toggle({ on, onChange }) {
 }
 
 export default function RideProfitCalc({ country }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const mr = mileageRates[country] || mileageRates.ca
   const isImperial = mr.unit === 'mile'
@@ -207,10 +209,10 @@ export default function RideProfitCalc({ country }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            {c.name} RideProfit Calculator
+            {c.name} {t('rideprofit.title')}
           </h1>
           <p className="text-slate-500">
-            Find out what you actually earn driving for Uber, DoorDash, Deliveroo and more.
+            {t('rideprofit.desc')}
           </p>
           <div className="mt-2 inline-flex items-center gap-2 bg-cw-success/10 border border-cw-success/30 rounded-full px-4 py-1 text-xs text-cw-success">
             ✓ {mr.label}
@@ -228,7 +230,7 @@ export default function RideProfitCalc({ country }) {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Weekly Revenue ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('rideprofit.weeklyEarnings')} ({c.symbol})</label>
               <NumericInput value={revenue} onChange={setRevenue} min={0} step={50} prefix={c.symbol} />
             </div>
             <div>
@@ -238,7 +240,7 @@ export default function RideProfitCalc({ country }) {
               <NumericInput value={distance} onChange={setDistance} min={0} step={10} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Hours Worked per Week</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('rideprofit.weeklyHours')}</label>
               <NumericInput value={hoursWorked} onChange={setHoursWorked} min={1} step={1} />
             </div>
             <div>
@@ -265,7 +267,7 @@ export default function RideProfitCalc({ country }) {
               className="w-full flex items-center justify-between text-left"
             >
               <div className="flex items-center gap-3">
-                <span className="font-semibold text-slate-800">Additional Expenses</span>
+                <span className="font-semibold text-slate-800">{t('rideprofit.costDetails')}</span>
                 {activeExpCount > 0 && (
                   <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
                     {activeExpCount} active · -{fmt0(monthlyExtraTotal)}/mo
@@ -319,7 +321,7 @@ export default function RideProfitCalc({ country }) {
               onClick={() => setView(v)}
               className={`cw-tab${view === v ? ' active' : ''}`}
             >
-              {v}
+              {v === 'summary' ? t('calc.summary') : v === 'chart' ? t('calc.chart') : t('calc.detailed')}
             </button>
           ))}
         </div>
@@ -327,7 +329,7 @@ export default function RideProfitCalc({ country }) {
         {result && view === 'summary' && (
           <>
             <div className="cw-card mb-4 text-center py-6 border border-primary/30 bg-primary/5">
-              <p className="text-xs text-slate-500 uppercase tracking-widest mb-1">True Hourly Rate</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest mb-1">{t('rideprofit.trueHourlyProfit')}</p>
               <p className={`text-5xl font-display font-bold ${result.hourlyRate >= 15 ? 'text-cw-success' : result.hourlyRate >= 10 ? 'text-yellow-400' : 'text-cw-danger'}`}>
                 {fmt(result.hourlyRate)}
               </p>
@@ -351,9 +353,9 @@ export default function RideProfitCalc({ country }) {
             )}
             <ResultSimple
               metrics={[
-                { label: 'Weekly Net Profit', value: fmt0(result.netProfit) },
-                { label: 'Tax Deductible', value: fmt0(result.taxDeduction), sub: 'This week' },
-                { label: 'Annual Net (×52)', value: fmt0(result.annualNet) },
+                { label: t('rideprofit.weeklyProfit'), value: fmt0(result.netProfit) },
+                { label: t('rideprofit.fuelCost'), value: fmt0(result.taxDeduction), sub: 'This week' },
+                { label: t('rideprofit.annualProfit'), value: fmt0(result.annualNet) },
               ]}
             />
           </>
@@ -393,7 +395,7 @@ export default function RideProfitCalc({ country }) {
             </div>
 
             <div className="cw-card text-center py-5 border border-primary/30 bg-primary/5">
-              <p className="text-xs text-slate-500 uppercase tracking-widest mb-1">True Hourly Rate</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest mb-1">{t('rideprofit.trueHourlyProfit')}</p>
               <p className={`text-4xl font-display font-bold ${result.hourlyRate >= 15 ? 'text-cw-success' : result.hourlyRate >= 10 ? 'text-yellow-400' : 'text-cw-danger'}`}>
                 {fmt(result.hourlyRate)}
               </p>
@@ -422,7 +424,7 @@ export default function RideProfitCalc({ country }) {
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter your weekly numbers above to see your real profit.
+            {t('calc.enterValid')}
           </div>
         )}
 

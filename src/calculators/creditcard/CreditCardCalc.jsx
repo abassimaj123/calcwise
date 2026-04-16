@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   AreaChart, Area, PieChart, Pie, Cell,
@@ -119,13 +120,14 @@ const defaultsByCountry = {
 
 const TABS = ['chart', 'summary', 'payoff']
 
-const PAY_MODES = [
-  { key: 'minimum', label: 'Minimum Payment' },
-  { key: 'fixed',   label: 'Fixed Amount' },
-  { key: 'payoff',  label: 'Pay Off In X Months' },
+const PAY_MODES_KEYS = [
+  { key: 'minimum', labelKey: 'calc.minPayment' },
+  { key: 'fixed',   labelKey: 'calc.fixedAmount' },
+  { key: 'payoff',  labelKey: 'calc.payOffIn' },
 ]
 
 export default function CreditCardCalc({ country = 'us' }) {
+  const { t } = useTranslation()
   const c = countries[country]
   const d = defaultsByCountry[country] || defaultsByCountry.us
 
@@ -200,8 +202,8 @@ export default function CreditCardCalc({ country = 'us' }) {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Credit Card Payoff Calculator</h1>
-          <p className="text-slate-500">Find out when you'll be debt-free and how much interest you can save.</p>
+          <h1 className="text-3xl font-display font-bold mb-2">{t('creditcard.title')}</h1>
+          <p className="text-slate-500">{t('creditcard.desc')}</p>
         </div>
 
         <CalcIntro
@@ -213,11 +215,11 @@ export default function CreditCardCalc({ country = 'us' }) {
         <div className="cw-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Current Balance ({c.symbol})</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('creditcard.balance')} ({c.symbol})</label>
               <NumericInput value={balance} onChange={setBalance} min={0} step={1000} prefix={c.symbol} />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">APR (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('creditcard.apr')}</label>
               <NumericInput
                 value={apr}
                 onChange={setApr}
@@ -232,11 +234,11 @@ export default function CreditCardCalc({ country = 'us' }) {
 
         {/* Payment Strategy — always visible */}
         <div className="cw-card mb-4">
-          <p className="text-sm font-semibold text-slate-800 mb-3">Payment Strategy</p>
+          <p className="text-sm font-semibold text-slate-800 mb-3">{t('calc.paymentStrategy')}</p>
 
           {/* Pill selector */}
           <div className="flex flex-wrap gap-2 mb-4">
-            {PAY_MODES.map(m => (
+            {PAY_MODES_KEYS.map(m => (
               <button
                 key={m.key}
                 type="button"
@@ -247,7 +249,7 @@ export default function CreditCardCalc({ country = 'us' }) {
                     : 'bg-white border-slate-300 text-slate-600 hover:border-primary hover:text-primary'
                 }`}
               >
-                {m.label}
+                {t(m.labelKey)}
               </button>
             ))}
           </div>
@@ -255,7 +257,7 @@ export default function CreditCardCalc({ country = 'us' }) {
           {/* Mode-specific input */}
           {payMode === 'minimum' && (
             <div className="max-w-xs">
-              <label className="block text-xs text-slate-500 mb-1">Min Payment Rate (min {c.symbol}25)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('creditcard.minPayPct')}</label>
               <NumericInput value={minPct} onChange={setMinPct} min={1} max={10} step={0.1} suffix="%" />
               <p className="text-xs text-slate-500 mt-1">Monthly: {c.symbol}25 floor applies automatically</p>
             </div>
@@ -263,14 +265,14 @@ export default function CreditCardCalc({ country = 'us' }) {
 
           {payMode === 'fixed' && (
             <div className="max-w-xs">
-              <label className="block text-xs text-slate-500 mb-1">Fixed Monthly Payment</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('calc.fixedAmount')}</label>
               <NumericInput value={fixedAmount} onChange={setFixedAmount} min={10} step={10} prefix={c.symbol} />
             </div>
           )}
 
           {payMode === 'payoff' && (
             <div className="max-w-xs">
-              <label className="block text-xs text-slate-500 mb-1">Pay Off In</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('calc.payOffIn')}</label>
               <NumericInput value={payoffMonths} onChange={setPayoffMonths} min={1} max={120} step={1} suffix=" months" />
               {result && (
                 <p className="text-xs text-slate-500 mt-1">
@@ -289,7 +291,7 @@ export default function CreditCardCalc({ country = 'us' }) {
             className="w-full flex items-center justify-between text-left"
           >
             <div className="flex items-center gap-3">
-              <span className="font-semibold text-slate-800">Extra Payment (optional)</span>
+              <span className="font-semibold text-slate-800">{t('calc.extraPayment')}</span>
               {extraPayment > 0 && (
                 <span className="text-xs bg-green-100 border border-green-200 text-green-700 rounded-full px-2 py-0.5">
                   +{fmt0(extraPayment)}/mo active
@@ -301,7 +303,7 @@ export default function CreditCardCalc({ country = 'us' }) {
 
           {extraOpen && (
             <div className="mt-4 max-w-xs">
-              <label className="block text-xs text-slate-500 mb-1">Extra Monthly Payment</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('calc.extraPayment')}</label>
               <NumericInput value={extraPayment} onChange={setExtraPayment} min={0} step={10} prefix={c.symbol} />
             </div>
           )}
@@ -327,14 +329,14 @@ export default function CreditCardCalc({ country = 'us' }) {
           {TABS.map(v => (
             <button key={v} onClick={() => setTab(v)}
               className={`cw-tab${tab === v ? ' active' : ''}`}>
-              {v === 'payoff' ? 'Schedule' : v}
+              {v === 'payoff' ? t('calc.schedule') : v === 'chart' ? t('calc.chart') : t('calc.summary')}
             </button>
           ))}
         </div>
 
         {!result && (
           <div className="cw-card text-center py-8 text-slate-500">
-            Enter your credit card details above.
+            {t('calc.enterValid')}
           </div>
         )}
 
@@ -342,7 +344,7 @@ export default function CreditCardCalc({ country = 'us' }) {
         {result && tab === 'chart' && (
           <div className="space-y-6">
             <div className="cw-card">
-              <h3 className="font-semibold mb-1 text-sm">Remaining Balance Over Time</h3>
+              <h3 className="font-semibold mb-1 text-sm">{t('creditcard.payoffTime')}</h3>
               {extraPayment > 0 && result.monthsSaved > 0 && (
                 <p className="text-xs text-green-600 mb-3">
                   Extra {fmt0(extraPayment)}/mo eliminates debt {months2years(result.monthsSaved)} sooner
@@ -372,7 +374,7 @@ export default function CreditCardCalc({ country = 'us' }) {
             </div>
 
             <div className="cw-card">
-              <h3 className="font-semibold mb-4 text-sm">Balance vs Total Interest Paid</h3>
+              <h3 className="font-semibold mb-4 text-sm">{t('creditcard.balance')} vs {t('creditcard.interestPaid')}</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
                   <Pie data={pieData} cx="50%" cy="50%" outerRadius={100} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
@@ -393,26 +395,26 @@ export default function CreditCardCalc({ country = 'us' }) {
           <>
             <ResultSimple
               metrics={[
-                { label: 'Payoff Time', value: months2years(result.months), highlight: true },
-                { label: 'Total Interest', value: fmt0(result.totalInterest) },
-                { label: 'Interest Saved', value: fmt0(result.interestSaved), sub: `${months2years(result.monthsSaved)} faster` },
+                { label: t('creditcard.payoffTime'), value: months2years(result.months), highlight: true },
+                { label: t('creditcard.interestPaid'), value: fmt0(result.totalInterest) },
+                { label: t('debtpayoff.interestSaved'), value: fmt0(result.interestSaved), sub: `${months2years(result.monthsSaved)} faster` },
               ]}
             />
             <ResultDetailed
-              title="Payoff Details"
+              title={t('creditcard.paymentDetails')}
               rows={[
-                { label: 'Balance', value: fmt0(balance) },
-                { label: 'APR', value: `${apr}%` },
-                { label: 'Payment Mode', value: PAY_MODES.find(m => m.key === payMode)?.label },
-                { label: 'Base Monthly Payment', value: fmt(result.baseMonthlyPayment) },
-                ...(extraPayment > 0 ? [{ label: 'Extra Monthly Payment', value: fmt0(extraPayment) }] : []),
-                { label: 'Payoff Time', value: months2years(result.months), bold: true },
-                { label: 'Total Interest', value: fmt0(result.totalInterest) },
-                { label: 'Total Paid', value: fmt(result.totalPaid), bold: true },
+                { label: t('creditcard.balance'), value: fmt0(balance) },
+                { label: t('creditcard.apr'), value: `${apr}%` },
+                { label: t('calc.paymentStrategy'), value: t(PAY_MODES_KEYS.find(m => m.key === payMode)?.labelKey) },
+                { label: t('calc.monthlyPayment'), value: fmt(result.baseMonthlyPayment) },
+                ...(extraPayment > 0 ? [{ label: t('calc.extraPayment'), value: fmt0(extraPayment) }] : []),
+                { label: t('creditcard.payoffTime'), value: months2years(result.months), bold: true },
+                { label: t('creditcard.interestPaid'), value: fmt0(result.totalInterest) },
+                { label: t('calc.totalInterest'), value: fmt(result.totalPaid), bold: true },
                 ...(extraPayment > 0 ? [
-                  { label: 'Interest Without Extra', value: fmt0(result.totalInterestNoExtra) },
-                  { label: 'Interest Saved', value: fmt0(result.interestSaved), bold: true },
-                  { label: 'Time Saved', value: months2years(result.monthsSaved), bold: true },
+                  { label: t('creditcard.interestPaid'), value: fmt0(result.totalInterestNoExtra) },
+                  { label: t('debtpayoff.interestSaved'), value: fmt0(result.interestSaved), bold: true },
+                  { label: t('debtpayoff.timeSaved'), value: months2years(result.monthsSaved), bold: true },
                 ] : []),
               ]}
             />
@@ -422,7 +424,7 @@ export default function CreditCardCalc({ country = 'us' }) {
         {/* Payoff Table Tab */}
         {result && tab === 'payoff' && (
           <div className="cw-card overflow-x-auto">
-            <h3 className="font-semibold mb-4 text-sm">Monthly Payment Schedule</h3>
+            <h3 className="font-semibold mb-4 text-sm">{t('debtpayoff.payoffSchedule')}</h3>
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-slate-200">
