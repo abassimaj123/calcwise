@@ -57,7 +57,25 @@
     "trustAccuracy": "Precisión bancaria",
     "trustInstant": "Resultados instantáneos",
     "trustCountries": "6 países",
-    "trustCalcs": "57+ calculadoras"
+    "trustCalcs": "57+ calculadoras",
+    "hiddenBannerTitle": "Revelamos lo que otros ocultan",
+    "hiddenBannerDesc": "Seguro colectivo, cuotas sindicales, PMI/CMHC, impuesto predial — cada costo que afecta tu bolsillo real.",
+    "hiddenTag0": "PMI/CMHC",
+    "hiddenTag1": "Seguro colectivo",
+    "hiddenTag2": "Impuesto predial",
+    "hiddenTag3": "Cuotas sindicales",
+    "hiddenTag4": "Costos de cierre",
+    "featured": {
+      "mortgage_us": "Pago mensual con PMI, impuesto predial, tabla de amortización.",
+      "mortgage_ca": "Seguro CMHC, prueba de estrés, pagos quincenales.",
+      "mortgage_uk": "SDLT, ratio LTV, prueba de estrés FCA, capital e interés.",
+      "tax_us": "Impuesto federal + estatal + FICA, tasa efectiva. 50 estados.",
+      "tax_ca": "Impuesto federal + provincial, contribuciones CPP y EI.",
+      "salary_us": "Bruto a neto, desglose horario/semanal/mensual/anual.",
+      "rideprofit_ca": "Ganancia real Uber/DoorDash. Deducción CRA $0,72/km.",
+      "rideprofit_uk": "Deducción HMRC 45p/mi. Ganancias por hora reales.",
+      "affordability_us": "¿Cuánto puedo pagar? Reglas DTI, FHA/VA/Conv."
+    }
   },
   "countryHub": {
     "financialCalcs": "Calculadoras Financieras",

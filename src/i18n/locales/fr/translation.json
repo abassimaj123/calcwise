@@ -57,7 +57,25 @@
     "trustAccuracy": "Précision bancaire",
     "trustInstant": "Résultats instantanés",
     "trustCountries": "6 pays",
-    "trustCalcs": "57+ calculateurs"
+    "trustCalcs": "57+ calculateurs",
+    "hiddenBannerTitle": "On révèle ce que les autres cachent",
+    "hiddenBannerDesc": "Assurance collective, cotisations syndicales, PMI/CMHC, taxe foncière — chaque coût qui affecte votre résultat réel.",
+    "hiddenTag0": "PMI/CMHC",
+    "hiddenTag1": "Assurance collective",
+    "hiddenTag2": "Taxe foncière",
+    "hiddenTag3": "Cotisations syndicales",
+    "hiddenTag4": "Frais de clôture",
+    "featured": {
+      "mortgage_us": "Paiement mensuel, PMI, taxe foncière, tableau d'amortissement.",
+      "mortgage_ca": "Assurance CMHC, test de résistance, paiements bimensuels.",
+      "mortgage_uk": "SDLT, ratio LTV, test FCA, capital et intérêts seulement.",
+      "tax_us": "Impôt fédéral + état + FICA, taux effectif. 50 États.",
+      "tax_ca": "Impôt fédéral + provincial, cotisations RPC et AE.",
+      "salary_us": "Brut vers net, décomposition horaire/hebdo/mensuel/annuel.",
+      "rideprofit_ca": "Profit réel Uber/DoorDash. Déduction CRA 0,72 $/km.",
+      "rideprofit_uk": "Déduction HMRC 45p/mi. Gain horaire réel.",
+      "affordability_us": "Combien puis-je emprunter ? Règles DTI, FHA/VA/Conv."
+    }
   },
   "countryHub": {
     "financialCalcs": "Calculateurs Financiers",

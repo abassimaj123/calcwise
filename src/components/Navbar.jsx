@@ -27,9 +27,9 @@ export default function Navbar() {
     setMobileOpen(false)
     setActiveDropdown(null)
     setLangOpen(false)
-  }, [location.pathname, location.hash])
+  }, [location.pathname])
 
-  const currentLang = LANGS.find(l => l.code === i18n.language) || LANGS[0]
+  const currentLang = LANGS.find(l => i18n.language?.startsWith(l.code)) || LANGS[0]
 
   const openDrop  = useCallback((code) => { clearTimeout(dropTimer.current); setActiveDropdown(code) }, [])
   const closeDrop = useCallback(() => { dropTimer.current = setTimeout(() => setActiveDropdown(null), 220) }, [])
@@ -125,7 +125,7 @@ export default function Navbar() {
                     key={lang.code}
                     onClick={() => switchLang(lang.code)}
                     className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      lang.code === i18n.language
+                      i18n.language?.startsWith(lang.code)
                         ? 'text-primary font-semibold bg-primary-light'
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}

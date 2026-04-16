@@ -57,7 +57,25 @@
     "trustAccuracy": "Bank-level accuracy",
     "trustInstant": "Instant results",
     "trustCountries": "6 countries",
-    "trustCalcs": "57+ calculators"
+    "trustCalcs": "57+ calculators",
+    "hiddenBannerTitle": "We reveal what others hide",
+    "hiddenBannerDesc": "Group insurance, union dues, PMI, property tax, CMHC — every cost that affects your real bottom line.",
+    "hiddenTag0": "PMI/CMHC",
+    "hiddenTag1": "Group Insurance",
+    "hiddenTag2": "Property Tax",
+    "hiddenTag3": "Union Dues",
+    "hiddenTag4": "Closing Costs",
+    "featured": {
+      "mortgage_us": "Monthly payment with PMI, property tax, amortization schedule.",
+      "mortgage_ca": "CMHC insurance, stress test rate, bi-weekly payments.",
+      "mortgage_uk": "SDLT, LTV ratio, FCA stress test, repayment & interest-only.",
+      "tax_us": "Federal + state tax, FICA, effective rate. All 50 states.",
+      "tax_ca": "Federal + provincial tax, CPP & EI contributions.",
+      "salary_us": "Gross to net, hourly/weekly/monthly/annual breakdown.",
+      "rideprofit_ca": "Real profit for Uber/DoorDash. CRA $0.72/km deduction.",
+      "rideprofit_uk": "HMRC 45p/mi mileage deduction. True hourly earnings.",
+      "affordability_us": "How much home can you afford? DTI rules, FHA/VA/Conv."
+    }
   },
   "countryHub": {
     "financialCalcs": "Financial Calculators",

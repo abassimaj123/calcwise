@@ -13,15 +13,15 @@ import CountryFlag from '../components/CountryFlag'
 const ICON_COLOR = '#1A6AFF'
 
 const featuredCalcs = [
-  { to: '/us/mortgage',      calcKey: 'mortgage',      title: 'Mortgage Calculator US',     desc: 'Monthly payment with PMI, property tax, amortization schedule.' },
-  { to: '/ca/mortgage',      calcKey: 'mortgage',      title: 'Mortgage Calculator CA',     desc: 'CMHC insurance, stress test rate, bi-weekly payments.' },
-  { to: '/uk/mortgage',      calcKey: 'mortgage',      title: 'Mortgage Calculator UK',     desc: 'SDLT, LTV ratio, FCA stress test, repayment & interest-only.' },
-  { to: '/us/tax',           calcKey: 'tax',           title: 'Tax Calculator US',          desc: 'Federal + state tax, FICA, effective rate. All 50 states.' },
-  { to: '/ca/tax',           calcKey: 'tax',           title: 'Tax Calculator CA',          desc: 'Federal + provincial tax, CPP & EI contributions.' },
-  { to: '/us/salary',        calcKey: 'salary',        title: 'Salary Calculator US',       desc: 'Gross to net, hourly/weekly/monthly/annual breakdown.' },
-  { to: '/ca/rideprofit',    calcKey: 'rideprofit',    title: 'RideProfit CA',              desc: 'Real profit for Uber/DoorDash drivers. CRA $0.72/km deduction.' },
-  { to: '/uk/rideprofit',    calcKey: 'rideprofit',    title: 'RideProfit UK',              desc: 'HMRC 45p/mi mileage deduction. True hourly earnings.' },
-  { to: '/us/affordability', calcKey: 'affordability', title: 'Affordability Calculator US', desc: 'How much home can you afford? DTI rules, FHA/VA/Conv.' },
+  { to: '/us/mortgage',      calcKey: 'mortgage',      country: 'us' },
+  { to: '/ca/mortgage',      calcKey: 'mortgage',      country: 'ca' },
+  { to: '/uk/mortgage',      calcKey: 'mortgage',      country: 'uk' },
+  { to: '/us/tax',           calcKey: 'tax',           country: 'us' },
+  { to: '/ca/tax',           calcKey: 'tax',           country: 'ca' },
+  { to: '/us/salary',        calcKey: 'salary',        country: 'us' },
+  { to: '/ca/rideprofit',    calcKey: 'rideprofit',    country: 'ca' },
+  { to: '/uk/rideprofit',    calcKey: 'rideprofit',    country: 'uk' },
+  { to: '/us/affordability', calcKey: 'affordability', country: 'us' },
 ]
 
 const trustItemKeys = [
@@ -169,12 +169,14 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 text-white flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <p className="font-display font-bold text-lg mb-1">We reveal what others hide</p>
-            <p className="text-blue-100 text-sm">Group insurance, union dues, PMI, property tax, CMHC — every cost that affects your real bottom line.</p>
+            <p className="font-display font-bold text-lg mb-1">{t('home.hiddenBannerTitle')}</p>
+            <p className="text-blue-100 text-sm">{t('home.hiddenBannerDesc')}</p>
           </div>
           <div className="flex flex-wrap gap-2 shrink-0">
-            {['PMI/CMHC', 'Assurance collective', 'Property Tax', 'Union Dues', 'Closing Costs'].map(tag => (
-              <span key={tag} className="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">{tag}</span>
+            {[0,1,2,3,4].map(i => (
+              <span key={i} className="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                {t(`home.hiddenTag${i}`)}
+              </span>
             ))}
           </div>
         </div>
@@ -187,8 +189,10 @@ export default function Home() {
             {t('home.popular')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {featuredCalcs.map(({ to, calcKey, title, desc }) => {
+            {featuredCalcs.map(({ to, calcKey, country }) => {
               const Icon = calcIconMap[calcKey] || BarChart2
+              const title = `${t('nav.' + calcKey)} — ${t('nav.country_' + country)}`
+              const desc = t(`home.featured.${calcKey}_${country}`)
               return (
                 <Link key={to} to={to} className="cw-calc-card group">
                   <div className="cw-calc-card-icon group-hover:bg-blue-100 transition-colors">
