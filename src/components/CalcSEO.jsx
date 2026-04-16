@@ -85,6 +85,45 @@ export function CalcAlsoAvailable({ calcSlug, countries }) {
   )
 }
 
+export function CalcHowTo({ title, steps }) {
+  if (!steps || !steps.length) return null
+  return (
+    <div className="mt-6 bg-white border border-slate-200 rounded-xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+      <div className="px-6 pt-6 pb-4">
+        <h2 className="font-display font-bold text-lg text-slate-900 mb-3">{title || 'How to use this calculator'}</h2>
+        <ol className="space-y-2">
+          {steps.map((step, i) => (
+            <li key={i} className="flex gap-3 text-sm text-slate-600 leading-relaxed">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center mt-0.5">{i + 1}</span>
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  )
+}
+
+export function CalcSubTopics({ links }) {
+  if (!links || !links.length) return null
+  return (
+    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+      <p className="text-xs text-primary mb-2 font-bold uppercase tracking-wider">Explore specific topics</p>
+      <div className="flex flex-wrap gap-2">
+        {links.map(({ to, label }) => (
+          <Link
+            key={to}
+            to={to}
+            className="text-xs bg-white border border-blue-200 hover:border-primary hover:text-primary hover:bg-white rounded-full px-3 py-1.5 text-slate-700 font-medium transition-colors"
+          >
+            → {label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function CalcRelated({ links }) {
   return (
     <div className="mt-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">

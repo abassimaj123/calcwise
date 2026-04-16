@@ -11,7 +11,8 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
-import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcFAQ, CalcRelated, CalcSubTopics } from '../../components/CalcSEO'
+import { subPagesByCalc } from '../../data/seoPages'
 import NumericInput from '../../components/NumericInput'
 
 const TAX_FAQS = {
@@ -631,6 +632,7 @@ export default function TaxCalc({ country }) {
 
         <AppDownloadBanner calcKey="tax" country={country} />
         <CalcFAQ faqs={TAX_FAQS[country] || TAX_FAQS.us} />
+        <CalcSubTopics links={subPagesByCalc[`${country}/tax`] || []} />
         <CalcRelated links={[
           { to: `/${country}/salary`,       label: 'Salary Calculator' },
           { to: `/${country}/affordability`, label: 'Affordability Calculator' },

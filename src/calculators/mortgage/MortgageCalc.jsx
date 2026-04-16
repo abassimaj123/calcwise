@@ -11,7 +11,8 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
-import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated, CalcHowTo, CalcSubTopics } from '../../components/CalcSEO'
+import { subPagesByCalc } from '../../data/seoPages'
 import NumericInput from '../../components/NumericInput'
 
 const COLORS = { primary: '#1A6AFF', accent: '#00D4FF', success: '#1D9E75', warn: '#F5C842' }
@@ -1218,34 +1219,91 @@ export default function MortgageCalc({ country }) {
 
   const faqs = {
     us: [
-      { q: 'What is included in my monthly mortgage payment?', a: 'Your monthly payment (P&I) covers principal repayment and interest. You may also owe PMI (if LTV > 80%), property tax (~1.1%/yr), and homeowner\'s insurance (~$150/mo) — which this calculator also estimates.' },
-      { q: 'How is PMI calculated?', a: 'PMI (Private Mortgage Insurance) applies when your down payment is less than 20%. It\'s typically 0.5%–1% of the loan amount annually. It automatically drops off once your LTV reaches 80%.' },
-      { q: 'What is a good debt-to-income ratio for a mortgage?', a: 'Lenders typically want your housing costs (PITI) below 28% of gross income (front-end DTI), and total debts below 36%–43% (back-end DTI) depending on loan type.' },
+      { q: 'How is a mortgage payment calculated in the US?', a: 'Enter your home price, down payment, interest rate, and loan term. The calculator uses the standard amortization formula to compute your monthly principal and interest (P&I). It also adds PMI (if LTV > 80%), property tax (~1.1%/yr average), and homeowner\'s insurance for a complete PITI payment estimate.' },
+      { q: 'What is PMI and when can I remove it?', a: 'Private Mortgage Insurance (PMI) is required when your down payment is less than 20%. It typically costs 0.50%–1.50% of the loan annually. Under the Homeowners Protection Act, your lender must automatically cancel PMI when your balance reaches 78% of the original home value. You can request cancellation at 80%.' },
+      { q: 'What is a good debt-to-income ratio for a US mortgage?', a: 'Lenders want your housing costs (PITI) below 28% of gross monthly income (front-end DTI). Total debt payments including car loans, student loans, and credit cards should stay below 36%–43% (back-end DTI). Conforming loan guidelines allow up to 45–50% DTI with strong compensating factors.' },
+      { q: 'What is the conforming loan limit in 2025?', a: 'The 2025 FHFA conforming loan limit is $806,500 for most US counties. High-cost areas (parts of CA, NY, HI, CO) have limits up to $1,209,750. Loans above the limit are "jumbo" mortgages with typically stricter qualification and higher rates.' },
+      { q: 'What does PITI stand for in a mortgage?', a: 'PITI stands for Principal, Interest, Taxes, and Insurance — the four components of a full monthly mortgage payment. Principal reduces your loan balance. Interest is the cost of borrowing. Property taxes and homeowners insurance are typically collected monthly in escrow and paid by the lender on your behalf.' },
     ],
     ca: [
-      { q: 'What is the CMHC mortgage insurance?', a: 'CMHC insurance is mandatory when your down payment is between 5%–19.99% of the purchase price. The premium ranges from 2.8%–4% of the insured mortgage amount and is added to your balance.' },
-      { q: 'What is the mortgage stress test in Canada?', a: 'The OSFI stress test requires you to qualify at the higher of your contract rate + 2%, or 5.25%. This ensures you can afford payments if rates rise.' },
-      { q: 'What is the maximum amortization in Canada?', a: 'For insured mortgages (down payment < 20%), the maximum amortization is 25 years. For uninsured mortgages, lenders may offer up to 30 years.' },
+      { q: 'How is a mortgage calculated in Canada?', a: 'Enter your home price, down payment, interest rate, and amortization period. For Canadian mortgages, interest is compounded semi-annually (not monthly) as required by the Interest Act, which this calculator handles automatically. CMHC insurance is added when your down payment is under 20%, and results show the stress test qualifying rate.' },
+      { q: 'What is CMHC mortgage insurance in Canada?', a: 'CMHC mortgage loan insurance is mandatory when your down payment is between 5% and 19.99% of the purchase price. The premium ranges from 2.80% (LTV 80–85%) to 4.00% (LTV 90–95%) of the insured loan amount and is added directly to your mortgage balance. You pay interest on it over your full amortization.' },
+      { q: 'What is the stress test rate in Canada for 2025?', a: 'The OSFI B-20 stress test requires federally regulated lenders to qualify you at the higher of: your contract rate + 2 percentage points, or 5.25%. So with a 4.8% mortgage, you must qualify at 6.8%. This reduces your maximum borrowing power by roughly 20–25% compared to qualifying at the contract rate alone.' },
+      { q: 'How much down payment do I need to buy a home in Canada?', a: 'Minimum down payments in Canada: 5% on the first $500,000 of purchase price, 10% on the portion between $500,000 and $999,999, and 20% for homes at $1,000,000 and above ($1.5M as of December 2024 changes). Any down payment under 20% requires mandatory CMHC mortgage insurance.' },
+      { q: 'What is the maximum amortization in Canada?', a: 'For insured mortgages (down payment under 20%), the maximum amortization is 25 years for existing homes, and 30 years for first-time buyers purchasing new construction (as of August 2024 federal changes). For conventional (uninsured) mortgages with 20%+ down, most lenders offer up to 30 years, with some offering 35 years.' },
     ],
     uk: [
-      { q: 'What is Stamp Duty (SDLT)?', a: 'Stamp Duty Land Tax is a tax on property purchases in England and Northern Ireland. Rates start at 0% up to £250,000 and rise to 12% above £1.5M. First-time buyers get relief up to £425,000.' },
-      { q: 'What is the LTV ratio?', a: 'Loan-to-Value (LTV) is your mortgage amount as a percentage of the property value. Most lenders require at least 5%-10% deposit (90-95% LTV max). Lower LTV = better interest rates.' },
-      { q: 'What is the FCA stress test?', a: 'UK mortgage lenders must verify you can afford repayments if rates rise by 3%. This stress test rate is applied to ensure affordability under adverse conditions.' },
+      { q: 'How does a UK mortgage calculator work?', a: 'Enter your property value, deposit, mortgage term, and interest rate. The calculator computes your monthly repayment using a standard amortization formula. UK mortgages are typically quoted as annual rates compounded monthly. Toggle optional costs to add council tax, buildings insurance, and service charge for a complete monthly housing cost estimate.' },
+      { q: 'What is Stamp Duty Land Tax (SDLT) in the UK?', a: 'SDLT is a tax on property purchases in England and Northern Ireland. From April 2025, rates return to pre-pandemic thresholds: 0% on the first £125,000; 2% on £125,001–£250,000; 5% on £250,001–£925,000; 10% on £925,001–£1.5M; 12% above £1.5M. First-time buyers get relief on purchases up to £500,000.' },
+      { q: 'What is LTV and why does it matter for UK mortgages?', a: 'Loan-to-Value (LTV) is your mortgage amount as a percentage of the property value. A 90% LTV means you have a 10% deposit. Lower LTV typically means better interest rates — the best rates are usually available at 60–75% LTV. Most UK lenders offer mortgages up to 95% LTV (5% deposit), though rates are significantly higher.' },
+      { q: 'Should I choose a fixed or tracker mortgage in the UK?', a: 'A fixed-rate mortgage locks your interest rate for a set term (typically 2, 5, or 10 years), providing payment certainty. A tracker mortgage follows the Bank of England base rate plus a set margin — your payment changes if the base rate changes. Fixed rates provide security; trackers can be cheaper when base rates fall, but carry payment risk.' },
+      { q: 'What other costs should I budget for when buying in the UK?', a: 'Beyond the mortgage, budget for: solicitor/conveyancing fees (£1,500–£3,000), surveyor\'s report (£400–£1,500), mortgage arrangement fee (£0–£2,000), buildings insurance (from £150–£350/yr), and SDLT. For leasehold properties, also budget for service charges and ground rent. Total buying costs typically add £5,000–£15,000 on top of your deposit.' },
     ],
     au: [
-      { q: 'What is LMI (Lenders Mortgage Insurance)?', a: 'LMI protects the lender if you default. It applies when your LVR exceeds 80% (deposit less than 20%). The cost is typically 1%–3% of the loan amount and can be added to your mortgage.' },
-      { q: 'What is the serviceability buffer?', a: 'APRA requires lenders to assess loan serviceability at the higher of the interest rate + 3% buffer or a floor rate. This ensures you can afford repayments if rates rise.' },
-      { q: 'What is the First Home Owner Grant (FHOG)?', a: 'FHOG is a government grant for eligible first-home buyers. The amount varies by state (typically $10,000–$30,000) and applies to new homes only.' },
+      { q: 'How does an Australian mortgage calculator work?', a: 'Enter your property value, deposit, loan term, and interest rate. Australian mortgages are calculated with monthly compounding. This calculator automatically adds LMI (Lenders Mortgage Insurance) when your deposit is under 20% (LVR above 80%). Toggle council rates, strata fees, and home insurance for a complete ongoing cost estimate.' },
+      { q: 'What is LMI (Lenders Mortgage Insurance) in Australia?', a: 'LMI protects the lender (not you) if you default. It\'s required when your LVR exceeds 80% (deposit less than 20%). LMI cost typically ranges from 1%–3% of the loan and can be added to the mortgage. The exact premium depends on your LVR, loan amount, and lender. Some professions (doctors, lawyers, accountants) qualify for LMI waivers from certain lenders.' },
+      { q: 'What is the APRA serviceability buffer in Australia?', a: 'APRA requires Australian lenders to assess your ability to repay at your actual interest rate plus a 3% buffer. If your rate is 6.2%, the bank must verify you can afford payments at 9.2%. This buffer replaced the previous minimum floor rate approach in 2021 and significantly reduces maximum borrowing power compared to the headline rate alone.' },
+      { q: 'What is the First Home Owner Grant (FHOG) in Australia?', a: 'FHOG is a state-administered grant for first-home buyers. Amount and eligibility vary by state: typically $10,000 in NSW, VIC, QLD; $15,000 in SA; $10,000 in WA (new builds). Most states only apply FHOG to new homes or substantially renovated homes, with price caps. First Home Buyer Assistance provides additional stamp duty concessions in most states.' },
+      { q: 'How does an offset account work with an Australian mortgage?', a: 'A 100% offset account is a transaction account linked to your mortgage. The balance offsets your loan principal for interest calculation — if you have $50,000 in offset against a $500,000 mortgage, you only pay interest on $450,000. This can save significant interest and reduce your loan term without formally paying extra, while keeping funds accessible.' },
     ],
     ie: [
-      { q: 'What is the Central Bank lending limit in Ireland?', a: 'The Central Bank of Ireland limits mortgages to 3.5× your gross income for owner-occupier purchases, with a 20% deposit required (10% for first-time buyers on amounts up to €500,000).' },
-      { q: 'What additional costs should I budget for?', a: 'Beyond the mortgage, budget for solicitor fees (€1,500–€2,500), valuation (€150–€300), survey (€400–€600), and stamp duty (1% on residential property).' },
-      { q: 'What is the Mortgage to Rent scheme?', a: 'The MTR scheme allows homeowners in arrears to remain in their home as social housing tenants while the lender or a housing body takes ownership. It\'s a last-resort option for those in mortgage difficulty.' },
+      { q: 'How does an Irish mortgage calculator work?', a: 'Enter your property value, deposit, mortgage term, and interest rate. Irish mortgages are calculated with monthly compounding. The calculator adds optional costs including Local Property Tax (LPT), home insurance, and mortgage protection insurance (required by Irish lenders). Central Bank income multiples and LTV limits are applied in the affordability context.' },
+      { q: 'What are the Central Bank of Ireland mortgage rules?', a: 'The Central Bank\'s macro-prudential rules limit: mortgage amount to 4× gross income for first-time buyers (3.5× for second and subsequent buyers); LTV to 90% for first-time buyers on primary residences (80% for second/subsequent buyers, 70% for buy-to-let). Up to 15% of new lending can be above the income limit, and 5% above the LTV limit.' },
+      { q: 'What is mortgage protection insurance in Ireland?', a: 'Mortgage protection insurance is legally required in Ireland for owner-occupier mortgages. It pays off your mortgage if you die before the loan is repaid — it\'s a decreasing term life policy that reduces in line with your outstanding balance. It differs from income protection or life insurance. Lenders must accept your chosen policy (you\'re not required to buy their own product).' },
+      { q: 'How much stamp duty do I pay in Ireland?', a: 'Residential stamp duty in Ireland is 1% on the first €1 million and 2% on the balance above €1 million. There is no first-time buyer exemption from stamp duty (unlike Northern Ireland). Stamp duty is calculated on the total purchase price and is a once-off cost paid at closing. Budget approximately 1% of the purchase price for most standard transactions.' },
+      { q: 'What additional costs are involved in buying in Ireland?', a: 'Budget for: solicitor fees (€1,500–€3,000), surveyor/structural engineer report (€400–€800), valuation report (€150–€300 — required by lender), Land Registry fees (€400–€800 depending on price), stamp duty (1% of purchase price), and mortgage protection insurance setup. Total additional costs typically amount to €5,000–€10,000 on top of your deposit.' },
     ],
     nz: [
-      { q: 'What is the LVR restriction in New Zealand?', a: 'RBNZ LVR restrictions limit high-LVR lending. Owner-occupiers need at least 20% deposit, investors need 35%. Some exceptions exist for new builds and first-home buyers.' },
-      { q: 'What are typical mortgage rates in NZ in 2026?', a: 'Rates vary by term and lender. Fixed 1-year rates are typically 6.5%–7.5% in 2026, while floating rates may be higher. Shopping across lenders can save thousands.' },
-      { q: 'What other costs are involved in buying a home in NZ?', a: 'Budget for legal fees ($1,500–$2,500), building inspection ($400–$800), LIM report ($200–$400), and potential KiwiSaver withdrawal for your deposit.' },
+      { q: 'How does a New Zealand mortgage calculator work?', a: 'Enter your property value, deposit, loan term, and interest rate. New Zealand mortgages typically use a table loan structure with equal fortnightly or monthly repayments of principal plus interest. This calculator supports both payment frequencies. Toggle council rates and home insurance for a full ongoing cost picture.' },
+      { q: 'What are the RBNZ LVR restrictions in New Zealand?', a: 'The Reserve Bank of New Zealand limits high-LVR lending. Owner-occupiers need at least a 20% deposit (80% LVR maximum) for existing homes. Investors require a 35% deposit (65% LVR maximum). Exceptions exist: first-home buyers can access certain bank allocations for new builds at higher LVR. Most first-home buyers use KiwiSaver First Home Withdrawal as part of their deposit.' },
+      { q: 'How does KiwiSaver help with buying a home in NZ?', a: 'After 3+ years in KiwiSaver, you can withdraw all your contributions, employer contributions, and returns (minus $1,000) for a first home purchase. The First Home Grant (if you qualify) adds up to $10,000 per person for existing homes or $20,000 for new builds. Combined, a couple could access $20,000–$40,000+ from KiwiSaver alone toward a deposit.' },
+      { q: 'What are typical mortgage rates in New Zealand for 2025?', a: 'NZ mortgage rates have fallen significantly from 2023 peaks. In 2025, 1-year fixed rates are typically 5.5%–6.5%, 2-year fixed 5.2%–6.2%, and floating/variable rates 7.0%–8.0%. Most New Zealand borrowers fix for 1–2 years due to historically better pricing on short-term fixed rates compared to floating. Always compare at least 3 lenders.' },
+      { q: 'What other costs are involved in buying in New Zealand?', a: 'Budget for: legal fees ($1,500–$2,500), building inspection ($400–$800), LIM report from council ($200–$400), valuation if required ($500–$800), and mortgage registration fee (~$100). If purchasing a unit title property, review the body corporate levies carefully — they can add $3,000–$15,000+ per year to ongoing costs.' },
+    ],
+  }
+
+  const howToSteps = {
+    us: [
+      'Enter the home price and your down payment amount.',
+      'Set the annual interest rate and loan term (typically 30 years).',
+      'Toggle optional costs — PMI is auto-calculated if LTV > 80%, property tax and insurance can be customized.',
+      'Review the Summary tab for your monthly PITI payment and the 30-year total interest cost.',
+      'Use the Chart tab to see the amortization curve and interest vs. principal breakdown.',
+    ],
+    ca: [
+      'Enter the home price and your down payment. CMHC insurance is automatically calculated when down payment is under 20%.',
+      'Set the interest rate (5-year fixed) and amortization period (max 25 years for insured mortgages).',
+      'The stress test qualifying rate (contract rate + 2%) is displayed automatically.',
+      'Toggle optional costs to add property tax, home insurance, and condo fees.',
+      'View the amortization schedule and bi-weekly payment option in the Chart and Schedule tabs.',
+    ],
+    uk: [
+      'Enter the property value and your deposit amount.',
+      'Set the mortgage term (typically 25–30 years) and current interest rate.',
+      'Add Stamp Duty cost using the SDLT sub-calculator linked below.',
+      'Toggle optional ongoing costs including council tax and buildings insurance.',
+      'Compare fixed vs. tracker scenarios by changing the interest rate.',
+    ],
+    au: [
+      'Enter the property value and your deposit. LMI is auto-calculated if your LVR exceeds 80%.',
+      'Set your loan term and interest rate. The APRA serviceability buffer (+3%) is shown alongside your rate.',
+      'Toggle optional costs: council rates, strata fees, and home insurance for a complete monthly picture.',
+      'Review the amortization schedule to see how fortnightly vs. monthly payments affect the loan term.',
+      'Use the Chart tab to visualize your equity build-up over time.',
+    ],
+    ie: [
+      'Enter the property price and your deposit (minimum 10% for first-time buyers, 20% for others).',
+      'Set the mortgage term (typically 25–30 years) and interest rate.',
+      'Add mortgage protection insurance and LPT in the optional costs section.',
+      'Check the Central Bank income multiple rules using the Affordability calculator.',
+      'Review the full amortization schedule to understand long-term interest costs.',
+    ],
+    nz: [
+      'Enter the property value and deposit. Use the KiwiSaver First Home Withdrawal as part of your deposit calculation.',
+      'Set your loan term and interest rate (compare 1-year vs. 2-year fixed options).',
+      'Choose fortnightly or monthly repayments — fortnightly payments reduce the loan term significantly.',
+      'Toggle council rates and home insurance for your total monthly housing cost.',
+      'Use the schedule view to see the impact of making extra lump-sum payments.',
     ],
   }
 
@@ -1641,7 +1699,9 @@ export default function MortgageCalc({ country }) {
           </div>{/* /calc-results-panel */}
         </div>{/* /calc-grid */}
 
+        <CalcHowTo steps={howToSteps[country] || howToSteps.us} />
         <CalcFAQ faqs={faqs[country] || faqs.us} />
+        <CalcSubTopics links={subPagesByCalc[`${country}/mortgage`] || []} />
         <CalcAlsoAvailable calcSlug="mortgage" calcLabel="Mortgage" countries={otherCountries} />
         <CalcRelated links={relatedLinks} />
 

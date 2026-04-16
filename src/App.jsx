@@ -11,6 +11,7 @@ const About = lazy(() => import('./pages/About'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Contact = lazy(() => import('./pages/Contact'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const SEOCalcPage = lazy(() => import('./pages/SEOCalcPage'))
 
 // Calculators — existing
 const MortgageCalc = lazy(() => import('./calculators/mortgage/MortgageCalc'))
@@ -180,6 +181,9 @@ export default function App() {
               <Route key={`${c}-rvb`} path={`/${c}/rentvsbuy`}   element={<Navigate to={`/${c}/rent-vs-buy`} replace />} />,
               <Route key={`${c}-pr`}  path={`/${c}/propertyroi`} element={<Navigate to={`/${c}/property-roi`} replace />} />,
             ])}
+
+            {/* SEO sub-pages: /:country/:calc/:slug */}
+            <Route path="/:country/:calc/:slug" element={<SEOCalcPage />} />
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />

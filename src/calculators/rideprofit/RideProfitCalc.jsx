@@ -7,7 +7,8 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 import { countries } from '../../config/countries'
-import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcSubTopics } from '../../components/CalcSEO'
+import { subPagesByCalc } from '../../data/seoPages'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -437,6 +438,7 @@ export default function RideProfitCalc({ country }) {
           { q: 'Is rideshare worth it financially?', a: 'After all expenses, many drivers earn $12-18/hr true net. It depends heavily on your city, vehicle efficiency, and which hours you drive. This calculator shows your real number.' },
         ]} />
 
+        <CalcSubTopics links={subPagesByCalc[`${country}/rideprofit`] || []} />
         <CalcRelated links={[
           { to: `/${country}/tax`, label: 'Tax Calculator' },
           { to: `/${country}/salary`, label: 'Salary Calculator' },

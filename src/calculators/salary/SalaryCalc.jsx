@@ -279,7 +279,7 @@ export default function SalaryCalc({ country }) {
                     value={gross}
                     onChange={setGross}
                     min={0}
-                    max={2000000}
+                    max={500000}
                     step={1000}
                     prefix={c.symbol}
                     showSlider
@@ -469,22 +469,21 @@ export default function SalaryCalc({ country }) {
           <div className="cw-card space-y-8">
             <div>
               <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">{t('salary.taxBreakdown')}</h3>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={320}>
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
-                    cy="50%"
-                    outerRadius={110}
+                    cy="45%"
+                    outerRadius={95}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
                   >
                     {pieData.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip formatter={(value) => fmtShort(value)} />
-                  <Legend />
+                  <Legend verticalAlign="bottom" height={60} wrapperStyle={{ fontSize: 12 }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
