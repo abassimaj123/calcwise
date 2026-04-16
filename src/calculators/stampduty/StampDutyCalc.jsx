@@ -1,10 +1,15 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import {
+  BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+} from 'recharts'
 import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
+import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
 
 // SDLT rates as of April 2025
 function calcSDLT({ price, buyerType }) {
@@ -88,16 +93,44 @@ const buyerTypes = [
   { value: 'additional', label: 'Additional Property (+3%)' },
 ]
 
+const CHART_COLORS = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd']
+const PIE_COLORS = ['#6366f1', '#22d3ee']
+
 export default function StampDutyCalc() {
   const c = countries['uk']
   const [price, setPrice] = useState(285000)
   const [buyerType, setBuyerType] = useState('standard')
-  const [view, setView] = useState('simple')
+  const [tab, setTab] = useState('summary')
 
   const result = useMemo(() => calcSDLT({ price, buyerType }), [price, buyerType])
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
+
+  const barData = result
+    ? result.bands.filter(b => b.tax > 0).map(b => ({
+        name: b.rate,
+        tax: Math.round(b.tax),
+        label: b.label,
+      }))
+    : []
+
+  const pieData = result
+    ? [
+        { name: 'Purchase Price', value: price - result.sdlt },
+        { name: 'SDLT', value: Math.round(result.sdlt) },
+      ]
+    : []
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'UK Stamp Duty Calculator 2025',
+    url: 'https://calqwise.com/uk/stamp-duty',
+    applicationCategory: 'FinanceApplication',
+    description: 'Calculate UK Stamp Duty Land Tax (SDLT) for 2025. Covers first-time buyers, standard rates, and additional property surcharge.',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'GBP' },
+  }
 
   return (
     <>
@@ -105,6 +138,7 @@ export default function StampDutyCalc() {
         <title>UK Stamp Duty Calculator 2025 — SDLT Rates & Bands | CalcWise</title>
         <meta name="description" content="Calculate UK Stamp Duty Land Tax (SDLT) for 2025. Covers first-time buyers, standard rates, and additional property surcharge. Free UK stamp duty calculator." />
         <link rel="canonical" href="https://calqwise.com/uk/stamp-duty" />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
@@ -112,6 +146,11 @@ export default function StampDutyCalc() {
           <h1 className="text-3xl font-display font-bold mb-2">Stamp Duty Calculator</h1>
           <p className="text-cw-gray">Calculate your UK Stamp Duty Land Tax (SDLT) — April 2025 rates.</p>
         </div>
+
+        <CalcIntro
+          intro="The UK Stamp Duty Land Tax (SDLT) calculator uses April 2025 rates to show exactly how much tax you'll pay when purchasing property. Includes First Time Buyer relief and Additional Dwelling Surcharge calculations."
+          hiddenCost="Additional property surcharge adds 3% to ALL bands"
+        />
 
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -142,17 +181,17 @@ export default function StampDutyCalc() {
         </div>
 
         <div className="flex gap-2 mb-4">
-          {['simple', 'detailed'].map(v => (
-            <button key={v} onClick={() => setView(v)}
+          {['summary', 'bands', 'chart'].map(v => (
+            <button key={v} onClick={() => setTab(v)}
               className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
+                tab === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
               }`}>
               {v}
             </button>
           ))}
         </div>
 
-        {result && view === 'simple' && (
+        {result && tab === 'summary' && (
           <ResultSimple
             metrics={[
               { label: 'Stamp Duty (SDLT)', value: fmt(result.sdlt), highlight: true },
@@ -162,23 +201,71 @@ export default function StampDutyCalc() {
           />
         )}
 
-        {result && view === 'detailed' && (
-          <>
-            <ResultDetailed
-              title="SDLT Breakdown by Band"
-              rows={[
-                ...result.bands.map(b => ({
-                  label: `${b.label} @ ${b.rate}`,
-                  value: fmt(b.tax),
-                  sub: `On ${fmt(b.taxable)}`,
-                })),
-                { label: 'Total SDLT', value: fmt(result.sdlt), bold: true },
-                { label: 'Effective Rate', value: `${result.effectiveRate}%`, bold: true },
-                { label: 'Property Price', value: fmt(price) },
-                { label: 'Total Cost (Price + SDLT)', value: fmt(price + result.sdlt), bold: true },
-              ]}
-            />
-          </>
+        {result && tab === 'bands' && (
+          <ResultDetailed
+            title="SDLT Breakdown by Band"
+            rows={[
+              ...result.bands.map(b => ({
+                label: `${b.label} @ ${b.rate}`,
+                value: fmt(b.tax),
+                sub: `On ${fmt(b.taxable)}`,
+              })),
+              { label: 'Total SDLT', value: fmt(result.sdlt), bold: true },
+              { label: 'Effective Rate', value: `${result.effectiveRate}%`, bold: true },
+              { label: 'Property Price', value: fmt(price) },
+              { label: 'Total Cost (Price + SDLT)', value: fmt(price + result.sdlt), bold: true },
+            ]}
+          />
+        )}
+
+        {result && tab === 'chart' && (
+          <div className="space-y-6">
+            {barData.length > 0 ? (
+              <div className="cw-card">
+                <h3 className="font-semibold text-sm mb-4">SDLT by Band</h3>
+                <ResponsiveContainer width="100%" height={260}>
+                  <BarChart data={barData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
+                    <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#94a3b8' }} />
+                    <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} tickFormatter={v => `£${(v / 1000).toFixed(0)}k`} />
+                    <Tooltip
+                      formatter={(v, _n, props) => [`£${v.toLocaleString()}`, props.payload.label]}
+                      contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }}
+                    />
+                    <Bar dataKey="tax" radius={[4, 4, 0, 0]}>
+                      {barData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="cw-card text-center py-6 text-cw-gray text-sm">No SDLT due at this price.</div>
+            )}
+
+            <div className="cw-card">
+              <h3 className="font-semibold text-sm mb-4">Purchase Price vs SDLT</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                    labelLine={false}
+                  >
+                    {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip
+                    formatter={v => `£${v.toLocaleString()}`}
+                    contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         )}
 
         {!result && (
@@ -190,6 +277,18 @@ export default function StampDutyCalc() {
         <div className="mt-4 p-3 bg-white/[0.03] rounded-lg text-xs text-cw-gray">
           ℹ️ Rates are for England and Northern Ireland (SDLT). Scotland uses LBTT; Wales uses LTT — different rates apply. Rates effective April 2025.
         </div>
+
+        <CalcFAQ faqs={[
+          { q: 'What is the First Time Buyer relief threshold?', a: 'From April 2025: 0% on the first £425,000, then 5% up to £625,000. No relief above £625,000 — you pay standard rates. Properties must be your only home.' },
+          { q: 'What is the Additional Dwelling Surcharge?', a: 'If you own another property, a 3% surcharge applies to all SDLT bands. This applies to buy-to-let purchases, second homes, and investment properties.' },
+          { q: 'When do you pay Stamp Duty?', a: 'SDLT must be paid within 14 days of completing your property purchase. Your solicitor typically handles this as part of the conveyancing process.' },
+        ]} />
+
+        <CalcRelated links={[
+          { to: '/uk/mortgage', label: 'UK Mortgage Calculator' },
+          { to: '/uk/affordability', label: 'UK Affordability' },
+          { to: '/uk/property-roi', label: 'Property ROI' },
+        ]} />
 
         <AdSenseSlot format="rectangle" />
         <AdSenseSlot format="leaderboard" />

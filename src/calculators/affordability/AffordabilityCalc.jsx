@@ -5,6 +5,10 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
+import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell,
+} from 'recharts'
 
 function calcAffordabilityUS({ grossIncome, monthlyDebts, downPayment, rate, loanType }) {
   const frontEndLimits = { conventional: 0.28, fha: 0.31, va: 0.41 }
@@ -157,6 +161,13 @@ const defaultsByCountry = {
   nz: { grossIncome: 100000, downPayment: 130000, rate: 7.15 },
 }
 
+// Affordability meter bar colors
+const meterColor = (pct) => {
+  if (pct <= 60) return '#22c55e'  // green: conservative
+  if (pct <= 80) return '#f97316'  // orange: moderate
+  return '#ef4444'                  // red: aggressive
+}
+
 export default function AffordabilityCalc({ country = 'us' }) {
   const c = countries[country]
   const d = defaultsByCountry[country] || defaultsByCountry.us
@@ -166,7 +177,8 @@ export default function AffordabilityCalc({ country = 'us' }) {
   const [downPayment, setDownPayment] = useState(d.downPayment)
   const [rate, setRate] = useState(d.rate)
   const [loanType, setLoanType] = useState('conventional')
-  const [view, setView] = useState('simple')
+  const [homePrice, setHomePrice] = useState(0)
+  const [view, setView] = useState('result')
 
   const result = useMemo(() => {
     if (!grossIncome || !downPayment) return null
@@ -192,12 +204,49 @@ export default function AffordabilityCalc({ country = 'us' }) {
     nz: 'How much can you borrow? RBNZ DTI cap of 6x gross income.',
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: `${c.name} Home Affordability Calculator`,
+    url: `https://calqwise.com/${country}/affordability`,
+    description: `How much home can you afford in ${c.name}? Uses official lender DTI guidelines, stress tests, and income caps.`,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: c.currency },
+  }
+
+  // Chart data: max, recommended (80%), conservative (60%)
+  const priceBarData = result
+    ? [
+        { name: 'Max Affordable', price: Math.round(result.maxHomePrice) },
+        { name: 'Recommended (80%)', price: Math.round(result.maxHomePrice * 0.80) },
+        { name: 'Conservative (60%)', price: Math.round(result.maxHomePrice * 0.60) },
+      ]
+    : []
+
+  // DTI breakdown for monthly income bar chart
+  const monthlyIncome = result?.monthlyIncome || 0
+  const dtiBarData = result
+    ? [
+        { name: '28% Threshold', amount: Math.round(monthlyIncome * 0.28), fill: '#22c55e' },
+        { name: '36% Threshold', amount: Math.round(monthlyIncome * 0.36), fill: '#f97316' },
+        { name: '43% Threshold', amount: Math.round(monthlyIncome * 0.43), fill: '#ef4444' },
+        { name: 'Your Payment', amount: Math.round(result.maxMonthlyPayment), fill: '#3b82f6' },
+      ]
+    : []
+
+  // Affordability meter: % of max budget for entered home price
+  const meterPct = result && homePrice > 0
+    ? Math.min(Math.round((homePrice / result.maxHomePrice) * 100), 150)
+    : null
+
   return (
     <>
       <Helmet>
         <title>{c.name} Affordability Calculator 2026 | CalcWise</title>
         <meta name="description" content={`How much property can you afford in ${c.name}? ${descByCountry[country] || ''} Free calculator. Updated 2026.`} />
         <link rel="canonical" href={`https://calqwise.com/${country}/affordability`} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
@@ -207,6 +256,11 @@ export default function AffordabilityCalc({ country = 'us' }) {
           </h1>
           <p className="text-cw-gray">{descByCountry[country] || descByCountry.us}</p>
         </div>
+
+        <CalcIntro
+          intro="The home affordability calculator tells you the maximum home price you can afford based on your income, debts, and down payment. It uses official lender guidelines for your country — DTI ratios, stress tests, and income caps."
+          hiddenCost="Lender stress tests add 2-3% to qualifying rate"
+        />
 
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -237,8 +291,9 @@ export default function AffordabilityCalc({ country = 'us' }) {
           </div>
         </div>
 
+        {/* Tabs */}
         <div className="flex gap-2 mb-4">
-          {['simple', 'detailed'].map(v => (
+          {['result', 'chart', 'breakdown'].map(v => (
             <button key={v} onClick={() => setView(v)}
               className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
                 view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
@@ -248,17 +303,120 @@ export default function AffordabilityCalc({ country = 'us' }) {
           ))}
         </div>
 
-        {result && view === 'simple' && (
-          <ResultSimple
-            metrics={[
-              { label: 'Max Home Price', value: fmt(result.maxHomePrice), highlight: true },
-              { label: 'Max Loan', value: fmt(result.maxLoan) },
-              { label: 'Est. Monthly Payment', value: fmtD(result.maxMonthlyPayment) },
-            ]}
-          />
+        {/* Result tab */}
+        {result && view === 'result' && (
+          <>
+            <ResultSimple
+              metrics={[
+                { label: 'Max Home Price', value: fmt(result.maxHomePrice), highlight: true },
+                { label: 'Max Loan', value: fmt(result.maxLoan) },
+                { label: 'Est. Monthly Payment', value: fmtD(result.maxMonthlyPayment) },
+              ]}
+            />
+
+            {/* Affordability Meter */}
+            <div className="cw-card mt-4">
+              <h3 className="font-semibold mb-3 text-sm uppercase tracking-wider text-cw-gray">
+                Affordability Meter
+              </h3>
+              <div className="mb-2">
+                <label className="block text-xs text-cw-gray mb-1">Enter a target home price to check ({c.symbol})</label>
+                <NumericInput value={homePrice} onChange={setHomePrice} min={0} step={1000} prefix={c.symbol} />
+              </div>
+              {meterPct !== null && (
+                <>
+                  <div className="w-full bg-white/10 rounded-full h-5 overflow-hidden mt-3">
+                    <div
+                      className="h-5 rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min(meterPct, 100)}%`,
+                        backgroundColor: meterColor(meterPct),
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs text-cw-gray mt-1">
+                    <span>0%</span>
+                    <span className="font-semibold" style={{ color: meterColor(meterPct) }}>
+                      {meterPct}% of max budget
+                      {meterPct > 100 ? ' — Over budget!' : meterPct > 80 ? ' — Aggressive' : meterPct > 60 ? ' — Moderate' : ' — Conservative'}
+                    </span>
+                    <span>100%</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </>
         )}
 
-        {result && view === 'detailed' && country === 'us' && (
+        {/* Chart tab */}
+        {result && view === 'chart' && (
+          <>
+            {/* Price tiers bar chart */}
+            <div className="cw-card mb-6">
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-cw-gray">
+                Affordable Price Tiers
+              </h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={priceBarData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                  <YAxis
+                    tickFormatter={(v) => fmt(v)}
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    width={90}
+                  />
+                  <Tooltip
+                    formatter={(val) => [fmt(val), 'Home Price']}
+                    contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
+                    labelStyle={{ color: '#e2e8f0' }}
+                  />
+                  <Bar dataKey="price" radius={[4, 4, 0, 0]}>
+                    <Cell fill="#ef4444" />
+                    <Cell fill="#f97316" />
+                    <Cell fill="#22c55e" />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              <p className="text-xs text-cw-gray mt-2 text-center">
+                Recommended = 80% of max. Conservative = 60% of max. Red = upper limit.
+              </p>
+            </div>
+
+            {/* DTI thresholds bar chart */}
+            <div className="cw-card mb-6">
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-cw-gray">
+                Monthly Payment vs DTI Thresholds
+              </h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={dtiBarData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                  <YAxis
+                    tickFormatter={(v) => fmt(v)}
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    width={90}
+                  />
+                  <Tooltip
+                    formatter={(val) => [fmt(val), 'Monthly Amount']}
+                    contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
+                    labelStyle={{ color: '#e2e8f0' }}
+                  />
+                  <Bar dataKey="amount" radius={[4, 4, 0, 0]}>
+                    {dtiBarData.map((entry, i) => (
+                      <Cell key={i} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              <p className="text-xs text-cw-gray mt-2 text-center">
+                Green = 28% front-end. Orange = 36% back-end. Red = 43% max. Blue = your qualifying payment.
+              </p>
+            </div>
+          </>
+        )}
+
+        {/* Breakdown tab (detailed) */}
+        {result && view === 'breakdown' && country === 'us' && (
           <ResultDetailed
             title="Affordability Analysis"
             rows={[
@@ -275,7 +433,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
           />
         )}
 
-        {result && view === 'detailed' && country === 'uk' && (
+        {result && view === 'breakdown' && country === 'uk' && (
           <ResultDetailed
             title="Affordability Analysis"
             rows={[
@@ -292,7 +450,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
           />
         )}
 
-        {result && view === 'detailed' && country === 'ca' && (
+        {result && view === 'breakdown' && country === 'ca' && (
           <ResultDetailed
             title="Affordability Analysis (Canada)"
             rows={[
@@ -310,7 +468,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
           />
         )}
 
-        {result && view === 'detailed' && country === 'au' && (
+        {result && view === 'breakdown' && country === 'au' && (
           <ResultDetailed
             title="Affordability Analysis (Australia)"
             rows={[
@@ -327,7 +485,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
           />
         )}
 
-        {result && view === 'detailed' && country === 'ie' && (
+        {result && view === 'breakdown' && country === 'ie' && (
           <ResultDetailed
             title="Affordability Analysis (Ireland)"
             rows={[
@@ -345,7 +503,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
           />
         )}
 
-        {result && view === 'detailed' && country === 'nz' && (
+        {result && view === 'breakdown' && country === 'nz' && (
           <ResultDetailed
             title="Affordability Analysis (New Zealand)"
             rows={[
@@ -368,6 +526,18 @@ export default function AffordabilityCalc({ country = 'us' }) {
             Enter your income and details above to see how much you can afford.
           </div>
         )}
+
+        <CalcFAQ faqs={[
+          { q: 'What is DTI ratio?', a: 'Debt-to-Income ratio: your monthly debt payments divided by gross monthly income. Lenders typically allow up to 43% DTI, with 28-36% for housing costs alone.' },
+          { q: 'What is the OSFI stress test (Canada)?', a: 'Canadian mortgage applicants must qualify at the higher of their contract rate + 2% or 5.25%. This ensures you can handle rate increases.' },
+          { q: 'How much should I put as a down payment?', a: 'Typically 10-20%. Less than 20% requires mortgage insurance (PMI/CMHC). More down payment means lower monthly payments and less interest.' },
+        ]} />
+
+        <CalcRelated links={[
+          { to: `/${country}/mortgage`, label: 'Mortgage Calculator' },
+          { to: `/${country}/rent-vs-buy`, label: 'Rent vs Buy' },
+          { to: `/${country}/salary`, label: 'Salary Calculator' },
+        ]} />
 
         <AdSenseSlot format="rectangle" />
         <AdSenseSlot format="leaderboard" />

@@ -1,48 +1,78 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import {
+  AreaChart, Area, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+} from 'recharts'
 import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
+import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
 
-function calcPayoff({ balance, apr, minPayment, extraPayment }) {
-  const monthlyRate = apr / 100 / 12
-  const payment = minPayment + extraPayment
-  if (balance <= 0 || monthlyRate <= 0 || payment <= 0) return null
-  if (payment <= balance * monthlyRate) return null // payment doesn't cover interest
+const COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444']
 
-  // With extra payment
+function runAmortization(balance, monthlyRate, payment) {
+  if (payment <= balance * monthlyRate) return { months: 0, totalInterest: 0, totalPaid: 0, schedule: [] }
   let bal = balance
   let months = 0
   let totalInterest = 0
+  const schedule = []
   while (bal > 0 && months < 600) {
     const interest = bal * monthlyRate
     const prin = Math.min(payment - interest, bal)
     totalInterest += interest
     bal -= prin
     months++
+    schedule.push({
+      month: months,
+      payment: +(interest + prin).toFixed(2),
+      principal: +prin.toFixed(2),
+      interest: +interest.toFixed(2),
+      balance: +Math.max(0, bal).toFixed(2),
+    })
   }
+  return { months, totalInterest, totalPaid: balance + totalInterest, schedule }
+}
 
-  // Without extra payment (min only)
-  let bal2 = balance
-  let months2 = 0
-  let totalInterest2 = 0
-  const payment2 = minPayment
-  if (payment2 > balance * monthlyRate) {
-    while (bal2 > 0 && months2 < 600) {
-      const interest = bal2 * monthlyRate
-      const prin = Math.min(payment2 - interest, bal2)
-      totalInterest2 += interest
-      bal2 -= prin
-      months2++
-    }
+function calcPayoff({ balance, apr, minPayment, extraPayment }) {
+  const monthlyRate = apr / 100 / 12
+  const payment = minPayment + extraPayment
+  if (balance <= 0 || monthlyRate <= 0 || payment <= 0) return null
+  if (payment <= balance * monthlyRate) return null
+
+  const withExtra = runAmortization(balance, monthlyRate, payment)
+  const withoutExtra = minPayment > balance * monthlyRate
+    ? runAmortization(balance, monthlyRate, minPayment)
+    : { months: 0, totalInterest: 0, schedule: [] }
+
+  const interestSaved = withoutExtra.totalInterest - withExtra.totalInterest
+  const monthsSaved = withoutExtra.months - withExtra.months
+
+  return {
+    ...withExtra,
+    months2: withoutExtra.months,
+    totalInterest2: withoutExtra.totalInterest,
+    scheduleMin: withoutExtra.schedule,
+    interestSaved,
+    monthsSaved,
   }
+}
 
-  const interestSaved = totalInterest2 - totalInterest
-  const monthsSaved = months2 - months
-
-  return { months, totalInterest, totalPaid: balance + totalInterest, months2, totalInterest2, interestSaved, monthsSaved }
+function buildAreaData(scheduleWith, scheduleMin) {
+  const len = Math.max(scheduleWith.length, scheduleMin.length)
+  if (len === 0) return []
+  const step = Math.max(1, Math.floor(len / 60))
+  const data = []
+  for (let i = 0; i < len; i += step) {
+    data.push({
+      month: i + 1,
+      withExtra: scheduleWith[i] ? scheduleWith[i].balance : 0,
+      minOnly: scheduleMin[i] ? scheduleMin[i].balance : 0,
+    })
+  }
+  return data
 }
 
 const defaultsByCountry = {
@@ -54,6 +84,8 @@ const defaultsByCountry = {
   nz: { balance: 20000, apr: 9.0, payment: 500 },
 }
 
+const TABS = ['summary', 'chart', 'schedule']
+
 export default function LoanPayoffCalc({ country = 'us' }) {
   const c = countries[country]
   const d = defaultsByCountry[country] || defaultsByCountry.us
@@ -62,7 +94,7 @@ export default function LoanPayoffCalc({ country = 'us' }) {
   const [apr, setApr] = useState(d.apr)
   const [minPayment, setMinPayment] = useState(d.payment)
   const [extraPayment, setExtraPayment] = useState(200)
-  const [view, setView] = useState('simple')
+  const [tab, setTab] = useState('summary')
 
   const result = useMemo(
     () => calcPayoff({ balance, apr, minPayment, extraPayment }),
@@ -71,11 +103,41 @@ export default function LoanPayoffCalc({ country = 'us' }) {
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
+  const fmt2 = (n) =>
+    new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
+  const fmtK = (n) => {
+    if (Math.abs(n) >= 1000) return `${c.symbol}${(n / 1000).toFixed(1)}k`
+    return fmt(n)
+  }
 
   const months2years = (m) => {
+    if (!m || m <= 0) return 'N/A'
     const y = Math.floor(m / 12)
     const mo = m % 12
     return y > 0 ? `${y}y ${mo}m` : `${mo}m`
+  }
+
+  const areaData = useMemo(() => {
+    if (!result) return []
+    return buildAreaData(result.schedule, result.scheduleMin)
+  }, [result])
+
+  const pieData = result
+    ? [
+        { name: 'Principal', value: +balance.toFixed(2) },
+        { name: 'Total Interest', value: +result.totalInterest.toFixed(2) },
+      ]
+    : []
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: `Loan Payoff Calculator ${c.name}`,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    description: `Calculate how extra loan payments save you interest and time in ${c.name}. See payoff date comparison with and without extra payments.`,
+    url: `https://calqwise.com/${country}/loan-payoff`,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: c.currency },
   }
 
   return (
@@ -84,6 +146,7 @@ export default function LoanPayoffCalc({ country = 'us' }) {
         <title>Loan Payoff Calculator {c.name} 2026 — Extra Payments Savings | CalcWise</title>
         <meta name="description" content={`Calculate how extra loan payments save you interest and time in ${c.name}. See payoff date comparison with and without extra payments. Free loan payoff calculator.`} />
         <link rel="canonical" href={`https://calqwise.com/${country}/loan-payoff`} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
@@ -91,6 +154,11 @@ export default function LoanPayoffCalc({ country = 'us' }) {
           <h1 className="text-3xl font-display font-bold mb-2">Loan Payoff Calculator</h1>
           <p className="text-cw-gray">See how extra payments accelerate your payoff and save interest.</p>
         </div>
+
+        <CalcIntro
+          intro="The loan payoff calculator shows how extra monthly payments dramatically reduce your total interest and payoff time. Enter your loan balance, rate, and extra payments to see the side-by-side comparison."
+          hiddenCost="Each extra payment reduces future interest exponentially"
+        />
 
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -113,45 +181,17 @@ export default function LoanPayoffCalc({ country = 'us' }) {
           </div>
         </div>
 
+        {/* Tabs */}
         <div className="flex gap-2 mb-4">
-          {['simple', 'detailed'].map(v => (
-            <button key={v} onClick={() => setView(v)}
+          {TABS.map(v => (
+            <button key={v} onClick={() => setTab(v)}
               className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
+                tab === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
               }`}>
               {v}
             </button>
           ))}
         </div>
-
-        {result && view === 'simple' && (
-          <ResultSimple
-            metrics={[
-              { label: 'Payoff Time', value: months2years(result.months), highlight: true },
-              { label: 'Total Interest', value: fmt(result.totalInterest) },
-              { label: 'Interest Saved', value: fmt(result.interestSaved), sub: `${months2years(result.monthsSaved)} faster` },
-            ]}
-          />
-        )}
-
-        {result && view === 'detailed' && (
-          <ResultDetailed
-            title="Payoff Comparison"
-            rows={[
-              { label: 'Loan Balance', value: fmt(balance) },
-              { label: '— With Extra Payment', value: '', bold: true },
-              { label: 'Monthly Payment', value: fmt(minPayment + extraPayment) },
-              { label: 'Payoff Time', value: months2years(result.months), bold: true },
-              { label: 'Total Interest Paid', value: fmt(result.totalInterest) },
-              { label: 'Total Paid', value: fmt(result.totalPaid) },
-              { label: '— Without Extra Payment', value: '', bold: true },
-              { label: 'Payoff Time', value: result.months2 < 600 ? months2years(result.months2) : '50+ years' },
-              { label: 'Total Interest', value: result.months2 < 600 ? fmt(result.totalInterest2) : 'N/A' },
-              { label: 'Interest Saved', value: fmt(result.interestSaved), bold: true },
-              { label: 'Time Saved', value: months2years(result.monthsSaved), bold: true },
-            ]}
-          />
-        )}
 
         {!result && (
           <div className="cw-card text-center py-8 text-cw-gray">
@@ -159,7 +199,123 @@ export default function LoanPayoffCalc({ country = 'us' }) {
           </div>
         )}
 
+        {/* Summary Tab */}
+        {result && tab === 'summary' && (
+          <>
+            <ResultSimple
+              metrics={[
+                { label: 'Payoff Time', value: months2years(result.months), highlight: true },
+                { label: 'Total Interest', value: fmt(result.totalInterest) },
+                { label: 'Interest Saved', value: fmt(result.interestSaved), sub: result.monthsSaved > 0 ? `${months2years(result.monthsSaved)} faster` : undefined },
+              ]}
+            />
+            <ResultDetailed
+              title="Payoff Comparison"
+              rows={[
+                { label: 'Loan Balance', value: fmt(balance) },
+                { label: '— With Extra Payment', value: '', bold: true },
+                { label: 'Monthly Payment', value: fmt(minPayment + extraPayment) },
+                { label: 'Payoff Time', value: months2years(result.months), bold: true },
+                { label: 'Total Interest Paid', value: fmt(result.totalInterest) },
+                { label: 'Total Paid', value: fmt(result.totalPaid) },
+                { label: '— Without Extra Payment', value: '', bold: true },
+                { label: 'Payoff Time', value: result.months2 > 0 && result.months2 < 600 ? months2years(result.months2) : '50+ years' },
+                { label: 'Total Interest', value: result.months2 > 0 && result.months2 < 600 ? fmt(result.totalInterest2) : 'N/A' },
+                { label: 'Interest Saved', value: fmt(result.interestSaved), bold: true },
+                { label: 'Time Saved', value: months2years(result.monthsSaved), bold: true },
+              ]}
+            />
+          </>
+        )}
+
+        {/* Chart Tab */}
+        {result && tab === 'chart' && (
+          <div className="space-y-6">
+            <div className="cw-card">
+              <h3 className="font-semibold mb-4 text-sm">Remaining Balance Over Time</h3>
+              <ResponsiveContainer width="100%" height={280}>
+                <AreaChart data={areaData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="gradMin" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={COLORS[1]} stopOpacity={0.25} />
+                      <stop offset="95%" stopColor={COLORS[1]} stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="gradExtra" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={COLORS[0]} stopOpacity={0.25} />
+                      <stop offset="95%" stopColor={COLORS[0]} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11 }} label={{ value: 'Month', position: 'insideBottomRight', offset: -5, fontSize: 11 }} />
+                  <YAxis tickFormatter={fmtK} tick={{ fontSize: 11 }} width={64} />
+                  <Tooltip formatter={(v) => fmt(v)} labelFormatter={(l) => `Month ${l}`} />
+                  <Legend />
+                  <Area type="monotone" dataKey="minOnly" name="Regular Payment Only" stroke={COLORS[1]} fill="url(#gradMin)" strokeWidth={2} dot={false} />
+                  <Area type="monotone" dataKey="withExtra" name={`With +${fmt(extraPayment)} Extra`} stroke={COLORS[0]} fill="url(#gradExtra)" strokeWidth={2} dot={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="cw-card">
+              <h3 className="font-semibold mb-4 text-sm">Principal vs Total Interest</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <PieChart>
+                  <Pie data={pieData} cx="50%" cy="50%" outerRadius={100} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
+                    {pieData.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(v) => fmt(v)} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Schedule Tab */}
+        {result && tab === 'schedule' && (
+          <div className="cw-card overflow-x-auto">
+            <h3 className="font-semibold mb-4 text-sm">Amortization Schedule (with extra payment)</h3>
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-slate-200">
+                  <th className="text-left py-2 pr-3 text-cw-gray font-medium">Month</th>
+                  <th className="text-right py-2 pr-3 text-cw-gray font-medium">Payment</th>
+                  <th className="text-right py-2 pr-3 text-cw-gray font-medium">Principal</th>
+                  <th className="text-right py-2 pr-3 text-cw-gray font-medium">Interest</th>
+                  <th className="text-right py-2 text-cw-gray font-medium">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.schedule.map((row) => (
+                  <tr key={row.month} className="border-b border-slate-100 hover:bg-slate-50">
+                    <td className="py-1.5 pr-3">{row.month}</td>
+                    <td className="py-1.5 pr-3 text-right">{fmt2(row.payment)}</td>
+                    <td className="py-1.5 pr-3 text-right text-indigo-600">{fmt2(row.principal)}</td>
+                    <td className="py-1.5 pr-3 text-right text-amber-600">{fmt2(row.interest)}</td>
+                    <td className="py-1.5 text-right">{fmt2(row.balance)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
         <AdSenseSlot format="rectangle" />
+
+        <CalcFAQ faqs={[
+          { q: 'Does it matter when I make extra payments?', a: 'Yes — earlier extra payments save more interest because they reduce the principal balance that future interest is calculated on. Every dollar early matters more.' },
+          { q: 'Should I pay off loans or invest?', a: 'If your loan rate is above 7%, paying off is usually better. If below 5%, investing in diversified index funds often wins long-term. Between 5-7% is a judgment call.' },
+          { q: 'What is a loan payoff date?', a: 'The month and year when your loan balance reaches zero. Making extra payments moves this date earlier, often by years on a typical mortgage or auto loan.' },
+        ]} />
+
+        <CalcRelated links={[
+          { to: `/${country}/mortgage`, label: 'Mortgage Calculator' },
+          { to: `/${country}/autoloan`, label: 'Auto Loan Calculator' },
+          { to: `/${country}/refinance`, label: 'Refinance Calculator' },
+        ]} />
+
         <AdSenseSlot format="leaderboard" />
       </div>
     </>

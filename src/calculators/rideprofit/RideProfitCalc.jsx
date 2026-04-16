@@ -1,6 +1,11 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import {
+  BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+} from 'recharts'
 import { countries } from '../../config/countries'
+import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -19,6 +24,18 @@ const mileageRates = {
 
 const platforms = ['Uber', 'Lyft', 'DoorDash', 'Uber Eats', 'Bolt', 'Deliveroo', 'Menulog', 'Skip The Dishes', 'Other']
 
+const COLORS = ['#6366f1', '#22d3ee', '#f59e0b', '#f43f5e']
+
+const jsonLd = (country) => ({
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'RideProfit Calculator',
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description: `Calculate your real rideshare and delivery profit in ${country.toUpperCase()}. True hourly rate after fuel, wear & tear, and depreciation.`,
+})
+
 export default function RideProfitCalc({ country }) {
   const c = countries[country]
   const mr = mileageRates[country] || mileageRates.ca
@@ -26,49 +43,43 @@ export default function RideProfitCalc({ country }) {
 
   const [revenue, setRevenue] = useState(1200)
   const [distance, setDistance] = useState(isImperial ? 600 : 900)
-  const [fuelConsumption, setFuelConsumption] = useState(9.0) // L/100km or MPG
+  const [fuelConsumption, setFuelConsumption] = useState(9.0)
   const [fuelPrice, setFuelPrice] = useState(
     country === 'us' ? 3.5 : country === 'uk' ? 1.55 : country === 'au' ? 2.0 : country === 'ca' ? 1.65 : country === 'ie' ? 1.75 : 2.1
   )
   const [hoursWorked, setHoursWorked] = useState(30)
   const [platform, setPlatform] = useState('Uber')
-  const [view, setView] = useState('simple')
+  const [view, setView] = useState('summary')
 
   const result = useMemo(() => {
     if (!revenue || !distance || !hoursWorked) return null
 
-    // Convert distance to km for calculations
     const distKm = isImperial ? distance * 1.60934 : distance
 
-    // Fuel cost
     let fuelCost = 0
     if (isImperial) {
-      // MPG-based: gallons = miles / mpg, cost = gallons * price_per_gallon
       const gallons = distance / (fuelConsumption || 30)
       fuelCost = gallons * fuelPrice
     } else {
-      // L/100km: litres = km * consumption / 100
       fuelCost = (distKm * fuelConsumption) / 100 * fuelPrice
     }
 
     const wearTear = distKm * 0.08
     const depreciation = distKm * 0.05
+    // Platform fee approximation ~25% of gross
+    const platformFee = revenue * 0.25
     const totalCosts = fuelCost + wearTear + depreciation
     const netProfit = revenue - totalCosts
     const hourlyRate = netProfit / hoursWorked
-    const weeklyNet = netProfit
 
-    // Tax deduction
-    const taxDeduction = isImperial
-      ? distance * mr.rate
-      : distance * mr.rate
+    const taxDeduction = distance * mr.rate
 
     const annualNet = netProfit * 52
     const annualTaxDeduction = taxDeduction * 52
 
     return {
-      revenue, fuelCost, wearTear, depreciation, totalCosts,
-      netProfit, hourlyRate, weeklyNet, taxDeduction,
+      revenue, fuelCost, wearTear, depreciation, platformFee, totalCosts,
+      netProfit, hourlyRate, weeklyNet: netProfit, taxDeduction,
       annualNet, annualTaxDeduction, distKm,
     }
   }, [revenue, distance, fuelConsumption, fuelPrice, hoursWorked, isImperial, mr.rate])
@@ -78,6 +89,24 @@ export default function RideProfitCalc({ country }) {
   const fmt0 = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
 
+  // Bar chart data
+  const barData = result ? [
+    {
+      name: 'Weekly',
+      Revenue: Math.round(result.revenue),
+      Expenses: Math.round(result.totalCosts),
+      'Net Profit': Math.round(result.netProfit),
+    },
+  ] : []
+
+  // Pie chart data — expense breakdown
+  const pieData = result ? [
+    { name: 'Fuel', value: Math.round(result.fuelCost) },
+    { name: 'Mileage Deduction', value: Math.round(result.taxDeduction) },
+    { name: 'Platform Fees (est.)', value: Math.round(result.platformFee) },
+    { name: 'Wear & Tear', value: Math.round(result.wearTear + result.depreciation) },
+  ] : []
+
   const pageTitle = `${c.name} RideProfit Calculator — Real Uber/DoorDash Earnings | CalcWise`
 
   return (
@@ -86,6 +115,7 @@ export default function RideProfitCalc({ country }) {
         <title>{pageTitle}</title>
         <meta name="description" content={`Calculate your real rideshare and delivery profit in ${c.name}. True hourly rate after fuel, wear & tear, depreciation. ${mr.label}.`} />
         <link rel="canonical" href={`https://calqwise.com/${country}/rideprofit`} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd(country))}</script>
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
@@ -100,6 +130,8 @@ export default function RideProfitCalc({ country }) {
             ✓ {mr.label}
           </div>
         </div>
+
+        <CalcIntro intro="The RideProfit calculator shows your true earnings as a rideshare or delivery driver after all expenses. It accounts for fuel costs, mileage tax deductions, platform fees, and vehicle wear to reveal your real hourly rate." hiddenCost="Vehicle depreciation costs drivers $0.05-0.15/km" />
 
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -139,7 +171,7 @@ export default function RideProfitCalc({ country }) {
         </div>
 
         <div className="flex gap-2 mb-4">
-          {['simple', 'detailed'].map(v => (
+          {['summary', 'chart', 'detailed'].map(v => (
             <button
               key={v}
               onClick={() => setView(v)}
@@ -152,14 +184,69 @@ export default function RideProfitCalc({ country }) {
           ))}
         </div>
 
-        {result && view === 'simple' && (
-          <ResultSimple
-            metrics={[
-              { label: 'Real Hourly Rate', value: fmt(result.hourlyRate), highlight: true },
-              { label: 'Weekly Net Profit', value: fmt0(result.netProfit) },
-              { label: 'Tax Deductible', value: fmt0(result.taxDeduction), sub: 'This week' },
-            ]}
-          />
+        {result && view === 'summary' && (
+          <>
+            {/* True Hourly Rate — big highlighted metric */}
+            <div className="cw-card mb-4 text-center py-6 border border-primary/30 bg-primary/5">
+              <p className="text-xs text-cw-gray uppercase tracking-widest mb-1">True Hourly Rate</p>
+              <p className={`text-5xl font-display font-bold ${result.hourlyRate >= 15 ? 'text-cw-success' : result.hourlyRate >= 10 ? 'text-yellow-400' : 'text-cw-danger'}`}>
+                {fmt(result.hourlyRate)}
+              </p>
+              <p className="text-xs text-cw-gray mt-2">After all expenses — {hoursWorked}h/week</p>
+            </div>
+            <ResultSimple
+              metrics={[
+                { label: 'Weekly Net Profit', value: fmt0(result.netProfit) },
+                { label: 'Tax Deductible', value: fmt0(result.taxDeduction), sub: 'This week' },
+                { label: 'Annual Net (×52)', value: fmt0(result.annualNet) },
+              ]}
+            />
+          </>
+        )}
+
+        {result && view === 'chart' && (
+          <div className="space-y-8">
+            {/* Revenue vs Expenses vs Net Profit Bar Chart */}
+            <div className="cw-card">
+              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4">Revenue vs Expenses vs Net Profit</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={barData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
+                  <XAxis dataKey="name" tick={{ fill: '#9ca3af', fontSize: 12 }} />
+                  <YAxis tickFormatter={v => fmt0(v)} tick={{ fill: '#9ca3af', fontSize: 11 }} width={70} />
+                  <Tooltip formatter={(v) => fmt0(v)} contentStyle={{ background: '#1e2130', border: 'none', borderRadius: 8 }} />
+                  <Legend />
+                  <Bar dataKey="Revenue" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Expenses" fill="#f43f5e" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Net Profit" fill="#10b981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Expense Breakdown Pie */}
+            <div className="cw-card">
+              <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4">Cost & Deduction Breakdown</h3>
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                    {pieData.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(v) => fmt(v)} contentStyle={{ background: '#1e2130', border: 'none', borderRadius: 8 }} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* True Hourly Rate callout in chart view */}
+            <div className="cw-card text-center py-5 border border-primary/30 bg-primary/5">
+              <p className="text-xs text-cw-gray uppercase tracking-widest mb-1">True Hourly Rate</p>
+              <p className={`text-4xl font-display font-bold ${result.hourlyRate >= 15 ? 'text-cw-success' : result.hourlyRate >= 10 ? 'text-yellow-400' : 'text-cw-danger'}`}>
+                {fmt(result.hourlyRate)}
+              </p>
+            </div>
+          </div>
         )}
 
         {result && view === 'detailed' && (
@@ -188,6 +275,19 @@ export default function RideProfitCalc({ country }) {
 
         <AppDownloadBanner calcKey="rideprofit" country={country} />
         <AdSenseSlot format="rectangle" />
+
+        <CalcFAQ faqs={[
+          { q: 'What mileage deduction can I claim?', a: 'Canada: $0.72/km for the first 5,000km, $0.66/km after. US: $0.67/mile (2024). UK: 45p/mile for first 10,000 miles, 25p after. These significantly reduce taxable income.' },
+          { q: 'What expenses can rideshare drivers deduct?', a: 'Mileage (or actual car expenses), phone plan (business portion), car washes, parking fees, insurance premium increase, and any supplies used for passengers.' },
+          { q: 'Is rideshare worth it financially?', a: 'After all expenses, many drivers earn $12-18/hr true net. It depends heavily on your city, vehicle efficiency, and which hours you drive. This calculator shows your real number.' },
+        ]} />
+
+        <CalcRelated links={[
+          { to: `/${country}/tax`, label: 'Tax Calculator' },
+          { to: `/${country}/salary`, label: 'Salary Calculator' },
+          { to: `/${country}/autoloan`, label: 'Auto Loan' },
+        ]} />
+
         <AdSenseSlot format="leaderboard" />
       </div>
     </>
