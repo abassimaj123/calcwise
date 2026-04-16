@@ -631,6 +631,10 @@ export default function TaxCalc({ country }) {
         </div>
 
         <AppDownloadBanner calcKey="tax" country={country} />
+        <AdSenseSlot format="rectangle" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 pb-8">
         <CalcFAQ faqs={TAX_FAQS[country] || TAX_FAQS.us} />
         <CalcSubTopics links={subPagesByCalc[`${country}/tax`] || []} />
         <CalcRelated links={[
@@ -638,7 +642,6 @@ export default function TaxCalc({ country }) {
           { to: `/${country}/affordability`, label: 'Affordability Calculator' },
           { to: `/${country}/budget`,        label: 'Budget Planner' },
         ]} />
-        <AdSenseSlot format="rectangle" />
         <AdSenseSlot format="leaderboard" />
       </div>
     </>

@@ -1699,14 +1699,17 @@ export default function MortgageCalc({ country }) {
           </div>{/* /calc-results-panel */}
         </div>{/* /calc-grid */}
 
+        <AppDownloadBanner calcKey="mortgage" country={country} />
+        <AdSenseSlot format="rectangle" />
+      </div>
+
+      {/* SEO content — kept outside the sticky grid container to avoid stacking context issues */}
+      <div className="max-w-7xl mx-auto px-4 pb-8">
         <CalcHowTo steps={howToSteps[country] || howToSteps.us} />
         <CalcFAQ faqs={faqs[country] || faqs.us} />
         <CalcSubTopics links={subPagesByCalc[`${country}/mortgage`] || []} />
         <CalcAlsoAvailable calcSlug="mortgage" calcLabel="Mortgage" countries={otherCountries} />
         <CalcRelated links={relatedLinks} />
-
-        <AppDownloadBanner calcKey="mortgage" country={country} />
-        <AdSenseSlot format="rectangle" />
         <AdSenseSlot format="leaderboard" />
       </div>
     </>
