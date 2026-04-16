@@ -13,11 +13,11 @@ export const SALARY_DEDUCTIONS = {
   ],
   ca: [
     { key: 'rrsp',     label: 'Cotisation REER',          hint: 'Avant impôt · réduit revenu imposable', preTax: true,  step: 500 },
-    { key: 'pension',  label: 'Régime de retraite (RPP)', hint: 'Avant impôt · pension entreprise',      preTax: true,  step: 100 },
+    { key: 'pension',  label: 'Retraite (RPP)',            hint: 'Avant impôt · pension entreprise',      preTax: true,  step: 100 },
     { key: 'groupins', label: 'Assurance collective',      hint: 'Après impôt · santé/vie/dentaire',     preTax: false, step: 20  },
     { key: 'union',    label: 'Cotisation syndicale',      hint: 'Après impôt · déductible déclaration', preTax: false, step: 10  },
     { key: 'club',     label: 'Club social / loisirs',     hint: 'Après impôt · activités parrainées',   preTax: false, step: 5   },
-    { key: 'parking',  label: 'Stationnement / transport', hint: 'Avant impôt · laissez-passer commun',  preTax: true,  step: 20  },
+    { key: 'parking',  label: 'Transport / stationnement', hint: 'Avant impôt · laissez-passer commun',  preTax: true,  step: 20  },
   ],
   uk: [
     { key: 'pension',     label: 'Pension Contribution',     hint: 'Pre-tax · typical 5% employee',   preTax: true,  step: 50 },

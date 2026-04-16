@@ -444,10 +444,12 @@ button[class*="text-cw-gray"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
   padding: 0.6875rem 0;
   border-bottom: 1px solid var(--border);
 }
 .cw-breakdown-row:last-child { border-bottom: none; }
+.cw-breakdown-row > div { flex: 1; min-width: 0; }
 .cw-breakdown-row.bold .cw-breakdown-label { font-weight: 600; color: var(--text-1); }
 .cw-breakdown-row.bold .cw-breakdown-value { font-weight: 700; color: var(--blue); }
 .cw-breakdown-row.total {
@@ -463,6 +465,9 @@ button[class*="text-cw-gray"] {
   color: var(--text-1);
   font-variant-numeric: tabular-nums;
   font-family: 'Lexend', sans-serif;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-align: right;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

@@ -31,7 +31,7 @@ export default function NumericInput({
 
   const btnBase = [
     'flex items-center justify-center',
-    'w-10 min-h-[44px]',            // fixed 40px width so value area is never squeezed
+    'w-8 min-h-[44px]',             // 32px — compact enough to fit in narrow card columns
     'bg-slate-100 hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100',
     'text-slate-600 font-bold text-xl transition-colors select-none shrink-0',
   ].join(' ')
@@ -75,7 +75,7 @@ export default function NumericInput({
             max={max}
             step={step}
             className="flex-1 min-w-0 min-h-[44px] bg-white text-center text-slate-900 font-semibold text-sm focus:outline-none"
-            style={{ minWidth: '60px' }}
+            style={{ minWidth: '80px' }}
           />
           {suffix && (
             <span className="pr-2 text-slate-500 text-sm font-medium pointer-events-none select-none shrink-0 leading-none">

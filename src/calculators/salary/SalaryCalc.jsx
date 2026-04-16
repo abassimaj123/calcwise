@@ -273,7 +273,7 @@ export default function SalaryCalc({ country }) {
               {/* Income group */}
               <div className="cw-input-group">
                 <p className="cw-input-group-title">{t('salary.incomeDetails')}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4">
+                <div className="grid grid-cols-1 items-start gap-4">
                   <NumericInput
                     label={`${t('salary.annualSalary')} (${c.symbol})`}
                     value={gross}
@@ -322,7 +322,7 @@ export default function SalaryCalc({ country }) {
                 {preDefs.length > 0 && (
                   <div>
                     <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">{t('calc.preTax')} {t('salary.deductions')}</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-3">
+                    <div className="grid grid-cols-1 items-start gap-3">
                       {preDefs.map(d => (
                         <div
                           key={d.key}
@@ -360,7 +360,7 @@ export default function SalaryCalc({ country }) {
                 {postDefs.length > 0 && (
                   <div>
                     <p className="text-xs font-bold uppercase tracking-wider text-orange-600 mb-3">{t('calc.postTax')} {t('salary.deductions')}</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-3">
+                    <div className="grid grid-cols-1 items-start gap-3">
                       {postDefs.map(d => (
                         <div
                           key={d.key}
