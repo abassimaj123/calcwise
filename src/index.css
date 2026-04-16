@@ -1,7 +1,7 @@
+@import './styles/calculator.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './styles/calculator.css';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    DESIGN TOKENS
