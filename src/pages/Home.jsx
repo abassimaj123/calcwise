@@ -1,7 +1,29 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
-import { countries, calcsByCountry, calcMeta } from '../config/countries'
+import { Home as HomeIcon, BarChart2, Car, DollarSign, Navigation, CheckCircle, TrendingUp } from 'lucide-react'
+import { countries, calcsByCountry } from '../config/countries'
 import AdSenseSlot from '../components/AdSenseSlot'
+
+const ICON_COLOR = '#1A6AFF'
+
+const featuredCalcs = [
+  { to: '/us/mortgage', Icon: HomeIcon,   title: 'Mortgage Calculator US', desc: 'Monthly payment with PMI, property tax, amortization schedule.' },
+  { to: '/ca/mortgage', Icon: HomeIcon,   title: 'Mortgage Calculator CA', desc: 'CMHC insurance, stress test rate, bi-weekly payments.' },
+  { to: '/uk/mortgage', Icon: HomeIcon,   title: 'Mortgage Calculator UK', desc: 'SDLT, LTV ratio, FCA stress test, repayment & interest-only.' },
+  { to: '/us/tax',      Icon: BarChart2,  title: 'Tax Calculator US',      desc: 'Federal + state tax, FICA, effective rate. All 50 states.' },
+  { to: '/ca/tax',      Icon: BarChart2,  title: 'Tax Calculator CA',      desc: 'Federal + provincial tax, CPP & EI contributions.' },
+  { to: '/us/salary',   Icon: DollarSign, title: 'Salary Calculator US',   desc: 'Gross to net, hourly/weekly/monthly/annual breakdown.' },
+  { to: '/ca/rideprofit', Icon: Navigation, title: 'RideProfit CA',        desc: 'Real profit for Uber/DoorDash drivers. CRA $0.72/km deduction.' },
+  { to: '/uk/rideprofit', Icon: Navigation, title: 'RideProfit UK',        desc: 'HMRC 45p/mi mileage deduction. True hourly earnings.' },
+  { to: '/us/affordability', Icon: CheckCircle, title: 'Affordability Calculator', desc: 'How much home can you afford? DTI rules, FHA/VA/Conv.' },
+]
+
+const stats = [
+  { value: '47+', label: 'Calculators' },
+  { value: '6',   label: 'Countries' },
+  { value: '2026', label: 'Tax Rates' },
+  { value: 'Free', label: 'No Signup' },
+]
 
 export default function Home() {
   return (
@@ -13,19 +35,37 @@ export default function Home() {
       </Helmet>
 
       {/* Hero */}
-      <section className="max-w-7xl mx-auto px-4 pt-16 pb-12 text-center">
-        <h1 className="text-4xl md:text-6xl font-display font-bold mb-6">
-          Free Financial Calculators<br />
-          <span className="text-primary">for 6 Countries</span>
-        </h1>
-        <p className="text-lg text-cw-gray max-w-2xl mx-auto mb-8">
-          Mortgage payments, taxes, salary, auto loans and more. Accurate, transparent, free. What your bank doesn't show you.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link to="/us/mortgage" className="cw-btn">🏠 Mortgage Calculator</Link>
-          <Link to="/us/tax" className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-btn transition-colors">
-            📊 Tax Calculator
-          </Link>
+      <section
+        className="max-w-full px-4 pt-16 pb-14 text-center"
+        style={{ background: 'linear-gradient(180deg, #0F172A 0%, #1E293B 100%)' }}
+      >
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-display font-bold mb-6">
+            Free Financial Calculators<br />
+            <span className="text-primary">for 6 Countries</span>
+          </h1>
+          <p className="text-lg text-cw-gray max-w-2xl mx-auto mb-8">
+            Mortgage payments, taxes, salary, auto loans and more. Accurate, transparent, free. What your bank doesn't show you.
+          </p>
+
+          {/* Stats row */}
+          <div className="flex flex-wrap justify-center gap-8 mb-10">
+            {stats.map(({ value, label }) => (
+              <div key={label} className="text-center">
+                <div className="text-3xl font-display font-bold text-primary">{value}</div>
+                <div className="text-xs text-cw-gray mt-1">{label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/us/mortgage" className="cw-btn flex items-center gap-2">
+              <HomeIcon size={18} /> Mortgage Calculator
+            </Link>
+            <Link to="/us/tax" className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-btn transition-colors flex items-center gap-2">
+              <BarChart2 size={18} /> Tax Calculator
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -50,30 +90,24 @@ export default function Home() {
       </section>
 
       {/* Featured Calcs */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-display font-bold mb-8 text-center">Most Popular Calculators</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            { to: '/us/mortgage', icon: '🏠', title: 'Mortgage Calculator US', desc: 'Monthly payment with PMI, property tax, amortization schedule.' },
-            { to: '/ca/mortgage', icon: '🏠', title: 'Mortgage Calculator CA', desc: 'CMHC insurance, stress test rate, bi-weekly payments.' },
-            { to: '/uk/mortgage', icon: '🏠', title: 'Mortgage Calculator UK', desc: 'SDLT, LTV ratio, FCA stress test, repayment & interest-only.' },
-            { to: '/us/tax', icon: '📊', title: 'Tax Calculator US', desc: 'Federal + state tax, FICA, effective rate. All 50 states.' },
-            { to: '/ca/tax', icon: '📊', title: 'Tax Calculator CA', desc: 'Federal + provincial tax, CPP & EI contributions.' },
-            { to: '/us/salary', icon: '💰', title: 'Salary Calculator US', desc: 'Gross to net, hourly/weekly/monthly/annual breakdown.' },
-            { to: '/ca/rideprofit', icon: '🚘', title: 'RideProfit CA', desc: 'Real profit for Uber/DoorDash drivers. CRA $0.72/km deduction.' },
-            { to: '/uk/rideprofit', icon: '🚘', title: 'RideProfit UK', desc: 'HMRC 45p/mi mileage deduction. True hourly earnings.' },
-            { to: '/us/affordability', icon: '✅', title: 'Affordability Calculator', desc: 'How much home can you afford? DTI rules, FHA/VA/Conv.' },
-          ].map(({ to, icon, title, desc }) => (
-            <Link
-              key={to}
-              to={to}
-              className="cw-card hover:border-primary/40 hover:bg-primary/5 transition-all group"
-            >
-              <div className="text-3xl mb-3">{icon}</div>
-              <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">{title}</h3>
-              <p className="text-sm text-cw-gray">{desc}</p>
-            </Link>
-          ))}
+      <section style={{ background: '#0F172A' }} className="py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-display font-bold mb-8 text-center">Most Popular Calculators</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredCalcs.map(({ to, Icon, title, desc }) => (
+              <Link
+                key={to}
+                to={to}
+                className="cw-card hover:border-primary/40 hover:bg-primary/5 transition-all group"
+              >
+                <div className="mb-3">
+                  <Icon size={24} color={ICON_COLOR} />
+                </div>
+                <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">{title}</h3>
+                <p className="text-sm text-cw-gray">{desc}</p>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

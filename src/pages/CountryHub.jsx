@@ -1,11 +1,16 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
+import { BarChart2 } from 'lucide-react'
 import { countries, calcsByCountry, calcMeta } from '../config/countries'
+import { calcIconMap } from '../config/calcIcons'
 import AdSenseSlot from '../components/AdSenseSlot'
+
+const ICON_COLOR = '#1A6AFF'
 
 export default function CountryHub({ country }) {
   const c = countries[country]
   const calcs = calcsByCountry[country] || []
+  const currencyLabel = c.currency === 'GBP' ? 'GBP · £' : `${c.currency} · ${c.symbol}`
 
   return (
     <>
@@ -29,16 +34,19 @@ export default function CountryHub({ country }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {calcs.map(calcKey => {
             const m = calcMeta[calcKey]
+            const Icon = calcIconMap[calcKey] || BarChart2
             return (
               <Link
                 key={calcKey}
                 to={`/${country}/${m.slug}`}
                 className="cw-card hover:border-primary/40 hover:bg-primary/5 transition-all group flex items-center gap-4"
               >
-                <div className="text-4xl">{m.icon}</div>
+                <div className="shrink-0">
+                  <Icon size={24} color={ICON_COLOR} />
+                </div>
                 <div>
                   <h2 className="font-semibold group-hover:text-primary transition-colors">{m.label}</h2>
-                  <p className="text-xs text-cw-gray">{c.currency} · Updated 2026</p>
+                  <p className="text-xs text-cw-gray">{currencyLabel} · Updated 2026</p>
                 </div>
               </Link>
             )

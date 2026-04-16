@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { countries, calcsByCountry, calcMeta } from '../config/countries'
+import { calcIconMap } from '../config/calcIcons'
+import { BarChart2 } from 'lucide-react'
+
+const ICON_COLOR = '#1A6AFF'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState(null)
 
   return (
-    <nav className="sticky top-0 z-50 bg-dark/80 backdrop-blur-md border-b border-white/[0.08]">
+    <nav className="sticky top-0 z-50 bg-dark2/90 backdrop-blur-md border-b border-border-subtle">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
         <Link to="/" className="text-xl font-display font-bold">
@@ -25,24 +29,27 @@ export default function Navbar() {
             >
               <Link
                 to={`/${code}`}
-                className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-white/[0.08] text-sm font-medium transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/[0.08] text-sm font-medium transition-colors"
               >
-                <span>{country.flag}</span>
+                <span className="text-base leading-none">{country.flag}</span>
                 <span>{code.toUpperCase()}</span>
               </Link>
               {/* Dropdown */}
               {activeDropdown === code && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-dark2 border border-white/10 rounded-card shadow-xl py-2 z-50">
-                  {calcsByCountry[code].map(calcKey => (
-                    <Link
-                      key={calcKey}
-                      to={`/${code}/${calcMeta[calcKey]?.slug}`}
-                      className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-white/[0.08] transition-colors"
-                    >
-                      <span>{calcMeta[calcKey]?.icon}</span>
-                      <span>{calcMeta[calcKey]?.label}</span>
-                    </Link>
-                  ))}
+                <div className="absolute top-full left-0 mt-1 w-52 bg-dark2 border border-border-subtle rounded-card shadow-xl py-2 z-50">
+                  {calcsByCountry[code].map(calcKey => {
+                    const Icon = calcIconMap[calcKey] || BarChart2
+                    return (
+                      <Link
+                        key={calcKey}
+                        to={`/${code}/${calcMeta[calcKey]?.slug}`}
+                        className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-white/[0.08] transition-colors"
+                      >
+                        <Icon size={16} color={ICON_COLOR} />
+                        <span>{calcMeta[calcKey]?.label}</span>
+                      </Link>
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -52,7 +59,7 @@ export default function Navbar() {
         {/* CTA + Hamburger */}
         <div className="flex items-center gap-3">
           <Link to="/us/mortgage" className="hidden md:block cw-btn text-sm py-2 px-5">
-            Try Calculators
+            Get the App
           </Link>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -65,7 +72,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-dark2 border-t border-white/[0.05] max-h-96 overflow-y-auto">
+        <div className="md:hidden bg-dark2 border-t border-border-subtle max-h-96 overflow-y-auto">
           {Object.entries(countries).map(([code, country]) => (
             <div key={code}>
               <Link
@@ -77,17 +84,20 @@ export default function Navbar() {
                 <span>{country.name}</span>
               </Link>
               <div className="pl-4">
-                {calcsByCountry[code].map(calcKey => (
-                  <Link
-                    key={calcKey}
-                    to={`/${code}/${calcMeta[calcKey]?.slug}`}
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-cw-gray hover:text-white"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <span>{calcMeta[calcKey]?.icon}</span>
-                    <span>{calcMeta[calcKey]?.label}</span>
-                  </Link>
-                ))}
+                {calcsByCountry[code].map(calcKey => {
+                  const Icon = calcIconMap[calcKey] || BarChart2
+                  return (
+                    <Link
+                      key={calcKey}
+                      to={`/${code}/${calcMeta[calcKey]?.slug}`}
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-cw-gray hover:text-white"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <Icon size={15} color={ICON_COLOR} />
+                      <span>{calcMeta[calcKey]?.label}</span>
+                    </Link>
+                  )
+                })}
               </div>
             </div>
           ))}

@@ -7,8 +7,11 @@ export default {
         primary: '#1A6AFF',
         'primary-dark': '#1455CC',
         accent: '#00D4FF',
-        dark: '#0A1628',
-        dark2: '#0F2040',
+        dark: '#111827',
+        'dark-hero': '#0F172A',
+        dark2: '#1E293B',
+        'dark-footer': '#060D1A',
+        'border-subtle': '#334155',
         cw: { gray: '#8A9BB5', success: '#1D9E75', warning: '#F5C842' },
       },
       fontFamily: {
