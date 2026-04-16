@@ -1,10 +1,16 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import {
+  AreaChart, Area, PieChart, Pie, Cell,
+  XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
+} from 'recharts'
 import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+
+const COLORS = { primary: '#1A6AFF', accent: '#00D4FF', success: '#1D9E75', warn: '#F5C842' }
 
 function calcMortgage({ price, down, rate, termYears, country }) {
   const principal = price - down
@@ -59,6 +65,28 @@ function calcMortgage({ price, down, rate, termYears, country }) {
   return { monthly, totalInterest, totalPaid, ltv, sdlt, cmhc, pmi, lmi, principal, n }
 }
 
+function buildAmortData(principal, monthlyRate, monthly, n) {
+  const data = []
+  let balance = principal
+  let cumPrincipal = 0
+  let cumInterest = 0
+  for (let m = 1; m <= n; m++) {
+    const interestPart = balance * monthlyRate
+    const principalPart = monthly - interestPart
+    balance -= principalPart
+    cumPrincipal += principalPart
+    cumInterest += interestPart
+    if (m % 12 === 0) {
+      data.push({
+        year: m / 12,
+        principal: Math.round(cumPrincipal),
+        interest: Math.round(cumInterest),
+      })
+    }
+  }
+  return data
+}
+
 const defaultValues = {
   us: { price: 400000, down: 80000, rate: 7.0, term: 30 },
   ca: { price: 600000, down: 120000, rate: 5.0, term: 25 },
@@ -84,6 +112,21 @@ export default function MortgageCalc({ country }) {
     [price, down, rate, term, country]
   )
 
+  const amortData = useMemo(() => {
+    if (!result) return []
+    return buildAmortData(result.principal, rate / 100 / 12, result.monthly, result.n)
+  }, [result, rate])
+
+  const pieData = useMemo(() => {
+    if (!result) return []
+    const items = [
+      { name: 'Principal', value: Math.round(result.principal) },
+      { name: 'Interest', value: Math.round(result.totalInterest) },
+    ]
+    if (result.pmi > 0) items.push({ name: 'PMI (total)', value: Math.round(result.pmi * result.n) })
+    return items
+  }, [result])
+
   const fmt = (n) =>
     n != null
       ? new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
@@ -95,11 +138,12 @@ export default function MortgageCalc({ country }) {
 
   const downPct = price > 0 ? ((down / price) * 100).toFixed(1) : 0
   const stressRate = Math.max(rate + 2, 5.25)
-
   const termOptions = [10, 15, 20, 25, 30].filter(y => country !== 'ca' || y <= 25)
 
   const pageTitle = `${c.name} Mortgage Calculator 2026 — Monthly Payment | CalcWise`
   const pageDesc = `Free ${c.name} mortgage calculator. Instant monthly payment, total interest, amortization.${country === 'uk' ? ' SDLT included.' : country === 'ca' ? ' CMHC & stress test.' : ''} Updated 2026.`
+
+  const PIE_COLORS = [COLORS.primary, COLORS.accent, COLORS.warn]
 
   return (
     <>
@@ -124,47 +168,20 @@ export default function MortgageCalc({ country }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-cw-gray mb-1">Home Price ({sym})</label>
-              <input
-                type="number"
-                className="cw-input"
-                value={price}
-                min={0}
-                onChange={e => setPrice(+e.target.value)}
-              />
+              <input type="number" className="cw-input" value={price} min={0} onChange={e => setPrice(+e.target.value)} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">
-                Down Payment ({sym}) — {downPct}%
-              </label>
-              <input
-                type="number"
-                className="cw-input"
-                value={down}
-                min={0}
-                onChange={e => setDown(+e.target.value)}
-              />
+              <label className="block text-xs text-cw-gray mb-1">Down Payment ({sym}) — {downPct}%</label>
+              <input type="number" className="cw-input" value={down} min={0} onChange={e => setDown(+e.target.value)} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Annual Interest Rate (%)</label>
-              <input
-                type="number"
-                step="0.05"
-                className="cw-input"
-                value={rate}
-                min={0}
-                onChange={e => setRate(+e.target.value)}
-              />
+              <input type="number" step="0.05" className="cw-input" value={rate} min={0} onChange={e => setRate(+e.target.value)} />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">Loan Term (years)</label>
-              <select
-                className="cw-input"
-                value={term}
-                onChange={e => setTerm(+e.target.value)}
-              >
-                {termOptions.map(y => (
-                  <option key={y} value={y}>{y} years</option>
-                ))}
+              <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
+                {termOptions.map(y => <option key={y} value={y}>{y} years</option>)}
               </select>
             </div>
           </div>
@@ -212,22 +229,83 @@ export default function MortgageCalc({ country }) {
         )}
 
         {result && view === 'detailed' && (
-          <ResultDetailed
-            title="Full Breakdown"
-            rows={[
-              { label: 'Purchase Price', value: fmt(price) },
-              { label: 'Down Payment', value: `${fmt(down)} (${downPct}%)` },
-              { label: 'Loan Amount', value: fmt(result.principal) },
-              { label: 'Monthly Payment (P&I)', value: fmtD(result.monthly), bold: true },
-              result.pmi > 0 && { label: 'PMI (monthly)', value: fmtD(result.pmi), sub: 'Removed when LTV < 80%' },
-              result.cmhc > 0 && { label: 'CMHC Premium', value: fmt(result.cmhc), sub: 'Added to mortgage balance' },
-              result.lmi > 0 && { label: 'LMI (est.)', value: fmt(result.lmi), sub: 'Lenders Mortgage Insurance' },
-              { label: 'LTV Ratio', value: `${result.ltv.toFixed(1)}%` },
-              { label: 'Total Interest', value: fmt(result.totalInterest) },
-              { label: 'Total of All Payments', value: fmt(result.totalPaid), bold: true },
-              result.sdlt > 0 && { label: 'Stamp Duty (SDLT)', value: fmt(result.sdlt), sub: 'April 2025 rates — paid upfront', bold: true },
-            ].filter(Boolean)}
-          />
+          <>
+            <ResultDetailed
+              title="Full Breakdown"
+              rows={[
+                { label: 'Purchase Price', value: fmt(price) },
+                { label: 'Down Payment', value: `${fmt(down)} (${downPct}%)` },
+                { label: 'Loan Amount', value: fmt(result.principal) },
+                { label: 'Monthly Payment (P&I)', value: fmtD(result.monthly), bold: true },
+                result.pmi > 0 && { label: 'PMI (monthly)', value: fmtD(result.pmi), sub: 'Removed when LTV < 80%' },
+                result.cmhc > 0 && { label: 'CMHC Premium', value: fmt(result.cmhc), sub: 'Added to mortgage balance' },
+                result.lmi > 0 && { label: 'LMI (est.)', value: fmt(result.lmi), sub: 'Lenders Mortgage Insurance' },
+                { label: 'LTV Ratio', value: `${result.ltv.toFixed(1)}%` },
+                { label: 'Total Interest', value: fmt(result.totalInterest) },
+                { label: 'Total of All Payments', value: fmt(result.totalPaid), bold: true },
+                result.sdlt > 0 && { label: 'Stamp Duty (SDLT)', value: fmt(result.sdlt), sub: 'April 2025 rates — paid upfront', bold: true },
+              ].filter(Boolean)}
+            />
+
+            {/* Charts */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              {/* Area Chart: Principal vs Interest over time */}
+              <div className="cw-card">
+                <h3 className="font-semibold mb-4 text-sm">Principal vs Interest Over Time</h3>
+                <ResponsiveContainer width="100%" height={220}>
+                  <AreaChart data={amortData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="gradPrincipal" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={COLORS.primary} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="gradInterest" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={COLORS.accent} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={COLORS.accent} stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="year" tick={{ fontSize: 11, fill: '#8A9BB5' }} tickFormatter={v => `Y${v}`} />
+                    <YAxis tick={{ fontSize: 11, fill: '#8A9BB5' }} tickFormatter={v => `${sym}${(v/1000).toFixed(0)}k`} />
+                    <Tooltip
+                      contentStyle={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 8, fontSize: 12 }}
+                      formatter={(val, name) => [fmt(val), name]}
+                      labelFormatter={l => `Year ${l}`}
+                    />
+                    <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                    <Area type="monotone" dataKey="principal" name="Cumulative Principal" stroke={COLORS.primary} fill="url(#gradPrincipal)" strokeWidth={2} />
+                    <Area type="monotone" dataKey="interest" name="Cumulative Interest" stroke={COLORS.accent} fill="url(#gradInterest)" strokeWidth={2} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Pie Chart: total cost breakdown */}
+              <div className="cw-card flex flex-col items-center">
+                <h3 className="font-semibold mb-4 text-sm self-start">Total Cost Breakdown</h3>
+                <ResponsiveContainer width="100%" height={220}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={55}
+                      outerRadius={85}
+                      paddingAngle={3}
+                      dataKey="value"
+                    >
+                      {pieData.map((_, i) => (
+                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 8, fontSize: 12 }}
+                      formatter={(val) => fmt(val)}
+                    />
+                    <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </>
         )}
 
         {!result && (
