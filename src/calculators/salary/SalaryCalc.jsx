@@ -258,11 +258,11 @@ export default function SalaryCalc({ country }) {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-display font-bold mb-1 text-slate-900 tracking-tight">
-            {c.name} {t('salary.title')}
+        <div className="calc-page-header">
+          <h1>
+            {t(`nav.country_${country}`, { defaultValue: c.name })} — {t('salary.title')}
           </h1>
-          <p className="text-slate-500 text-sm">Gross to net · all pay periods · 2026 tax rates</p>
+          <p>{t('salary.subtitle')}</p>
         </div>
 
         <div className="calc-grid">

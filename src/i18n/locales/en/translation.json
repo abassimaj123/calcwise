@@ -111,6 +111,7 @@
   },
   "mortgage": {
     "title": "Mortgage Calculator",
+    "subtitle": "Monthly payment · total interest · amortization — 2026 rates",
     "desc": "Monthly payment, true total cost, amortization schedule — with property tax, insurance, and PMI/CMHC.",
     "homePrice": "Home Price",
     "downPayment": "Down Payment",
@@ -545,6 +546,7 @@
   },
   "salary": {
     "title": "Salary Calculator",
+    "subtitle": "Gross to net · all pay periods · 2026 tax rates",
     "desc": "Calculate your true take-home pay with all deductions, benefits, and hidden costs.",
     "annualSalary": "Annual Gross Salary",
     "payPeriod": "Pay Period",

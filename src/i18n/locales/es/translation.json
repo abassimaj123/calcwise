@@ -111,6 +111,7 @@
   },
   "mortgage": {
     "title": "Calculadora de Hipoteca",
+    "subtitle": "Pago mensual · intereses totales · amortización — tasas 2026",
     "desc": "Pago mensual, costo total real y tabla de amortización — con impuesto predial, seguro y PMI/CMHC.",
     "homePrice": "Precio de la Vivienda",
     "downPayment": "Pago Inicial",
@@ -545,6 +546,7 @@
   },
   "salary": {
     "title": "Calculadora de Salario",
+    "subtitle": "Bruto a neto · todos los períodos de pago · tasas 2026",
     "desc": "Calcule su pago neto real con todas las deducciones, beneficios y costos ocultos.",
     "annualSalary": "Salario Bruto Anual",
     "payPeriod": "Período de pago",

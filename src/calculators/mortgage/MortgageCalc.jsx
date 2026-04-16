@@ -1278,11 +1278,11 @@ export default function MortgageCalc({ country }) {
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-display font-bold mb-1 text-slate-900 tracking-tight">
-            {c.name} Mortgage Calculator
+        <div className="calc-page-header">
+          <h1>
+            {t(`nav.country_${country}`, { defaultValue: c.name })} — {t('mortgage.title')}
           </h1>
-          <p className="text-slate-500 text-sm">Monthly payment · total interest · amortization — 2026 rates</p>
+          <p>{t('mortgage.subtitle')}</p>
         </div>
 
         <div className="calc-grid">

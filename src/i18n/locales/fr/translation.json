@@ -111,6 +111,7 @@
   },
   "mortgage": {
     "title": "Calculateur Hypothécaire",
+    "subtitle": "Paiement mensuel · intérêts totaux · amortissement — taux 2026",
     "desc": "Paiement mensuel, coût total réel et tableau d'amortissement — avec taxes, assurance et CMHC.",
     "homePrice": "Prix de la Propriété",
     "downPayment": "Mise de Fonds",
@@ -545,6 +546,7 @@
   },
   "salary": {
     "title": "Calculateur de Salaire",
+    "subtitle": "Salaire brut → net · toutes périodes de paie · taux 2026",
     "desc": "Calculez votre salaire net réel avec toutes les déductions, avantages et coûts cachés.",
     "annualSalary": "Salaire Brut Annuel",
     "payPeriod": "Période de paie",
