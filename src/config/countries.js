@@ -9,11 +9,11 @@ export const countries = {
 
 export const calcsByCountry = {
   us: ['mortgage','tax','autoloan','rent-vs-buy','salary','loan-payoff','credit-card','heloc','student-loan','property-roi','refinance','affordability'],
-  ca: ['mortgage','tax','autoloan','salary','rent-vs-buy','rideprofit'],
-  uk: ['mortgage','tax','autoloan','salary','rent-vs-buy','rideprofit'],
-  au: ['mortgage','tax','salary','rideprofit'],
-  ie: ['mortgage','tax','salary','rideprofit'],
-  nz: ['mortgage','tax','salary','rideprofit'],
+  ca: ['mortgage','tax','autoloan','salary','rent-vs-buy','rideprofit','loan-payoff','credit-card','affordability','property-roi','refinance'],
+  uk: ['mortgage','tax','autoloan','salary','rent-vs-buy','rideprofit','affordability','loan-payoff','credit-card','property-roi','refinance','stamp-duty'],
+  au: ['mortgage','tax','salary','rideprofit','autoloan','rent-vs-buy','loan-payoff','credit-card','affordability'],
+  ie: ['mortgage','tax','salary','rideprofit','autoloan','rent-vs-buy','loan-payoff','credit-card','affordability'],
+  nz: ['mortgage','tax','salary','rideprofit','autoloan','rent-vs-buy','loan-payoff','credit-card','affordability'],
 }
 
 export const calcMeta = {
@@ -30,4 +30,5 @@ export const calcMeta = {
   'property-roi':{ label: 'Property ROI',  icon: '📈', slug: 'property-roi' },
   refinance:     { label: 'Refinance',      icon: '🔄', slug: 'refinance' },
   affordability: { label: 'Affordability', icon: '✅', slug: 'affordability' },
+  'stamp-duty':  { label: 'Stamp Duty',    icon: '🏷️', slug: 'stamp-duty' },
 }

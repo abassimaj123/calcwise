@@ -22,11 +22,16 @@
     "step3Title": "Obtén el desglose completo",
     "step3Desc": "Ve resultados simples o cambia a vista detallada con amortización completa."
   },
+  "countryHub": {
+    "financialCalcs": "Calculadoras Financieras",
+    "subtitle": "calculadoras gratuitas — actualizadas 2026",
+    "updated": "Actualizado 2026"
+  },
   "stats": {
     "calculators": "Calculadoras",
     "countries": "Países",
     "taxRates": "Tasas 2026",
-    "noSignup": "Sin Registro"
+    "noSignup": "Gratis"
   },
   "calc": {
     "simple": "Simple",
@@ -66,7 +71,7 @@
   "footer": {
     "tagline": "Calculadoras financieras gratuitas para 6 países. Lo que tu banco no te muestra.",
     "countries": "Países",
-    "topCalcs": "Calculadoras Principales",
+    "topCalcs": "Top Calculadoras",
     "legal": "Legal",
     "disclaimer": "Solo para fines informativos. No es asesoría financiera.",
     "covering": "Cubriendo US · CA · UK · AU · IE · NZ"

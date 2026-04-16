@@ -22,11 +22,16 @@
     "step3Title": "Obtenez le détail complet",
     "step3Desc": "Voyez des résultats simples ou basculez vers la vue détaillée avec amortissement complet."
   },
+  "countryHub": {
+    "financialCalcs": "Calculateurs Financiers",
+    "subtitle": "calculateurs gratuits — mis à jour 2026",
+    "updated": "Mis à jour 2026"
+  },
   "stats": {
     "calculators": "Calculateurs",
     "countries": "Pays",
     "taxRates": "Taux 2026",
-    "noSignup": "Sans Inscription"
+    "noSignup": "Gratuit"
   },
   "calc": {
     "simple": "Simple",
@@ -66,7 +71,7 @@
   "footer": {
     "tagline": "Calculateurs financiers gratuits pour 6 pays. Ce que votre banque ne vous montre pas.",
     "countries": "Pays",
-    "topCalcs": "Meilleurs Calculateurs",
+    "topCalcs": "Top Calculateurs",
     "legal": "Légal",
     "disclaimer": "À titre informatif uniquement. Pas un conseil financier.",
     "covering": "Couvre US · CA · UK · AU · IE · NZ"

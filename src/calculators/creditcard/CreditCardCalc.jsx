@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -42,9 +43,21 @@ function calcCreditCard({ balance, apr, minType, minPct, minFixed, extraPayment 
   return { ...withExtra, interestSaved, monthsSaved, totalInterestNoExtra: withoutExtra.totalInterest }
 }
 
+const defaultsByCountry = {
+  us: { balance: 8500, apr: 24.99 },
+  ca: { balance: 5000, apr: 19.99 },
+  uk: { balance: 3000, apr: 24.9 },
+  au: { balance: 4000, apr: 19.99 },
+  ie: { balance: 3000, apr: 22.9 },
+  nz: { balance: 3000, apr: 19.95 },
+}
+
 export default function CreditCardCalc({ country = 'us' }) {
-  const [balance, setBalance] = useState(8500)
-  const [apr, setApr] = useState(24.99)
+  const c = countries[country]
+  const d = defaultsByCountry[country] || defaultsByCountry.us
+
+  const [balance, setBalance] = useState(d.balance)
+  const [apr, setApr] = useState(d.apr)
   const [minType, setMinType] = useState('percent')
   const [minPct, setMinPct] = useState(2)
   const [minFixed, setMinFixed] = useState(200)
@@ -56,8 +69,11 @@ export default function CreditCardCalc({ country = 'us' }) {
     [balance, apr, minType, minPct, minFixed, extraPayment]
   )
 
-  const fmt = (n) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-  const fmt0 = (n) => `$${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
+  const fmt = (n) =>
+    new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
+  const fmt0 = (n) =>
+    new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
+
   const months2years = (m) => {
     const y = Math.floor(m / 12)
     const mo = m % 12
@@ -67,21 +83,21 @@ export default function CreditCardCalc({ country = 'us' }) {
   return (
     <>
       <Helmet>
-        <title>Credit Card Payoff Calculator US 2026 | CalcWise</title>
-        <meta name="description" content="Calculate how long to pay off your credit card and how much interest you'll pay. See savings from extra payments. Free US credit card payoff calculator." />
-        <link rel="canonical" href="https://calqwise.com/us/credit-card" />
+        <title>Credit Card Payoff Calculator {c.name} 2026 | CalcWise</title>
+        <meta name="description" content={`Calculate how long to pay off your credit card in ${c.name} and how much interest you'll pay. See savings from extra payments. Free credit card payoff calculator.`} />
+        <link rel="canonical" href={`https://calqwise.com/${country}/credit-card`} />
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">💳 Credit Card Payoff Calculator</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">{c.flag} Credit Card Payoff Calculator</h1>
           <p className="text-cw-gray">Find out when you'll be debt-free and how much interest you can save.</p>
         </div>
 
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Current Balance ($)</label>
+              <label className="block text-xs text-cw-gray mb-1">Current Balance ({c.symbol})</label>
               <input type="number" className="cw-input" value={balance} min={0} onChange={e => setBalance(+e.target.value)} />
             </div>
             <div>
@@ -98,18 +114,18 @@ export default function CreditCardCalc({ country = 'us' }) {
             <div>
               {minType === 'percent' ? (
                 <>
-                  <label className="block text-xs text-cw-gray mb-1">Min Payment % (min $25)</label>
+                  <label className="block text-xs text-cw-gray mb-1">Min Payment % (min {c.symbol}25)</label>
                   <input type="number" step="0.5" className="cw-input" value={minPct} min={1} onChange={e => setMinPct(+e.target.value)} />
                 </>
               ) : (
                 <>
-                  <label className="block text-xs text-cw-gray mb-1">Fixed Monthly Payment ($)</label>
+                  <label className="block text-xs text-cw-gray mb-1">Fixed Monthly Payment ({c.symbol})</label>
                   <input type="number" className="cw-input" value={minFixed} min={25} onChange={e => setMinFixed(+e.target.value)} />
                 </>
               )}
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Extra Monthly Payment ($)</label>
+              <label className="block text-xs text-cw-gray mb-1">Extra Monthly Payment ({c.symbol})</label>
               <input type="number" className="cw-input" value={extraPayment} min={0} onChange={e => setExtraPayment(+e.target.value)} />
             </div>
           </div>

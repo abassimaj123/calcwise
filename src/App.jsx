@@ -25,6 +25,7 @@ const StudentLoanCalc = lazy(() => import('./calculators/studentloan/StudentLoan
 const PropertyROICalc = lazy(() => import('./calculators/propertyrei/PropertyROICalc'))
 const RefinanceCalc = lazy(() => import('./calculators/refinance/RefinanceCalc'))
 const AffordabilityCalc = lazy(() => import('./calculators/affordability/AffordabilityCalc'))
+const StampDutyCalc = lazy(() => import('./calculators/stampduty/StampDutyCalc'))
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -71,6 +72,11 @@ export default function App() {
             <Route path="/ca/salary" element={<SalaryCalc country="ca" />} />
             <Route path="/ca/rent-vs-buy" element={<RentVsBuyCalc country="ca" />} />
             <Route path="/ca/rideprofit" element={<RideProfitCalc country="ca" />} />
+            <Route path="/ca/loan-payoff" element={<LoanPayoffCalc country="ca" />} />
+            <Route path="/ca/credit-card" element={<CreditCardCalc country="ca" />} />
+            <Route path="/ca/affordability" element={<AffordabilityCalc country="ca" />} />
+            <Route path="/ca/property-roi" element={<PropertyROICalc country="ca" />} />
+            <Route path="/ca/refinance" element={<RefinanceCalc country="ca" />} />
 
             {/* UK Calculators */}
             <Route path="/uk/mortgage" element={<MortgageCalc country="uk" />} />
@@ -80,24 +86,44 @@ export default function App() {
             <Route path="/uk/rent-vs-buy" element={<RentVsBuyCalc country="uk" />} />
             <Route path="/uk/rideprofit" element={<RideProfitCalc country="uk" />} />
             <Route path="/uk/affordability" element={<AffordabilityCalc country="uk" />} />
+            <Route path="/uk/loan-payoff" element={<LoanPayoffCalc country="uk" />} />
+            <Route path="/uk/credit-card" element={<CreditCardCalc country="uk" />} />
+            <Route path="/uk/property-roi" element={<PropertyROICalc country="uk" />} />
+            <Route path="/uk/refinance" element={<RefinanceCalc country="uk" />} />
+            <Route path="/uk/stamp-duty" element={<StampDutyCalc />} />
 
             {/* AU Calculators */}
             <Route path="/au/mortgage" element={<MortgageCalc country="au" />} />
             <Route path="/au/tax" element={<TaxCalc country="au" />} />
             <Route path="/au/salary" element={<SalaryCalc country="au" />} />
             <Route path="/au/rideprofit" element={<RideProfitCalc country="au" />} />
+            <Route path="/au/autoloan" element={<AutoLoanCalc country="au" />} />
+            <Route path="/au/rent-vs-buy" element={<RentVsBuyCalc country="au" />} />
+            <Route path="/au/loan-payoff" element={<LoanPayoffCalc country="au" />} />
+            <Route path="/au/credit-card" element={<CreditCardCalc country="au" />} />
+            <Route path="/au/affordability" element={<AffordabilityCalc country="au" />} />
 
             {/* IE Calculators */}
             <Route path="/ie/mortgage" element={<MortgageCalc country="ie" />} />
             <Route path="/ie/tax" element={<TaxCalc country="ie" />} />
             <Route path="/ie/salary" element={<SalaryCalc country="ie" />} />
             <Route path="/ie/rideprofit" element={<RideProfitCalc country="ie" />} />
+            <Route path="/ie/autoloan" element={<AutoLoanCalc country="ie" />} />
+            <Route path="/ie/rent-vs-buy" element={<RentVsBuyCalc country="ie" />} />
+            <Route path="/ie/loan-payoff" element={<LoanPayoffCalc country="ie" />} />
+            <Route path="/ie/credit-card" element={<CreditCardCalc country="ie" />} />
+            <Route path="/ie/affordability" element={<AffordabilityCalc country="ie" />} />
 
             {/* NZ Calculators */}
             <Route path="/nz/mortgage" element={<MortgageCalc country="nz" />} />
             <Route path="/nz/tax" element={<TaxCalc country="nz" />} />
             <Route path="/nz/salary" element={<SalaryCalc country="nz" />} />
             <Route path="/nz/rideprofit" element={<RideProfitCalc country="nz" />} />
+            <Route path="/nz/autoloan" element={<AutoLoanCalc country="nz" />} />
+            <Route path="/nz/rent-vs-buy" element={<RentVsBuyCalc country="nz" />} />
+            <Route path="/nz/loan-payoff" element={<LoanPayoffCalc country="nz" />} />
+            <Route path="/nz/credit-card" element={<CreditCardCalc country="nz" />} />
+            <Route path="/nz/affordability" element={<AffordabilityCalc country="nz" />} />
 
             {/* Static Pages */}
             <Route path="/privacy" element={<Privacy />} />

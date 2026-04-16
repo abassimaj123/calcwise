@@ -1,7 +1,7 @@
 import {
-  Home, BarChart2, Car, DollarSign, Navigation,
+  Home, BarChart2, Car, DollarSign,
   TrendingDown, CreditCard, Building2, GraduationCap,
-  TrendingUp, RefreshCw, CheckCircle, Repeat
+  TrendingUp, RefreshCw, CheckCircle, Tag
 } from 'lucide-react'
 
 export const calcIconMap = {
@@ -10,7 +10,7 @@ export const calcIconMap = {
   autoloan:       Car,
   'rent-vs-buy':  Building2,
   salary:         DollarSign,
-  rideprofit:     Navigation,
+  rideprofit:     Car,
   'loan-payoff':  TrendingDown,
   'credit-card':  CreditCard,
   heloc:          Building2,
@@ -18,4 +18,5 @@ export const calcIconMap = {
   'property-roi': TrendingUp,
   refinance:      RefreshCw,
   affordability:  CheckCircle,
+  'stamp-duty':   Tag,
 }

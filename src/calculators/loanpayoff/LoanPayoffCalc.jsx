@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -43,10 +44,22 @@ function calcPayoff({ balance, apr, minPayment, extraPayment }) {
   return { months, totalInterest, totalPaid: balance + totalInterest, months2, totalInterest2, interestSaved, monthsSaved }
 }
 
+const defaultsByCountry = {
+  us: { balance: 25000, apr: 6.5, payment: 450 },
+  ca: { balance: 25000, apr: 8.0, payment: 500 },
+  uk: { balance: 20000, apr: 7.9, payment: 450 },
+  au: { balance: 25000, apr: 8.5, payment: 550 },
+  ie: { balance: 20000, apr: 8.5, payment: 450 },
+  nz: { balance: 20000, apr: 9.0, payment: 500 },
+}
+
 export default function LoanPayoffCalc({ country = 'us' }) {
-  const [balance, setBalance] = useState(25000)
-  const [apr, setApr] = useState(6.5)
-  const [minPayment, setMinPayment] = useState(450)
+  const c = countries[country]
+  const d = defaultsByCountry[country] || defaultsByCountry.us
+
+  const [balance, setBalance] = useState(d.balance)
+  const [apr, setApr] = useState(d.apr)
+  const [minPayment, setMinPayment] = useState(d.payment)
   const [extraPayment, setExtraPayment] = useState(200)
   const [view, setView] = useState('simple')
 
@@ -55,7 +68,9 @@ export default function LoanPayoffCalc({ country = 'us' }) {
     [balance, apr, minPayment, extraPayment]
   )
 
-  const fmt = (n) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+  const fmt = (n) =>
+    new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
+
   const months2years = (m) => {
     const y = Math.floor(m / 12)
     const mo = m % 12
@@ -65,21 +80,21 @@ export default function LoanPayoffCalc({ country = 'us' }) {
   return (
     <>
       <Helmet>
-        <title>Loan Payoff Calculator US 2026 — Extra Payments Savings | CalcWise</title>
-        <meta name="description" content="Calculate how extra loan payments save you interest and time. See payoff date comparison with and without extra payments. Free US loan payoff calculator." />
-        <link rel="canonical" href="https://calqwise.com/us/loan-payoff" />
+        <title>Loan Payoff Calculator {c.name} 2026 — Extra Payments Savings | CalcWise</title>
+        <meta name="description" content={`Calculate how extra loan payments save you interest and time in ${c.name}. See payoff date comparison with and without extra payments. Free loan payoff calculator.`} />
+        <link rel="canonical" href={`https://calqwise.com/${country}/loan-payoff`} />
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">🇺🇸 Loan Payoff Calculator</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">{c.flag} Loan Payoff Calculator</h1>
           <p className="text-cw-gray">See how extra payments accelerate your payoff and save interest.</p>
         </div>
 
         <div className="cw-card mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Loan Balance ($)</label>
+              <label className="block text-xs text-cw-gray mb-1">Loan Balance ({c.symbol})</label>
               <input type="number" className="cw-input" value={balance} min={0} onChange={e => setBalance(+e.target.value)} />
             </div>
             <div>
@@ -87,11 +102,11 @@ export default function LoanPayoffCalc({ country = 'us' }) {
               <input type="number" step="0.1" className="cw-input" value={apr} min={0} onChange={e => setApr(+e.target.value)} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Regular Monthly Payment ($)</label>
+              <label className="block text-xs text-cw-gray mb-1">Regular Monthly Payment ({c.symbol})</label>
               <input type="number" className="cw-input" value={minPayment} min={0} onChange={e => setMinPayment(+e.target.value)} />
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Extra Monthly Payment ($)</label>
+              <label className="block text-xs text-cw-gray mb-1">Extra Monthly Payment ({c.symbol})</label>
               <input type="number" className="cw-input" value={extraPayment} min={0} onChange={e => setExtraPayment(+e.target.value)} />
             </div>
           </div>

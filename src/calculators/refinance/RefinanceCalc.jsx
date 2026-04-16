@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -30,13 +31,25 @@ function calcRefinance({ currentBalance, currentRate, remainingMonths, newRate, 
   }
 }
 
+const defaultsByCountry = {
+  us: { balance: 320000, currentRate: 7.5, newRate: 6.5, closingCosts: 6000 },
+  ca: { balance: 400000, currentRate: 5.5, newRate: 4.75, closingCosts: 3000 },
+  uk: { balance: 200000, currentRate: 5.5, newRate: 4.5, closingCosts: 2000 },
+  au: { balance: 500000, currentRate: 6.5, newRate: 5.75, closingCosts: 2000 },
+  ie: { balance: 300000, currentRate: 4.5, newRate: 3.75, closingCosts: 2000 },
+  nz: { balance: 500000, currentRate: 7.0, newRate: 6.0, closingCosts: 2000 },
+}
+
 export default function RefinanceCalc({ country = 'us' }) {
-  const [balance, setBalance] = useState(320000)
-  const [currentRate, setCurrentRate] = useState(7.5)
+  const c = countries[country]
+  const d = defaultsByCountry[country] || defaultsByCountry.us
+
+  const [balance, setBalance] = useState(d.balance)
+  const [currentRate, setCurrentRate] = useState(d.currentRate)
   const [remainingYears, setRemainingYears] = useState(25)
-  const [newRate, setNewRate] = useState(6.5)
+  const [newRate, setNewRate] = useState(d.newRate)
   const [newTerm, setNewTerm] = useState(30)
-  const [closingCosts, setClosingCosts] = useState(6000)
+  const [closingCosts, setClosingCosts] = useState(d.closingCosts)
   const [view, setView] = useState('simple')
 
   const result = useMemo(
@@ -44,20 +57,22 @@ export default function RefinanceCalc({ country = 'us' }) {
     [balance, currentRate, remainingYears, newRate, newTerm, closingCosts]
   )
 
-  const fmt = (n) => `$${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
-  const fmtD = (n) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  const fmt = (n) =>
+    new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
+  const fmtD = (n) =>
+    new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
 
   return (
     <>
       <Helmet>
-        <title>Refinance Calculator US 2026 — Break-Even & Monthly Savings | CalcWise</title>
-        <meta name="description" content="Calculate mortgage refinance savings, break-even point, and lifetime savings. Free US refinance calculator. Updated 2026." />
-        <link rel="canonical" href="https://calqwise.com/us/refinance" />
+        <title>Refinance Calculator {c.name} 2026 — Break-Even & Monthly Savings | CalcWise</title>
+        <meta name="description" content={`Calculate mortgage refinance savings, break-even point, and lifetime savings in ${c.name}. Free refinance calculator. Updated 2026.`} />
+        <link rel="canonical" href={`https://calqwise.com/${country}/refinance`} />
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">🔄 Refinance Calculator</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">{c.flag} Refinance Calculator</h1>
           <p className="text-cw-gray">Is it worth refinancing? Find your break-even point and lifetime savings.</p>
         </div>
 
@@ -65,7 +80,7 @@ export default function RefinanceCalc({ country = 'us' }) {
           <h3 className="text-sm text-cw-gray uppercase tracking-wider mb-4">Current Mortgage</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Outstanding Balance ($)</label>
+              <label className="block text-xs text-cw-gray mb-1">Outstanding Balance ({c.symbol})</label>
               <input type="number" className="cw-input" value={balance} min={0} onChange={e => setBalance(+e.target.value)} />
             </div>
             <div>
@@ -93,7 +108,7 @@ export default function RefinanceCalc({ country = 'us' }) {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-cw-gray mb-1">Closing Costs ($)</label>
+              <label className="block text-xs text-cw-gray mb-1">Closing Costs ({c.symbol})</label>
               <input type="number" className="cw-input" value={closingCosts} min={0} onChange={e => setClosingCosts(+e.target.value)} />
             </div>
           </div>

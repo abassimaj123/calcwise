@@ -24,6 +24,9 @@ const defaults = {
   us: { price: 35000, down: 5000, tradeIn: 3000, apr: 7.5, term: 60, taxRate: 7.0 },
   ca: { price: 40000, down: 5000, tradeIn: 3000, apr: 6.9, term: 60, taxRate: 13.0 },
   uk: { price: 25000, down: 3000, tradeIn: 2000, apr: 8.5, term: 48, taxRate: 0 },
+  au: { price: 40000, down: 5000, tradeIn: 3000, apr: 7.5, term: 60, taxRate: 0 },
+  ie: { price: 30000, down: 5000, tradeIn: 2000, apr: 7.9, term: 60, taxRate: 0 },
+  nz: { price: 35000, down: 5000, tradeIn: 2000, apr: 9.5, term: 60, taxRate: 0 },
 }
 
 const termOptions = [24, 36, 48, 60, 72, 84]
@@ -96,7 +99,7 @@ export default function AutoLoanCalc({ country }) {
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1">
-                {country === 'ca' ? 'HST/GST+PST (%)' : country === 'uk' ? 'VAT already included' : 'Sales Tax (%)'}
+                {country === 'ca' ? 'HST/GST+PST (%)' : (country === 'uk' || country === 'au' || country === 'ie' || country === 'nz') ? 'Tax (included in price)' : 'Sales Tax (%)'}
               </label>
               <input
                 type="number"
@@ -104,7 +107,7 @@ export default function AutoLoanCalc({ country }) {
                 className="cw-input"
                 value={taxRate}
                 min={0}
-                disabled={country === 'uk'}
+                disabled={country === 'uk' || country === 'au' || country === 'ie' || country === 'nz'}
                 onChange={e => setTaxRate(+e.target.value)}
               />
             </div>

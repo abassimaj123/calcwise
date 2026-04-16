@@ -22,11 +22,16 @@
     "step3Title": "Get full breakdown",
     "step3Desc": "See simple results or toggle to detailed view with full amortization."
   },
+  "countryHub": {
+    "financialCalcs": "Financial Calculators",
+    "subtitle": "free calculators — all updated for 2026",
+    "updated": "Updated 2026"
+  },
   "stats": {
     "calculators": "Calculators",
     "countries": "Countries",
     "taxRates": "Tax Rates",
-    "noSignup": "No Signup"
+    "noSignup": "Free"
   },
   "calc": {
     "simple": "Simple",
