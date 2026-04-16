@@ -8,7 +8,6 @@ import { calcIconMap } from '../config/calcIcons'
 const ICON_COLOR = '#1A6AFF'
 const LANGS = [
   { code: 'en', label: 'EN', full: 'English' },
-  { code: 'es', label: 'ES', full: 'Español' },
   { code: 'fr', label: 'FR', full: 'Français' },
 ]
 
@@ -37,10 +36,10 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 bg-dark2/90 backdrop-blur-md border-b border-border-subtle">
+    <nav className="sticky top-0 z-50 bg-white border-b border-slate-200" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
-        <Link to="/" className="text-xl font-display font-bold">
+        <Link to="/" className="text-xl font-display font-bold text-slate-900">
           Calc<span className="text-primary">Wise</span>
         </Link>
 
@@ -55,20 +54,20 @@ export default function Navbar() {
             >
               <Link
                 to={`/${code}`}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/[0.08] text-sm font-medium transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
               >
                 <span className="text-base leading-none">{country.flag}</span>
                 <span>{code.toUpperCase()}</span>
               </Link>
               {activeDropdown === code && (
-                <div className="absolute top-full left-0 mt-1 w-52 bg-dark2 border border-border-subtle rounded-card shadow-xl py-2 z-50">
+                <div className="absolute top-full left-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-card-hover py-2 z-50">
                   {calcsByCountry[code].map(calcKey => {
                     const Icon = calcIconMap[calcKey] || BarChart2
                     return (
                       <Link
                         key={calcKey}
                         to={`/${code}/${calcMeta[calcKey]?.slug}`}
-                        className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-white/[0.08] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
                       >
                         <Icon size={16} color={ICON_COLOR} />
                         <span>{calcMeta[calcKey]?.label}</span>
@@ -87,19 +86,21 @@ export default function Navbar() {
           <div className="relative hidden md:block" ref={langRef}>
             <button
               onClick={() => setLangOpen(v => !v)}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-white/[0.08] text-sm font-medium transition-colors text-cw-gray hover:text-white"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
               {currentLang.label}
               <ChevronDown size={14} className={`transition-transform ${langOpen ? 'rotate-180' : ''}`} />
             </button>
             {langOpen && (
-              <div className="absolute top-full right-0 mt-1 w-36 bg-dark2 border border-border-subtle rounded-card shadow-xl py-2 z-50">
+              <div className="absolute top-full right-0 mt-1 w-36 bg-white border border-slate-200 rounded-xl shadow-card-hover py-2 z-50">
                 {LANGS.map(lang => (
                   <button
                     key={lang.code}
                     onClick={() => switchLang(lang.code)}
-                    className={`w-full text-left px-4 py-2 text-sm hover:bg-white/[0.08] transition-colors ${
-                      lang.code === i18n.language ? 'text-primary' : 'text-cw-gray hover:text-white'
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      lang.code === i18n.language
+                        ? 'text-primary font-semibold bg-primary-light'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
                     {lang.full}
@@ -109,12 +110,12 @@ export default function Navbar() {
             )}
           </div>
 
-          <Link to="/us/mortgage" className="hidden md:block cw-btn text-sm py-2 px-5">
+          <Link to="/us/mortgage" className="hidden md:block cw-btn text-sm">
             {t('nav.getApp')}
           </Link>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/[0.08] text-white text-lg"
+            className="md:hidden p-2 rounded-lg hover:bg-slate-100 text-slate-700 text-lg"
           >
             {mobileOpen ? '✕' : '☰'}
           </button>
@@ -123,9 +124,9 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-dark2 border-t border-border-subtle max-h-[80vh] overflow-y-auto">
+        <div className="md:hidden bg-white border-t border-slate-100 max-h-[80vh] overflow-y-auto">
           {/* Mobile language switcher */}
-          <div className="flex gap-2 px-4 py-3 border-b border-white/[0.05]">
+          <div className="flex gap-2 px-4 py-3 border-b border-slate-100">
             {LANGS.map(lang => (
               <button
                 key={lang.code}
@@ -133,7 +134,7 @@ export default function Navbar() {
                 className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                   lang.code === i18n.language
                     ? 'bg-primary text-white'
-                    : 'bg-white/10 text-cw-gray hover:text-white'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 {lang.label}
@@ -144,7 +145,7 @@ export default function Navbar() {
             <div key={code}>
               <Link
                 to={`/${code}`}
-                className="flex items-center gap-2 px-4 py-3 font-semibold border-b border-white/[0.05]"
+                className="flex items-center gap-2 px-4 py-3 font-semibold text-slate-900 border-b border-slate-100"
                 onClick={() => setMobileOpen(false)}
               >
                 <span>{country.flag}</span>
@@ -157,7 +158,7 @@ export default function Navbar() {
                     <Link
                       key={calcKey}
                       to={`/${code}/${calcMeta[calcKey]?.slug}`}
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-cw-gray hover:text-white"
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-slate-500 hover:text-slate-900"
                       onClick={() => setMobileOpen(false)}
                     >
                       <Icon size={15} color={ICON_COLOR} />

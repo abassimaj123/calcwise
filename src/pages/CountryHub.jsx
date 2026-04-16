@@ -20,20 +20,21 @@ export default function CountryHub({ country }) {
         <title>{c.name} Financial Calculators 2026 | CalcWise</title>
         <meta name="description" content={`Free financial calculators for ${c.name}: mortgage, tax, salary, auto loan and more. Accurate 2026 rates.`} />
         <link rel="canonical" href={`https://calqwise.com/${country}`} />
+        {country === 'ca' && <link rel="alternate" hreflang="fr-ca" href={`https://calqwise.com/ca`} />}
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <div className="text-6xl mb-4">{c.flag}</div>
-          <h1 className="text-4xl font-display font-bold mb-3">
+          <h1 className="text-4xl font-display font-bold mb-3 text-slate-900">
             {c.name} {t('countryHub.financialCalcs')}
           </h1>
-          <p className="text-cw-gray text-lg">
+          <p className="text-slate-500 text-lg">
             {calcs.length} {t('countryHub.subtitle')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {calcs.map(calcKey => {
             const m = calcMeta[calcKey]
             if (!m) return null
@@ -42,14 +43,14 @@ export default function CountryHub({ country }) {
               <Link
                 key={calcKey}
                 to={`/${country}/${m.slug}`}
-                className="cw-card hover:border-primary/40 hover:bg-primary/5 transition-all group flex items-center gap-4"
+                className="bg-white border border-slate-200 hover:border-primary hover:shadow-card-hover rounded-xl p-5 transition-all group flex items-center gap-4"
               >
-                <div className="shrink-0">
-                  <Icon size={24} color={ICON_COLOR} />
+                <div className="shrink-0 w-11 h-11 rounded-lg flex items-center justify-center" style={{ background: '#EFF6FF' }}>
+                  <Icon size={22} color={ICON_COLOR} />
                 </div>
                 <div>
-                  <h2 className="font-semibold group-hover:text-primary transition-colors">{m.label}</h2>
-                  <p className="text-xs text-cw-gray">{currencyLabel} · {t('countryHub.updated')}</p>
+                  <h2 className="font-semibold text-slate-900 group-hover:text-primary transition-colors">{m.label}</h2>
+                  <p className="text-xs text-slate-400 mt-0.5">{currencyLabel} · {t('countryHub.updated')}</p>
                 </div>
               </Link>
             )

@@ -9,6 +9,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
 
 const COLORS = { primary: '#1A6AFF', accent: '#00D4FF', success: '#1D9E75', warn: '#F5C842' }
 
@@ -145,12 +146,91 @@ export default function MortgageCalc({ country }) {
 
   const PIE_COLORS = [COLORS.primary, COLORS.accent, COLORS.warn]
 
+  const otherCountries = Object.entries(countries)
+    .filter(([code]) => code !== country)
+    .map(([code, ct]) => ({ code, flag: ct.flag, name: ct.name }))
+
+  const relatedLinks = [
+    country === 'us' && { to: '/us/refinance', label: 'Refinance US' },
+    country === 'us' && { to: '/us/rent-vs-buy', label: 'Rent vs Buy US' },
+    country === 'us' && { to: '/us/affordability', label: 'Affordability US' },
+    country === 'ca' && { to: '/ca/affordability', label: 'Affordability CA' },
+    country === 'ca' && { to: '/ca/rent-vs-buy', label: 'Rent vs Buy CA' },
+    country === 'uk' && { to: '/uk/stamp-duty', label: 'Stamp Duty UK' },
+    country === 'uk' && { to: '/uk/affordability', label: 'Affordability UK' },
+    { to: `/${country}/tax`, label: `Tax ${country.toUpperCase()}` },
+  ].filter(Boolean)
+
+  const introText = {
+    us: 'Our US mortgage calculator goes beyond the basic monthly payment. We include PMI (when your down payment is under 20%), show your LTV ratio, and display the full amortization schedule — revealing exactly how much of every payment goes to principal vs. interest. Your bank\'s calculator won\'t show you how much PMI really costs over the life of the loan.',
+    ca: 'Our Canadian mortgage calculator includes CMHC mortgage insurance (required when down payment is under 20%), the OSFI stress test at qualifying rate, and bi-weekly payment options. See the true cost of your mortgage including all fees your bank might not advertise.',
+    uk: 'Our UK mortgage calculator includes Stamp Duty Land Tax (SDLT) using April 2025 rates, LTV ratio, and FCA stress test rate. See the full cost of buying property in the UK, including the hidden upfront tax costs that catch many buyers by surprise.',
+    au: 'Our Australian mortgage calculator includes Lenders Mortgage Insurance (LMI) when your LVR exceeds 80%, giving you the real picture of what homeownership costs — not just the repayment amount.',
+    ie: 'Our Irish mortgage calculator uses 2026 ECB-influenced rates and shows your true monthly repayment. Compare with rent costs to make an informed decision about buying property in Ireland.',
+    nz: 'Our New Zealand mortgage calculator helps you understand the full cost of home ownership in 2026. See how your interest rate, loan term, and deposit affect your weekly and fortnightly payments.',
+  }
+
+  const hiddenCostLabel = {
+    us: result?.pmi > 0 ? `PMI adds ${fmtD(result.pmi)}/mo until LTV < 80%` : 'PMI applies if down payment < 20%',
+    ca: 'CMHC premium adds to your mortgage balance',
+    uk: result?.sdlt > 0 ? `SDLT: ${fmt(result.sdlt)} due at completion` : 'SDLT may apply based on purchase price',
+    au: result?.lmi > 0 ? `LMI: ${fmt(result.lmi)} if LVR > 80%` : 'LMI applies if LVR > 80%',
+    ie: 'Solicitor fees, valuation, and survey not included',
+    nz: 'Legal fees and LIM report costs not included',
+  }
+
+  const faqs = {
+    us: [
+      { q: 'What is included in my monthly mortgage payment?', a: 'Your monthly payment (P&I) covers principal repayment and interest. You may also owe PMI (if LTV > 80%), property tax (~1.1%/yr), and homeowner\'s insurance (~$150/mo) — which this calculator also estimates.' },
+      { q: 'How is PMI calculated?', a: 'PMI (Private Mortgage Insurance) applies when your down payment is less than 20%. It\'s typically 0.5%–1% of the loan amount annually. It automatically drops off once your LTV reaches 80%.' },
+      { q: 'What is a good debt-to-income ratio for a mortgage?', a: 'Lenders typically want your housing costs (PITI) below 28% of gross income (front-end DTI), and total debts below 36%–43% (back-end DTI) depending on loan type.' },
+    ],
+    ca: [
+      { q: 'What is the CMHC mortgage insurance?', a: 'CMHC insurance is mandatory when your down payment is between 5%–19.99% of the purchase price. The premium ranges from 2.8%–4% of the insured mortgage amount and is added to your balance.' },
+      { q: 'What is the mortgage stress test in Canada?', a: 'The OSFI stress test requires you to qualify at the higher of your contract rate + 2%, or 5.25%. This ensures you can afford payments if rates rise.' },
+      { q: 'What is the maximum amortization in Canada?', a: 'For insured mortgages (down payment < 20%), the maximum amortization is 25 years. For uninsured mortgages, lenders may offer up to 30 years.' },
+    ],
+    uk: [
+      { q: 'What is Stamp Duty (SDLT)?', a: 'Stamp Duty Land Tax is a tax on property purchases in England and Northern Ireland. Rates start at 0% up to £250,000 and rise to 12% above £1.5M. First-time buyers get relief up to £425,000.' },
+      { q: 'What is the LTV ratio?', a: 'Loan-to-Value (LTV) is your mortgage amount as a percentage of the property value. Most lenders require at least 5%-10% deposit (90-95% LTV max). Lower LTV = better interest rates.' },
+      { q: 'What is the FCA stress test?', a: 'UK mortgage lenders must verify you can afford repayments if rates rise by 3%. This stress test rate is applied to ensure affordability under adverse conditions.' },
+    ],
+    au: [
+      { q: 'What is LMI (Lenders Mortgage Insurance)?', a: 'LMI protects the lender if you default. It applies when your LVR exceeds 80% (deposit less than 20%). The cost is typically 1%–3% of the loan amount and can be added to your mortgage.' },
+      { q: 'What is the serviceability buffer?', a: 'APRA requires lenders to assess loan serviceability at the higher of the interest rate + 3% buffer or a floor rate. This ensures you can afford repayments if rates rise.' },
+      { q: 'What is the First Home Owner Grant (FHOG)?', a: 'FHOG is a government grant for eligible first-home buyers. The amount varies by state (typically $10,000–$30,000) and applies to new homes only.' },
+    ],
+    ie: [
+      { q: 'What is the Central Bank lending limit in Ireland?', a: 'The Central Bank of Ireland limits mortgages to 3.5× your gross income for owner-occupier purchases, with a 20% deposit required (10% for first-time buyers on amounts up to €500,000).' },
+      { q: 'What additional costs should I budget for?', a: 'Beyond the mortgage, budget for solicitor fees (€1,500–€2,500), valuation (€150–€300), survey (€400–€600), and stamp duty (1% on residential property).' },
+      { q: 'What is the Mortgage to Rent scheme?', a: 'The MTR scheme allows homeowners in arrears to remain in their home as social housing tenants while the lender or a housing body takes ownership. It\'s a last-resort option for those in mortgage difficulty.' },
+    ],
+    nz: [
+      { q: 'What is the LVR restriction in New Zealand?', a: 'RBNZ LVR restrictions limit high-LVR lending. Owner-occupiers need at least 20% deposit, investors need 35%. Some exceptions exist for new builds and first-home buyers.' },
+      { q: 'What are typical mortgage rates in NZ in 2026?', a: 'Rates vary by term and lender. Fixed 1-year rates are typically 6.5%–7.5% in 2026, while floating rates may be higher. Shopping across lenders can save thousands.' },
+      { q: 'What other costs are involved in buying a home in NZ?', a: 'Budget for legal fees ($1,500–$2,500), building inspection ($400–$800), LIM report ($200–$400), and potential KiwiSaver withdrawal for your deposit.' },
+    ],
+  }
+
   return (
     <>
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDesc} />
         <link rel="canonical" href={`https://calqwise.com/${country}/mortgage`} />
+        {country === 'ca' && <link rel="alternate" hreflang="fr-ca" href="https://calqwise.com/ca/mortgage" />}
+        <link rel="alternate" hreflang="en" href={`https://calqwise.com/${country}/mortgage`} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": `${c.name} Mortgage Calculator`,
+          "applicationCategory": "FinanceApplication",
+          "applicationSubCategory": "Financial Calculator",
+          "operatingSystem": "Web",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": c.currency },
+          "description": pageDesc,
+          "url": `https://calqwise.com/${country}/mortgage`,
+        })}</script>
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
@@ -162,6 +242,8 @@ export default function MortgageCalc({ country }) {
             Calculate your monthly payment, total interest and amortization schedule.
           </p>
         </div>
+
+        <CalcIntro intro={introText[country] || introText.us} hiddenCost={result ? hiddenCostLabel[country] : null} />
 
         {/* Inputs */}
         <div className="cw-card mb-6">
@@ -313,6 +395,10 @@ export default function MortgageCalc({ country }) {
             Enter valid values above to see your results.
           </div>
         )}
+
+        <CalcFAQ faqs={faqs[country] || faqs.us} />
+        <CalcAlsoAvailable calcSlug="mortgage" calcLabel="Mortgage" countries={otherCountries} />
+        <CalcRelated links={relatedLinks} />
 
         <AppDownloadBanner calcKey="mortgage" country={country} />
         <AdSenseSlot format="rectangle" />

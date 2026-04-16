@@ -4,9 +4,9 @@ import { adsense } from '../config/adsense'
 const isDev = import.meta.env.DEV
 
 const DIM = {
-  rectangle:   { h: 'h-[250px]', w: 'w-full max-w-sm', label: '336×280' },
-  leaderboard: { h: 'h-[90px]',  w: 'w-full max-w-3xl', label: '728×90' },
-  responsive:  { h: 'h-[200px]', w: 'w-full', label: 'Responsive' },
+  rectangle:   { minH: '250px', w: 'w-full max-w-sm', label: '336×280' },
+  leaderboard: { minH: '90px',  w: 'w-full max-w-3xl', label: '728×90' },
+  responsive:  { minH: '200px', w: 'w-full', label: 'Responsive' },
 }
 
 export default function AdSenseSlot({ format = 'rectangle', className = '' }) {
@@ -22,16 +22,16 @@ export default function AdSenseSlot({ format = 'rectangle', className = '' }) {
   if (isDev) {
     return (
       <div
-        className={`flex flex-col items-center justify-center ${dim.h} ${dim.w} mx-auto my-6 rounded-lg ${className}`}
-        style={{ border: '2px dashed #F5C842', background: 'rgba(245, 200, 66, 0.08)' }}
+        className={`flex flex-col items-center justify-center ${dim.w} mx-auto my-6 rounded-lg ${className}`}
+        style={{ minHeight: dim.minH, border: '1px dashed #CBD5E1', background: '#F8FAFC' }}
       >
-        <span style={{ color: '#F5C842' }} className="text-xs font-medium">AdSense · {format} · {dim.label}</span>
+        <span className="text-xs text-slate-400">AdSense · {format} · {dim.label}</span>
       </div>
     )
   }
 
   return (
-    <div className={`my-6 ${className}`}>
+    <div className={`my-6 ${className}`} style={{ display: 'block', minHeight: dim.minH }}>
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
