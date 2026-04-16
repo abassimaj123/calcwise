@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "getApp": "Get the App",
+    "lang": "EN"
+  },
+  "hero": {
+    "title": "Free Financial Calculators",
+    "titleHighlight": "for 6 Countries",
+    "subtitle": "Mortgage payments, taxes, salary, auto loans and more. Accurate, transparent, free. What your bank doesn't show you.",
+    "cta_mortgage": "Mortgage Calculator",
+    "cta_tax": "Tax Calculator"
+  },
+  "home": {
+    "chooseCountry": "Choose Your Country",
+    "calculators": "calculators",
+    "popular": "Most Popular Calculators",
+    "howItWorks": "How It Works",
+    "step1Title": "Choose your country",
+    "step1Desc": "Select US, CA, UK, AU, IE or NZ for country-specific calculations.",
+    "step2Title": "Enter your numbers",
+    "step2Desc": "Input your details. All calculations happen instantly in your browser.",
+    "step3Title": "Get full breakdown",
+    "step3Desc": "See simple results or toggle to detailed view with full amortization."
+  },
+  "stats": {
+    "calculators": "Calculators",
+    "countries": "Countries",
+    "taxRates": "Tax Rates",
+    "noSignup": "No Signup"
+  },
+  "calc": {
+    "simple": "Simple",
+    "detailed": "Detailed",
+    "monthlyPayment": "Monthly Payment",
+    "totalInterest": "Total Interest",
+    "totalCost": "Total Cost",
+    "netAnnual": "Net Annual Income",
+    "monthlyTakeHome": "Monthly Take-Home",
+    "effectiveRate": "Effective Tax Rate",
+    "enterValid": "Enter valid values above to see your results.",
+    "enterIncome": "Enter your annual income above to see the breakdown."
+  },
+  "mortgage": {
+    "title": "Mortgage Calculator",
+    "desc": "Calculate your monthly payment, total interest and amortization schedule.",
+    "homePrice": "Home Price",
+    "downPayment": "Down Payment",
+    "interestRate": "Annual Interest Rate (%)",
+    "loanTerm": "Loan Term (years)",
+    "purchasePrice": "Purchase Price",
+    "loanAmount": "Loan Amount",
+    "ltvRatio": "LTV Ratio",
+    "totalPayments": "Total of All Payments",
+    "amortTitle": "Principal vs Interest Over Time",
+    "pieTitle": "Total Cost Breakdown"
+  },
+  "tax": {
+    "title": "Tax Calculator",
+    "desc": "Calculate your take-home pay and effective tax rate. Updated for 2025-26.",
+    "annualIncome": "Annual Gross Income",
+    "enterGross": "Enter your gross (before-tax) annual income",
+    "pieTitle": "Income Distribution",
+    "barTitle": "Tax Components",
+    "disclaimer": "These are estimates based on standard deductions and average rates. Actual tax may differ based on filing status, deductions, credits, and jurisdiction. Consult a tax professional for advice."
+  },
+  "footer": {
+    "tagline": "Free financial calculators for 6 countries. What your bank doesn't show you.",
+    "countries": "Countries",
+    "topCalcs": "Top Calculators",
+    "legal": "Legal",
+    "disclaimer": "For informational purposes only. Not financial advice.",
+    "covering": "Covering US · CA · UK · AU · IE · NZ"
+  },
+  "download": {
+    "title": "Get the full experience on mobile",
+    "ios": "App Store",
+    "android": "Google Play"
+  }
+}

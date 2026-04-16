@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "getApp": "Obtener la App",
+    "lang": "ES"
+  },
+  "hero": {
+    "title": "Calculadoras Financieras Gratuitas",
+    "titleHighlight": "para 6 Países",
+    "subtitle": "Hipotecas, impuestos, salario, préstamos de auto y más. Preciso, transparente, gratis. Lo que tu banco no te muestra.",
+    "cta_mortgage": "Calculadora de Hipoteca",
+    "cta_tax": "Calculadora de Impuestos"
+  },
+  "home": {
+    "chooseCountry": "Elige tu País",
+    "calculators": "calculadoras",
+    "popular": "Calculadoras Más Populares",
+    "howItWorks": "Cómo Funciona",
+    "step1Title": "Elige tu país",
+    "step1Desc": "Selecciona US, CA, UK, AU, IE o NZ para cálculos específicos de cada país.",
+    "step2Title": "Ingresa tus datos",
+    "step2Desc": "Ingresa tus datos. Todos los cálculos ocurren al instante en tu navegador.",
+    "step3Title": "Obtén el desglose completo",
+    "step3Desc": "Ve resultados simples o cambia a vista detallada con amortización completa."
+  },
+  "stats": {
+    "calculators": "Calculadoras",
+    "countries": "Países",
+    "taxRates": "Tasas 2026",
+    "noSignup": "Sin Registro"
+  },
+  "calc": {
+    "simple": "Simple",
+    "detailed": "Detallado",
+    "monthlyPayment": "Pago Mensual",
+    "totalInterest": "Interés Total",
+    "totalCost": "Costo Total",
+    "netAnnual": "Ingreso Anual Neto",
+    "monthlyTakeHome": "Ingreso Mensual Neto",
+    "effectiveRate": "Tasa Impositiva Efectiva",
+    "enterValid": "Ingresa valores válidos arriba para ver tus resultados.",
+    "enterIncome": "Ingresa tu ingreso anual arriba para ver el desglose."
+  },
+  "mortgage": {
+    "title": "Calculadora de Hipoteca",
+    "desc": "Calcula tu pago mensual, interés total y tabla de amortización.",
+    "homePrice": "Precio de la Vivienda",
+    "downPayment": "Pago Inicial",
+    "interestRate": "Tasa de Interés Anual (%)",
+    "loanTerm": "Plazo del Préstamo (años)",
+    "purchasePrice": "Precio de Compra",
+    "loanAmount": "Monto del Préstamo",
+    "ltvRatio": "Ratio LTV",
+    "totalPayments": "Total de Pagos",
+    "amortTitle": "Capital vs Interés a lo Largo del Tiempo",
+    "pieTitle": "Desglose del Costo Total"
+  },
+  "tax": {
+    "title": "Calculadora de Impuestos",
+    "desc": "Calcula tu sueldo neto y tasa impositiva efectiva. Actualizado 2025-26.",
+    "annualIncome": "Ingreso Bruto Anual",
+    "enterGross": "Ingresa tu ingreso anual bruto (antes de impuestos)",
+    "pieTitle": "Distribución de Ingresos",
+    "barTitle": "Componentes del Impuesto",
+    "disclaimer": "Estas son estimaciones basadas en deducciones estándar y tasas promedio. El impuesto real puede diferir. Consulte a un profesional fiscal."
+  },
+  "footer": {
+    "tagline": "Calculadoras financieras gratuitas para 6 países. Lo que tu banco no te muestra.",
+    "countries": "Países",
+    "topCalcs": "Calculadoras Principales",
+    "legal": "Legal",
+    "disclaimer": "Solo para fines informativos. No es asesoría financiera.",
+    "covering": "Cubriendo US · CA · UK · AU · IE · NZ"
+  },
+  "download": {
+    "title": "Obtén la experiencia completa en móvil",
+    "ios": "App Store",
+    "android": "Google Play"
+  }
+}

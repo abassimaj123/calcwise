@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "getApp": "Obtenir l'App",
+    "lang": "FR"
+  },
+  "hero": {
+    "title": "Calculateurs Financiers Gratuits",
+    "titleHighlight": "pour 6 Pays",
+    "subtitle": "Hypothèques, impôts, salaire, prêts auto et plus. Précis, transparent, gratuit. Ce que votre banque ne vous montre pas.",
+    "cta_mortgage": "Calculateur Hypothécaire",
+    "cta_tax": "Calculateur d'Impôts"
+  },
+  "home": {
+    "chooseCountry": "Choisissez votre Pays",
+    "calculators": "calculateurs",
+    "popular": "Calculateurs les Plus Populaires",
+    "howItWorks": "Comment Ça Marche",
+    "step1Title": "Choisissez votre pays",
+    "step1Desc": "Sélectionnez US, CA, UK, AU, IE ou NZ pour des calculs spécifiques au pays.",
+    "step2Title": "Entrez vos chiffres",
+    "step2Desc": "Saisissez vos données. Tous les calculs se font instantanément dans votre navigateur.",
+    "step3Title": "Obtenez le détail complet",
+    "step3Desc": "Voyez des résultats simples ou basculez vers la vue détaillée avec amortissement complet."
+  },
+  "stats": {
+    "calculators": "Calculateurs",
+    "countries": "Pays",
+    "taxRates": "Taux 2026",
+    "noSignup": "Sans Inscription"
+  },
+  "calc": {
+    "simple": "Simple",
+    "detailed": "Détaillé",
+    "monthlyPayment": "Paiement Mensuel",
+    "totalInterest": "Intérêt Total",
+    "totalCost": "Coût Total",
+    "netAnnual": "Revenu Annuel Net",
+    "monthlyTakeHome": "Revenu Mensuel Net",
+    "effectiveRate": "Taux d'Imposition Effectif",
+    "enterValid": "Entrez des valeurs valides ci-dessus pour voir vos résultats.",
+    "enterIncome": "Entrez votre revenu annuel ci-dessus pour voir le détail."
+  },
+  "mortgage": {
+    "title": "Calculateur Hypothécaire",
+    "desc": "Calculez votre paiement mensuel, l'intérêt total et le tableau d'amortissement.",
+    "homePrice": "Prix du Logement",
+    "downPayment": "Apport Initial",
+    "interestRate": "Taux d'Intérêt Annuel (%)",
+    "loanTerm": "Durée du Prêt (ans)",
+    "purchasePrice": "Prix d'Achat",
+    "loanAmount": "Montant du Prêt",
+    "ltvRatio": "Ratio LTV",
+    "totalPayments": "Total des Paiements",
+    "amortTitle": "Capital vs Intérêt dans le Temps",
+    "pieTitle": "Répartition du Coût Total"
+  },
+  "tax": {
+    "title": "Calculateur d'Impôts",
+    "desc": "Calculez votre salaire net et votre taux d'imposition effectif. Mis à jour 2025-26.",
+    "annualIncome": "Revenu Brut Annuel",
+    "enterGross": "Entrez votre revenu annuel brut (avant impôts)",
+    "pieTitle": "Répartition des Revenus",
+    "barTitle": "Composantes de l'Impôt",
+    "disclaimer": "Il s'agit d'estimations basées sur des déductions standard et des taux moyens. L'impôt réel peut différer. Consultez un professionnel fiscal."
+  },
+  "footer": {
+    "tagline": "Calculateurs financiers gratuits pour 6 pays. Ce que votre banque ne vous montre pas.",
+    "countries": "Pays",
+    "topCalcs": "Meilleurs Calculateurs",
+    "legal": "Légal",
+    "disclaimer": "À titre informatif uniquement. Pas un conseil financier.",
+    "covering": "Couvre US · CA · UK · AU · IE · NZ"
+  },
+  "download": {
+    "title": "Profitez de l'expérience complète sur mobile",
+    "ios": "App Store",
+    "android": "Google Play"
+  }
+}
