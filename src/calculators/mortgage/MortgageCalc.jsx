@@ -1387,7 +1387,7 @@ export default function MortgageCalc({ country }) {
             {optOpen && (
               <div className="mt-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-3">{t('mortgage.monthlyCostEstimates')}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3">
                   {optionDefs.map(opt => {
                     const enabled = !!optEnabled[opt.key]
                     const val = optValues[opt.key] ?? opt.defaultVal

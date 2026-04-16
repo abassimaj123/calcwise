@@ -1,7 +1,32 @@
 {
   "nav": {
     "getApp": "Get the App",
-    "lang": "EN"
+    "lang": "EN",
+    "country_us": "United States",
+    "country_ca": "Canada",
+    "country_uk": "United Kingdom",
+    "country_au": "Australia",
+    "country_ie": "Ireland",
+    "country_nz": "New Zealand",
+    "mortgage": "Mortgage",
+    "tax": "Tax",
+    "autoloan": "Auto Loan",
+    "salary": "Salary",
+    "rentvsbuy": "Rent vs Buy",
+    "rideprofit": "Ride Profit",
+    "loanpayoff": "Loan Payoff",
+    "creditcard": "Credit Card",
+    "heloc": "HELOC",
+    "studentloan": "Student Loan",
+    "propertyroi": "Property ROI",
+    "refinance": "Refinance",
+    "affordability": "Affordability",
+    "stampduty": "Stamp Duty",
+    "savings": "Savings",
+    "retirement": "Retirement",
+    "networth": "Net Worth",
+    "debtpayoff": "Debt Payoff",
+    "budget": "Budget"
   },
   "hero": {
     "title": "Financial Calculators That Show",

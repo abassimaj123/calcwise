@@ -41,7 +41,7 @@ export default function Home() {
   const { t } = useTranslation()
 
   const stats = [
-    { value: '47+',  label: t('stats.calculators') },
+    { value: '57+',  label: t('stats.calculators') },
     { value: '6',    label: t('stats.countries') },
     { value: '2026', label: t('stats.taxRates') },
     { value: t('stats.noSignup'), label: null },

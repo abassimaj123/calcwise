@@ -1,7 +1,32 @@
 {
   "nav": {
     "getApp": "Télécharger l'app",
-    "lang": "FR"
+    "lang": "FR",
+    "country_us": "États-Unis",
+    "country_ca": "Canada",
+    "country_uk": "Royaume-Uni",
+    "country_au": "Australie",
+    "country_ie": "Irlande",
+    "country_nz": "Nouvelle-Zélande",
+    "mortgage": "Hypothèque",
+    "tax": "Impôts",
+    "autoloan": "Prêt auto",
+    "salary": "Salaire",
+    "rentvsbuy": "Louer ou acheter",
+    "rideprofit": "Revenus Uber",
+    "loanpayoff": "Remboursement prêt",
+    "creditcard": "Carte de crédit",
+    "heloc": "HELOC",
+    "studentloan": "Prêt étudiant",
+    "propertyroi": "Rendement locatif",
+    "refinance": "Refinancement",
+    "affordability": "Capacité d'emprunt",
+    "stampduty": "Droits de timbre",
+    "savings": "Épargne",
+    "retirement": "Retraite",
+    "networth": "Patrimoine net",
+    "debtpayoff": "Désendettement",
+    "budget": "Budget"
   },
   "hero": {
     "title": "Calculateurs Financiers Qui Révèlent",

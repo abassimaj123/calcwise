@@ -1,7 +1,32 @@
 {
   "nav": {
     "getApp": "Obtener la App",
-    "lang": "ES"
+    "lang": "ES",
+    "country_us": "Estados Unidos",
+    "country_ca": "Canadá",
+    "country_uk": "Reino Unido",
+    "country_au": "Australia",
+    "country_ie": "Irlanda",
+    "country_nz": "Nueva Zelanda",
+    "mortgage": "Hipoteca",
+    "tax": "Impuestos",
+    "autoloan": "Préstamo auto",
+    "salary": "Salario",
+    "rentvsbuy": "Alquilar vs comprar",
+    "rideprofit": "Ingreso conductor",
+    "loanpayoff": "Amortización",
+    "creditcard": "Tarjeta de crédito",
+    "heloc": "HELOC",
+    "studentloan": "Préstamo estudiantil",
+    "propertyroi": "ROI inmobiliario",
+    "refinance": "Refinanciamiento",
+    "affordability": "Capacidad de compra",
+    "stampduty": "Impuesto de timbre",
+    "savings": "Ahorros",
+    "retirement": "Jubilación",
+    "networth": "Patrimonio neto",
+    "debtpayoff": "Pago de deudas",
+    "budget": "Presupuesto"
   },
   "hero": {
     "title": "Calculadoras Financieras Que Revelan",

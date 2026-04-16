@@ -9,6 +9,7 @@ const ICON_COLOR = '#1A6AFF'
 const LANGS = [
   { code: 'en', label: 'EN', full: 'English' },
   { code: 'fr', label: 'FR', full: 'Français' },
+  { code: 'es', label: 'ES', full: 'Español' },
 ]
 
 export default function Navbar() {
@@ -72,7 +73,7 @@ export default function Navbar() {
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                {country.name}
+                {t(`nav.country_${code}`, { defaultValue: country.name })}
                 <ChevronDown size={13} className={`ml-1 transition-transform ${activeDropdown === code ? 'rotate-180' : ''}`} />
               </Link>
               {activeDropdown === code && (
@@ -91,7 +92,7 @@ export default function Navbar() {
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-blue-50 hover:text-primary transition-colors"
                       >
                         <Icon size={15} color={ICON_COLOR} />
-                        <span>{calcMeta[calcKey]?.label}</span>
+                        <span>{t(`nav.${calcKey}`, { defaultValue: calcMeta[calcKey]?.label })}</span>
                       </Link>
                     )
                   })}
@@ -174,7 +175,7 @@ export default function Navbar() {
                 onClick={() => setMobileOpen(false)}
               >
                 <span className="text-xs font-bold text-primary bg-blue-50 px-2 py-0.5 rounded">{code.toUpperCase()}</span>
-                <span>{country.name}</span>
+                <span>{t(`nav.country_${code}`, { defaultValue: country.name })}</span>
               </Link>
               <div className="pl-4">
                 {calcsByCountry[code].map(calcKey => {
@@ -187,7 +188,7 @@ export default function Navbar() {
                       onClick={() => setMobileOpen(false)}
                     >
                       <Icon size={15} color={ICON_COLOR} />
-                      <span>{calcMeta[calcKey]?.label}</span>
+                      <span>{t(`nav.${calcKey}`, { defaultValue: calcMeta[calcKey]?.label })}</span>
                     </Link>
                   )
                 })}
