@@ -142,6 +142,12 @@ export default function MortgageCalc({ country }) {
   const stressRate = Math.max(rate + 2, 5.25)
   const termOptions = [10, 15, 20, 25, 30].filter(y => country !== 'ca' || y <= 25)
 
+  const rateHint = country === 'us'
+    ? '2026 avg: 6.8%'
+    : country === 'ca'
+    ? '2026 avg: 5.4%'
+    : '2026 avg: 4.8% UK'
+
   const pageTitle = `${c.name} Mortgage Calculator 2026 — Monthly Payment | CalcWise`
   const pageDesc = `Free ${c.name} mortgage calculator. Instant monthly payment, total interest, amortization.${country === 'uk' ? ' SDLT included.' : country === 'ca' ? ' CMHC & stress test.' : ''} Updated 2026.`
 
@@ -248,24 +254,54 @@ export default function MortgageCalc({ country }) {
 
         {/* Inputs */}
         <div className="cw-card mb-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Home Price ({sym})</label>
-              <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={sym} />
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Down Payment ({sym}) — {downPct}%</label>
-              <NumericInput value={down} onChange={setDown} min={0} step={1000} prefix={sym} />
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Annual Interest Rate (%)</label>
-              <NumericInput value={rate} onChange={setRate} min={0} step={0.1} suffix="%" />
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Loan Term (years)</label>
-              <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
-                {termOptions.map(y => <option key={y} value={y}>{y} years</option>)}
-              </select>
+          {/* Property section */}
+          <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">Property Details</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <NumericInput
+              label={`Home Price (${sym})`}
+              value={price}
+              onChange={setPrice}
+              min={50000}
+              max={2000000}
+              step={5000}
+              prefix={sym}
+              showSlider
+              hint="Median 2026: $420k US · CA$650k · £295k UK"
+            />
+            <NumericInput
+              label={`Down Payment (${sym}) — ${downPct}%`}
+              value={down}
+              onChange={setDown}
+              min={0}
+              max={Math.min(price, 500000)}
+              step={1000}
+              prefix={sym}
+              showSlider
+              hint="Min: 3.5% FHA · 5% conventional · 20% avoids PMI"
+            />
+          </div>
+
+          {/* Financing section */}
+          <div className="border-t border-slate-100 mt-5 pt-5">
+            <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">Financing</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <NumericInput
+                label="Interest Rate (%)"
+                value={rate}
+                onChange={setRate}
+                min={2}
+                max={12}
+                step={0.05}
+                suffix="%"
+                showSlider
+                hint={rateHint}
+              />
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Loan Term (years)</label>
+                <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
+                  {termOptions.map(y => <option key={y} value={y}>{y} years</option>)}
+                </select>
+              </div>
             </div>
           </div>
 

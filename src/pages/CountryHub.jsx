@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { countries, calcsByCountry, calcMeta } from '../config/countries'
 import { calcIconMap } from '../config/calcIcons'
 import AdSenseSlot from '../components/AdSenseSlot'
+import CountryFlag from '../components/CountryFlag'
 
 const ICON_COLOR = '#1A6AFF'
 
@@ -55,7 +56,9 @@ export default function CountryHub({ country }) {
         style={{ background: 'linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%)' }}
       >
         <div className="max-w-3xl mx-auto">
-          <div className="text-7xl mb-4 leading-none select-none">{c.flag}</div>
+          <div className="flex justify-center mb-4">
+            <CountryFlag code={country} size="xl" />
+          </div>
 
           <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-3 leading-tight">
             {c.name}{' '}

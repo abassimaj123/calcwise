@@ -89,6 +89,12 @@ export default function AutoLoanCalc({ country }) {
     balance: Math.round(r.balance),
   }))
 
+  const aprHint = country === 'us'
+    ? '2026 avg: 7.5%'
+    : country === 'ca'
+    ? '2026 avg: 6.9%'
+    : '2026 avg: 8%'
+
   const pageTitle = `${c.name} Auto Loan Calculator 2026 | Monthly Payment | CalcWise`
 
   return (
@@ -117,36 +123,72 @@ export default function AutoLoanCalc({ country }) {
         </div>
 
         <div className="cw-card mb-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Vehicle Price ({c.symbol})</label>
-              <NumericInput value={price} onChange={setPrice} min={0} step={1000} prefix={c.symbol} />
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Down Payment ({c.symbol})</label>
-              <NumericInput value={down} onChange={setDown} min={0} step={1000} prefix={c.symbol} />
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Trade-In Value ({c.symbol})</label>
-              <NumericInput value={tradeIn} onChange={setTradeIn} min={0} step={1000} prefix={c.symbol} />
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">APR (%)</label>
-              <NumericInput value={apr} onChange={setApr} min={0} step={0.1} suffix="%" />
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">Loan Term</label>
-              <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
-                {termOptions.map(t => (
-                  <option key={t} value={t}>{t} months ({(t / 12).toFixed(1)} yr)</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs text-cw-gray mb-1">
-                {country === 'ca' ? 'HST/GST+PST (%)' : (country === 'uk' || country === 'au' || country === 'ie' || country === 'nz') ? 'Tax (included in price)' : 'Sales Tax (%)'}
-              </label>
-              <NumericInput value={taxRate} onChange={setTaxRate} min={0} step={0.1} suffix="%" />
+          {/* Vehicle Details section */}
+          <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">Vehicle Details</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <NumericInput
+              label={`Vehicle Price (${c.symbol})`}
+              value={price}
+              onChange={setPrice}
+              min={5000}
+              max={150000}
+              step={1000}
+              prefix={c.symbol}
+              showSlider
+              hint="Average new car: $48k US · $55k CA · £35k UK"
+            />
+            <NumericInput
+              label={`Down Payment (${c.symbol})`}
+              value={down}
+              onChange={setDown}
+              min={0}
+              max={50000}
+              step={500}
+              prefix={c.symbol}
+              showSlider
+              hint="Recommended: 10-20% of vehicle price"
+            />
+            <NumericInput
+              label={`Trade-In Value (${c.symbol})`}
+              value={tradeIn}
+              onChange={setTradeIn}
+              min={0}
+              max={30000}
+              step={500}
+              prefix={c.symbol}
+              showSlider
+            />
+          </div>
+
+          {/* Financing section */}
+          <div className="border-t border-slate-100 mt-5 pt-5">
+            <h3 className="font-semibold text-slate-700 text-sm mb-4 uppercase tracking-wider">Financing</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <NumericInput
+                label="APR (%)"
+                value={apr}
+                onChange={setApr}
+                min={2}
+                max={25}
+                step={0.1}
+                suffix="%"
+                showSlider
+                hint={aprHint}
+              />
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Loan Term</label>
+                <select className="cw-input" value={term} onChange={e => setTerm(+e.target.value)}>
+                  {termOptions.map(t => (
+                    <option key={t} value={t}>{t} months ({(t / 12).toFixed(1)} yr)</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                  {country === 'ca' ? 'HST/GST+PST (%)' : (country === 'uk' || country === 'au' || country === 'ie' || country === 'nz') ? 'Tax (included in price)' : 'Sales Tax (%)'}
+                </label>
+                <NumericInput value={taxRate} onChange={setTaxRate} min={0} step={0.1} suffix="%" />
+              </div>
             </div>
           </div>
         </div>

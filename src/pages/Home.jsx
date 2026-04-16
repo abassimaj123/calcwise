@@ -8,6 +8,7 @@ import {
 import { countries, calcsByCountry, calcMeta } from '../config/countries'
 import { calcIconMap } from '../config/calcIcons'
 import AdSenseSlot from '../components/AdSenseSlot'
+import CountryFlag from '../components/CountryFlag'
 
 const ICON_COLOR = '#1A6AFF'
 
@@ -151,7 +152,9 @@ export default function Home() {
                 to={`/${code}`}
                 className="bg-white border border-slate-200 hover:border-primary hover:shadow-card-hover rounded-2xl p-5 text-center transition-all hover:scale-105 group"
               >
-                <div className="text-5xl mb-3 leading-none">{c.flag}</div>
+                <div className="flex justify-center mb-3">
+                  <CountryFlag code={code} size="lg" />
+                </div>
                 <div className="font-semibold text-sm text-slate-900 group-hover:text-primary transition-colors">
                   {c.name}
                 </div>

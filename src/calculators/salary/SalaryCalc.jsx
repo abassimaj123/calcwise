@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import { countries } from '../../config/countries'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -7,27 +8,83 @@ import NumericInput from '../../components/NumericInput'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
 
-// Reuse tax logic inline (simplified)
-function calcTax(gross, country) {
+// ---------------------------------------------------------------------------
+// Country-specific optional deductions
+// ---------------------------------------------------------------------------
+const COUNTRY_DEDUCTIONS = {
+  us: [
+    { key: '401k',   label: '401(k) Contribution',   hint: 'Pre-tax · 2026 max: $23,000',          preTax: true,  step: 500 },
+    { key: 'health', label: 'Health Insurance',       hint: 'Pre-tax employer plan premium',         preTax: true,  step: 50  },
+    { key: 'hsa',    label: 'HSA Contribution',       hint: 'Pre-tax · 2026 max: $4,150',            preTax: true,  step: 100 },
+    { key: 'union',  label: 'Union Dues',             hint: 'Post-tax · varies by local',            preTax: false, step: 10  },
+    { key: 'life',   label: 'Life / Disability Ins.', hint: 'Post-tax supplemental',                 preTax: false, step: 10  },
+  ],
+  ca: [
+    { key: 'rrsp',     label: 'Cotisation REER',          hint: 'Avant impôt · réduit revenu imposable', preTax: true,  step: 500 },
+    { key: 'pension',  label: 'Régime de retraite (RPP)', hint: 'Avant impôt · pension entreprise',      preTax: true,  step: 100 },
+    { key: 'groupins', label: 'Assurance collective',      hint: 'Après impôt · santé/vie/dentaire',     preTax: false, step: 20  },
+    { key: 'union',    label: 'Cotisation syndicale',      hint: 'Après impôt · déductible déclaration', preTax: false, step: 10  },
+    { key: 'club',     label: 'Club social / loisirs',     hint: 'Après impôt · activités parrainées',   preTax: false, step: 5   },
+    { key: 'parking',  label: 'Stationnement / transport', hint: 'Avant impôt · laissez-passer commun',  preTax: true,  step: 20  },
+  ],
+  uk: [
+    { key: 'pension',     label: 'Pension Contribution',     hint: 'Pre-tax · typical 5% employee',   preTax: true,  step: 50 },
+    { key: 'healthins',   label: 'Private Health Insurance', hint: 'Post-tax · BUPA, AXA etc.',        preTax: false, step: 20 },
+    { key: 'union',       label: 'Union Dues',               hint: 'Post-tax · TUC affiliated',        preTax: false, step: 5  },
+    { key: 'studentloan', label: 'Student Loan Repayment',   hint: 'Post-tax · Plan 1/2',              preTax: false, step: 20 },
+    { key: 'cycle',       label: 'Cycle to Work Scheme',     hint: 'Pre-tax salary sacrifice',         preTax: true,  step: 10 },
+  ],
+  au: [
+    { key: 'super',         label: 'Extra Super Contribution', hint: 'Pre-tax · above mandatory 11%',             preTax: true,  step: 100 },
+    { key: 'privatehealth', label: 'Private Health Insurance', hint: 'Post-tax · avoids Medicare Levy Surcharge', preTax: false, step: 30  },
+    { key: 'union',         label: 'Union Dues',               hint: 'Post-tax · ACTU affiliated',                preTax: false, step: 10  },
+    { key: 'salary_sac',    label: 'Salary Sacrifice (other)', hint: 'Pre-tax · FBT-exempt benefits',             preTax: true,  step: 50  },
+  ],
+  ie: [
+    { key: 'pension', label: 'Pension (AVC)',          hint: 'Pre-tax · Additional Voluntary',   preTax: true,  step: 100 },
+    { key: 'health',  label: 'Health Insurance',       hint: 'Post-tax · VHI, Laya, Irish Life', preTax: false, step: 20  },
+    { key: 'union',   label: 'Union Dues',             hint: 'Post-tax · ICTU affiliated',       preTax: false, step: 5   },
+    { key: 'travel',  label: 'Travel Pass (TaxSaver)', hint: 'Pre-tax · public transport',       preTax: true,  step: 20  },
+  ],
+  nz: [
+    { key: 'kiwisaver', label: 'KiwiSaver Extra',    hint: 'Pre-tax · above 3% mandatory',        preTax: true,  step: 50 },
+    { key: 'health',    label: 'Health Insurance',    hint: 'Post-tax · Southern Cross, nib etc.', preTax: false, step: 20 },
+    { key: 'union',     label: 'Union Dues',          hint: 'Post-tax · CTU affiliated',           preTax: false, step: 5  },
+  ],
+}
+
+// ---------------------------------------------------------------------------
+// Tax calculation — returns { incomeTax, contributions, total }
+// ---------------------------------------------------------------------------
+function calcTaxDetail(gross, country) {
   switch (country) {
     case 'us': {
       const stdDed = 14600
       const taxable = Math.max(0, gross - stdDed)
-      const brackets = [[11600,0.10,0],[47150,0.12,11600],[100525,0.22,47150],[191950,0.24,100525],[243725,0.32,191950],[609350,0.35,243725],[Infinity,0.37,609350]]
+      const brackets = [
+        [11600, 0.10, 0], [47150, 0.12, 11600], [100525, 0.22, 47150],
+        [191950, 0.24, 100525], [243725, 0.32, 191950], [609350, 0.35, 243725],
+        [Infinity, 0.37, 609350],
+      ]
       let fed = 0
       for (const [lim, r, fl] of brackets) {
         if (taxable <= fl) break
         fed += (Math.min(taxable, lim) - fl) * r
       }
+      const state = gross * 0.045
+      const incomeTax = fed + state
       const ss = Math.min(gross, 168600) * 0.062
       const medicare = gross * 0.0145
-      const state = gross * 0.045
-      return fed + ss + medicare + state
+      const contributions = ss + medicare
+      return { incomeTax, contributions, total: incomeTax + contributions }
     }
     case 'ca': {
       const bpa = 15705
       const taxable = Math.max(0, gross - bpa)
-      const brackets = [[57375,0.15,0],[114750,0.205,57375],[158519,0.26,114750],[220000,0.29,158519],[Infinity,0.33,220000]]
+      const brackets = [
+        [57375, 0.15, 0], [114750, 0.205, 57375], [158519, 0.26, 114750],
+        [220000, 0.29, 158519], [Infinity, 0.33, 220000],
+      ]
       let fed = 0
       for (const [lim, r, fl] of brackets) {
         if (taxable <= fl) break
@@ -35,10 +92,12 @@ function calcTax(gross, country) {
       }
       const fedCredit = bpa * 0.15
       const fedFinal = Math.max(0, fed - fedCredit)
+      const prov = gross * 0.08
+      const incomeTax = fedFinal + prov
       const cpp = Math.min(Math.max(0, gross - 3500), 68500) * 0.0595
       const ei = Math.min(gross, 63200) * 0.0166
-      const prov = gross * 0.08
-      return fedFinal + cpp + ei + prov
+      const contributions = cpp + ei
+      return { incomeTax, contributions, total: incomeTax + contributions }
     }
     case 'uk': {
       const pa = 12570
@@ -46,136 +105,148 @@ function calcTax(gross, country) {
       const basic = Math.min(taxable, 37700) * 0.20
       const higher = Math.max(0, Math.min(taxable - 37700, 74870)) * 0.40
       const add = Math.max(0, taxable - 112570) * 0.45
+      const incomeTax = basic + higher + add
       const ni1 = Math.min(Math.max(0, gross - 12570), 37700) * 0.08
       const ni2 = Math.max(0, gross - 50270) * 0.02
-      return basic + higher + add + ni1 + ni2
+      const contributions = ni1 + ni2
+      return { incomeTax, contributions, total: incomeTax + contributions }
     }
     case 'au': {
-      const brackets = [[18200,0,0],[45000,0.19,18200],[120000,0.325,45000],[180000,0.37,120000],[Infinity,0.45,180000]]
-      let tax = 0
+      const brackets = [
+        [18200, 0, 0], [45000, 0.19, 18200], [120000, 0.325, 45000],
+        [180000, 0.37, 120000], [Infinity, 0.45, 180000],
+      ]
+      let incomeTax = 0
       for (const [lim, r, fl] of brackets) {
         if (gross <= fl) break
-        tax += (Math.min(gross, lim) - fl) * r
+        incomeTax += (Math.min(gross, lim) - fl) * r
       }
-      return tax + gross * 0.02
+      const contributions = gross * 0.02 // Medicare levy
+      return { incomeTax, contributions, total: incomeTax + contributions }
     }
     case 'ie': {
-      const it = Math.min(gross, 44000) * 0.20 + Math.max(0, gross - 44000) * 0.40
+      const incomeTax = Math.min(gross, 44000) * 0.20 + Math.max(0, gross - 44000) * 0.40
       const prsi = gross * 0.041
-      const usc = Math.min(gross, 12012) * 0.005
-        + Math.min(Math.max(0, gross - 12012), 15370) * 0.02
-        + Math.min(Math.max(0, gross - 27382), 42662) * 0.045
-        + Math.max(0, gross - 70044) * 0.08
-      return it + prsi + usc
+      const usc =
+        Math.min(gross, 12012) * 0.005 +
+        Math.min(Math.max(0, gross - 12012), 15370) * 0.02 +
+        Math.min(Math.max(0, gross - 27382), 42662) * 0.045 +
+        Math.max(0, gross - 70044) * 0.08
+      const contributions = prsi + usc
+      return { incomeTax, contributions, total: incomeTax + contributions }
     }
     case 'nz': {
-      const brackets = [[14000,0.105,0],[48000,0.175,14000],[70000,0.30,48000],[180000,0.33,70000],[Infinity,0.39,180000]]
-      let tax = 0
+      const brackets = [
+        [14000, 0.105, 0], [48000, 0.175, 14000], [70000, 0.30, 48000],
+        [180000, 0.33, 70000], [Infinity, 0.39, 180000],
+      ]
+      let incomeTax = 0
       for (const [lim, r, fl] of brackets) {
         if (gross <= fl) break
-        tax += (Math.min(gross, lim) - fl) * r
+        incomeTax += (Math.min(gross, lim) - fl) * r
       }
-      return tax + gross * 0.016
+      const contributions = gross * 0.016 // ACC levy
+      return { incomeTax, contributions, total: incomeTax + contributions }
     }
-    default: return gross * 0.25
+    default: {
+      const incomeTax = gross * 0.20
+      const contributions = gross * 0.05
+      return { incomeTax, contributions, total: incomeTax + contributions }
+    }
   }
 }
 
+// ---------------------------------------------------------------------------
+// Static data
+// ---------------------------------------------------------------------------
 const defaultSalaries = { us: 75000, ca: 80000, uk: 45000, au: 85000, ie: 55000, nz: 70000 }
 
 const periods = [
-  { key: 'annual', label: 'Annual', divisor: 1 },
-  { key: 'monthly', label: 'Monthly', divisor: 12 },
-  { key: 'biweekly', label: 'Bi-Weekly', divisor: 26 },
-  { key: 'weekly', label: 'Weekly', divisor: 52 },
-  { key: 'daily', label: 'Daily', divisor: 260 },
-  { key: 'hourly', label: 'Hourly', divisor: 2080 },
+  { key: 'annual',   label: 'Annual',   divisor: 1    },
+  { key: 'monthly',  label: 'Monthly',  divisor: 12   },
+  { key: 'biweekly', label: 'Bi-Weekly',divisor: 26   },
+  { key: 'weekly',   label: 'Weekly',   divisor: 52   },
+  { key: 'daily',    label: 'Daily',    divisor: 260  },
+  { key: 'hourly',   label: 'Hourly',   divisor: 2080 },
 ]
 
-const PIE_COLORS = ['#22c55e', '#ef4444', '#f97316']
+const COLORS = ['#22c55e', '#ef4444', '#f97316', '#6366f1', '#ec4899', '#14b8a6', '#f59e0b', '#8b5cf6']
 
+const viewLabels = { breakdown: 'Summary', chart: 'Chart', periods: 'All Periods' }
+
+// ---------------------------------------------------------------------------
+// Toggle switch
+// ---------------------------------------------------------------------------
+function Toggle({ on, onChange, color = 'green' }) {
+  const bg = on ? (color === 'green' ? 'bg-green-500' : 'bg-orange-500') : 'bg-slate-300'
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!on)}
+      className={`relative inline-flex w-10 h-5 rounded-full transition-colors focus:outline-none ${bg}`}
+      aria-pressed={on}
+    >
+      <span
+        className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${on ? 'translate-x-5' : 'translate-x-0'}`}
+      />
+    </button>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
 export default function SalaryCalc({ country }) {
   const c = countries[country]
+  const deductionDefs = COUNTRY_DEDUCTIONS[country] || []
+
   const [gross, setGross] = useState(defaultSalaries[country] || 60000)
   const [inputPeriod, setInputPeriod] = useState('annual')
   const [view, setView] = useState('breakdown')
+  const [dedOpen, setDedOpen] = useState(false)
+  const [dedEnabled, setDedEnabled] = useState({})
+  const [dedAmounts, setDedAmounts] = useState(
+    Object.fromEntries(deductionDefs.map(d => [d.key, 0]))
+  )
 
+  // ---- derived values ----
   const annualGross = useMemo(() => {
     const p = periods.find(p => p.key === inputPeriod)
     return gross * (p ? p.divisor : 1)
   }, [gross, inputPeriod])
 
-  const totalTax = useMemo(() => calcTax(annualGross, country), [annualGross, country])
-  const annualNet = annualGross - totalTax
-  const effectiveRate = annualGross > 0 ? (totalTax / annualGross) * 100 : 0
+  const preTaxTotal = useMemo(() =>
+    deductionDefs
+      .filter(d => d.preTax && dedEnabled[d.key])
+      .reduce((sum, d) => sum + (dedAmounts[d.key] || 0), 0),
+    [deductionDefs, dedEnabled, dedAmounts]
+  )
 
-  // Approximate income tax vs deductions/contributions split
-  const incomeTaxPortion = useMemo(() => {
-    // Recalculate just income tax (without contributions)
-    switch (country) {
-      case 'us': {
-        const stdDed = 14600
-        const taxable = Math.max(0, annualGross - stdDed)
-        const brackets = [[11600,0.10,0],[47150,0.12,11600],[100525,0.22,47150],[191950,0.24,100525],[243725,0.32,191950],[609350,0.35,243725],[Infinity,0.37,609350]]
-        let fed = 0
-        for (const [lim, r, fl] of brackets) {
-          if (taxable <= fl) break
-          fed += (Math.min(taxable, lim) - fl) * r
-        }
-        return fed + annualGross * 0.045
-      }
-      case 'ca': {
-        const bpa = 15705
-        const taxable = Math.max(0, annualGross - bpa)
-        const brackets = [[57375,0.15,0],[114750,0.205,57375],[158519,0.26,114750],[220000,0.29,158519],[Infinity,0.33,220000]]
-        let fed = 0
-        for (const [lim, r, fl] of brackets) {
-          if (taxable <= fl) break
-          fed += (Math.min(taxable, lim) - fl) * r
-        }
-        return Math.max(0, fed - bpa * 0.15) + annualGross * 0.08
-      }
-      case 'uk': {
-        const pa = 12570
-        const taxable = Math.max(0, annualGross - pa)
-        const basic = Math.min(taxable, 37700) * 0.20
-        const higher = Math.max(0, Math.min(taxable - 37700, 74870)) * 0.40
-        const add = Math.max(0, taxable - 112570) * 0.45
-        return basic + higher + add
-      }
-      case 'au': {
-        const brackets = [[18200,0,0],[45000,0.19,18200],[120000,0.325,45000],[180000,0.37,120000],[Infinity,0.45,180000]]
-        let tax = 0
-        for (const [lim, r, fl] of brackets) {
-          if (annualGross <= fl) break
-          tax += (Math.min(annualGross, lim) - fl) * r
-        }
-        return tax
-      }
-      case 'ie': {
-        return Math.min(annualGross, 44000) * 0.20 + Math.max(0, annualGross - 44000) * 0.40
-      }
-      case 'nz': {
-        const brackets = [[14000,0.105,0],[48000,0.175,14000],[70000,0.30,48000],[180000,0.33,70000],[Infinity,0.39,180000]]
-        let tax = 0
-        for (const [lim, r, fl] of brackets) {
-          if (annualGross <= fl) break
-          tax += (Math.min(annualGross, lim) - fl) * r
-        }
-        return tax
-      }
-      default: return annualGross * 0.20
-    }
-  }, [annualGross, country])
+  const postTaxTotal = useMemo(() =>
+    deductionDefs
+      .filter(d => !d.preTax && dedEnabled[d.key])
+      .reduce((sum, d) => sum + (dedAmounts[d.key] || 0), 0),
+    [deductionDefs, dedEnabled, dedAmounts]
+  )
 
-  const deductions = Math.max(0, totalTax - incomeTaxPortion)
+  const taxableIncome = Math.max(0, annualGross - preTaxTotal)
+  const { incomeTax, contributions } = useMemo(() => calcTaxDetail(taxableIncome, country), [taxableIncome, country])
 
+  const annualNet = annualGross - incomeTax - contributions - postTaxTotal
+  const effectiveRate = annualGross > 0 ? (incomeTax + contributions) / annualGross * 100 : 0
+
+  const activeDeductions = deductionDefs.filter(d => dedEnabled[d.key] && dedAmounts[d.key] > 0)
+  const activeDedTotal = preTaxTotal + postTaxTotal
+  const activeDedCount = activeDeductions.length
+
+  // ---- formatting ----
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
 
   const fmtShort = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
 
+  // ---- rows for result table ----
   const rows = periods.map(p => ({
     label: p.label,
     value: fmt(annualNet / p.divisor),
@@ -183,17 +254,30 @@ export default function SalaryCalc({ country }) {
     bold: p.key === 'annual',
   }))
 
-  const pieData = [
-    { name: 'Net Income', value: Math.round(annualNet) },
-    { name: 'Income Tax', value: Math.round(incomeTaxPortion) },
-    { name: 'Deductions', value: Math.round(deductions) },
-  ].filter(d => d.value > 0)
+  // ---- chart data ----
+  const pieBase = [
+    { name: 'Net Income',    value: Math.max(0, Math.round(annualNet))    },
+    { name: 'Income Tax',    value: Math.max(0, Math.round(incomeTax))    },
+    { name: 'Contributions', value: Math.max(0, Math.round(contributions)) },
+  ]
+  const pieDeductions = activeDeductions.map(d => ({
+    name: d.label,
+    value: Math.max(0, Math.round(dedAmounts[d.key] || 0)),
+  }))
+  const pieData = [...pieBase, ...pieDeductions].filter(d => d.value > 0)
 
   const barData = periods.map(p => ({
     period: p.label,
     Gross: Math.round(annualGross / p.divisor * 100) / 100,
-    Net: Math.round(annualNet / p.divisor * 100) / 100,
+    Net:   Math.round(annualNet   / p.divisor * 100) / 100,
   }))
+
+  // ---- helpers ----
+  const toggleDed = (key, val) => setDedEnabled(prev => ({ ...prev, [key]: val }))
+  const setDedAmt = (key, val) => setDedAmounts(prev => ({ ...prev, [key]: val }))
+
+  const preDefs  = deductionDefs.filter(d =>  d.preTax)
+  const postDefs = deductionDefs.filter(d => !d.preTax)
 
   const pageTitle = `${c.name} Salary Calculator 2026 — Gross to Net Take-Home | CalcWise`
 
@@ -204,17 +288,18 @@ export default function SalaryCalc({ country }) {
         <meta name="description" content={`Free ${c.name} salary calculator 2026. Convert gross to net. See hourly, weekly, monthly, annual take-home pay. Updated tax brackets.`} />
         <link rel="canonical" href={`https://calqwise.com/${country}/salary`} />
         <script type="application/ld+json">{JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          "name": `${c.name} Salary Calculator`,
-          "applicationCategory": "FinanceApplication",
-          "operatingSystem": "Web",
-          "offers": { "@type": "Offer", "price": "0", "priceCurrency": c.currency },
-          "description": `Free salary calculator for ${c.name}. Convert gross income to net take-home pay across all pay periods.`
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: `${c.name} Salary Calculator`,
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'Web',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: c.currency },
+          description: `Free salary calculator for ${c.name}. Convert gross income to net take-home pay across all pay periods.`,
         })}</script>
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
+        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
             {c.name} Salary Calculator
@@ -222,11 +307,21 @@ export default function SalaryCalc({ country }) {
           <p className="text-cw-gray">Convert gross income to net take-home. All pay periods.</p>
         </div>
 
-        <div className="cw-card mb-6">
+        {/* Main input card */}
+        <div className="cw-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Gross Income ({c.symbol})</label>
-              <NumericInput value={gross} onChange={setGross} min={0} step={1000} prefix={c.symbol} />
+              <NumericInput
+                label={`Gross Income (${c.symbol})`}
+                value={gross}
+                onChange={setGross}
+                min={0}
+                max={2000000}
+                step={1000}
+                prefix={c.symbol}
+                showSlider
+                hint={`Median ${c.name}: ${fmtShort(defaultSalaries[country])}/yr`}
+              />
             </div>
             <div>
               <label className="block text-xs text-cw-gray mb-1 uppercase tracking-wider">Income Period</label>
@@ -239,59 +334,184 @@ export default function SalaryCalc({ country }) {
           </div>
         </div>
 
+        {/* Deductions collapsible card */}
+        {deductionDefs.length > 0 && (
+          <div className="cw-card mb-6">
+            {/* Header row */}
+            <button
+              type="button"
+              onClick={() => setDedOpen(o => !o)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-slate-800">Optional Deductions</span>
+                {activeDedCount > 0 && (
+                  <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
+                    {activeDedCount} active · -{fmtShort(activeDedTotal)}/yr
+                  </span>
+                )}
+              </div>
+              {dedOpen ? <ChevronUp size={18} className="text-slate-400" /> : <ChevronDown size={18} className="text-slate-400" />}
+            </button>
+
+            {dedOpen && (
+              <div className="mt-5 space-y-6">
+                {/* Pre-tax section */}
+                {preDefs.length > 0 && (
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">Pre-tax deductions</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {preDefs.map(d => (
+                        <div
+                          key={d.key}
+                          className={`border rounded-xl p-3 transition-colors ${dedEnabled[d.key] ? 'border-green-300 bg-green-50' : 'border-slate-200 bg-white'}`}
+                        >
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <div>
+                              <p className="text-sm font-semibold text-slate-800">{d.label}</p>
+                              <p className="text-xs text-slate-500 mt-0.5">{d.hint}</p>
+                            </div>
+                            <Toggle on={!!dedEnabled[d.key]} onChange={v => toggleDed(d.key, v)} color="green" />
+                          </div>
+                          {dedEnabled[d.key] && (
+                            <div className="mt-2">
+                              <NumericInput
+                                label=""
+                                value={dedAmounts[d.key] || 0}
+                                onChange={v => setDedAmt(d.key, v)}
+                                min={0}
+                                max={500000}
+                                step={d.step}
+                                prefix={c.symbol}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Post-tax section */}
+                {postDefs.length > 0 && (
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-orange-600 mb-3">Post-tax deductions</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {postDefs.map(d => (
+                        <div
+                          key={d.key}
+                          className={`border rounded-xl p-3 transition-colors ${dedEnabled[d.key] ? 'border-orange-300 bg-orange-50' : 'border-slate-200 bg-white'}`}
+                        >
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <div>
+                              <p className="text-sm font-semibold text-slate-800">{d.label}</p>
+                              <p className="text-xs text-slate-500 mt-0.5">{d.hint}</p>
+                            </div>
+                            <Toggle on={!!dedEnabled[d.key]} onChange={v => toggleDed(d.key, v)} color="orange" />
+                          </div>
+                          {dedEnabled[d.key] && (
+                            <div className="mt-2">
+                              <NumericInput
+                                label=""
+                                value={dedAmounts[d.key] || 0}
+                                onChange={v => setDedAmt(d.key, v)}
+                                min={0}
+                                max={500000}
+                                step={d.step}
+                                prefix={c.symbol}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* View tabs */}
         <div className="flex gap-2 mb-4">
           {['breakdown', 'chart', 'periods'].map(v => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-4 py-2 rounded-btn text-sm font-semibold transition-colors capitalize ${
-                view === v ? 'bg-primary text-white' : 'bg-white/10 text-cw-gray hover:text-white'
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                view === v
+                  ? 'bg-primary text-white'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:border-primary hover:text-primary'
               }`}
             >
-              {v}
+              {viewLabels[v]}
             </button>
           ))}
         </div>
 
+        {/* ---- Summary view ---- */}
         {annualGross > 0 && view === 'breakdown' && (
           <>
+            {/* 3 metric cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <div className="cw-card text-center border-blue-500/40 bg-blue-500/10">
-                <p className="text-cw-gray text-xs uppercase tracking-wider mb-1">Annual Net Income</p>
-                <p className="font-display font-bold text-3xl text-white">{fmt(annualNet)}</p>
+              <div className="cw-card text-center" style={{ borderLeft: '4px solid #1A6AFF' }}>
+                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Annual Net</p>
+                <p className="font-display font-bold text-3xl text-slate-900">{fmtShort(annualNet)}</p>
               </div>
-              <div className="cw-card text-center border-green-500/40 bg-green-500/10">
-                <p className="text-cw-gray text-xs uppercase tracking-wider mb-1">Monthly Take-Home</p>
-                <p className="font-display font-bold text-2xl text-green-400">{fmt(annualNet / 12)}</p>
+              <div className="cw-card text-center" style={{ borderLeft: '4px solid #22c55e' }}>
+                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Monthly Take-Home</p>
+                <p className="font-display font-bold text-2xl text-slate-900">{fmt(annualNet / 12)}</p>
               </div>
-              <div className="cw-card text-center border-orange-500/40 bg-orange-500/10">
-                <p className="text-cw-gray text-xs uppercase tracking-wider mb-1">Effective Tax Rate</p>
-                <p className="font-display font-bold text-2xl text-orange-400">{effectiveRate.toFixed(1)}%</p>
+              <div className="cw-card text-center" style={{ borderLeft: '4px solid #f97316' }}>
+                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Effective Tax Rate</p>
+                <p className="font-display font-bold text-2xl text-slate-900">{effectiveRate.toFixed(1)}%</p>
               </div>
             </div>
-            <ResultDetailed
-              title="Pay Period Breakdown (Net)"
-              rows={rows}
-            />
+
+            {/* Active deductions card */}
+            {activeDeductions.length > 0 && (
+              <div className="cw-card mb-6">
+                <p className="text-sm font-bold text-slate-700 mb-3">Active Deductions</p>
+                <div className="space-y-2">
+                  {activeDeductions.map(d => (
+                    <div key={d.key} className="flex items-center justify-between text-sm">
+                      <span className={`font-medium ${d.preTax ? 'text-green-700' : 'text-orange-700'}`}>
+                        {d.label}
+                        <span className="ml-1 text-xs font-normal opacity-70">{d.preTax ? '(pre-tax)' : '(post-tax)'}</span>
+                      </span>
+                      <span className="text-slate-700 font-semibold">-{fmtShort(dedAmounts[d.key] || 0)}/yr</span>
+                    </div>
+                  ))}
+                </div>
+                {preTaxTotal > 0 && (
+                  <div className="mt-3 pt-3 border-t border-slate-100 text-xs text-green-700 font-semibold">
+                    Tax saved: +{fmtShort(calcTaxDetail(annualGross, country).total - incomeTax - contributions)}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <ResultDetailed title="Pay Period Breakdown (Net)" rows={rows} />
           </>
         )}
 
+        {/* ---- Chart view ---- */}
         {annualGross > 0 && view === 'chart' && (
           <div className="cw-card space-y-8">
             <div>
               <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4 text-center">Income Breakdown</h3>
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    outerRadius={100}
+                    outerRadius={110}
                     dataKey="value"
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
                   >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                    {pieData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip formatter={(value) => fmtShort(value)} />
@@ -304,24 +524,22 @@ export default function SalaryCalc({ country }) {
               <h3 className="text-sm font-semibold text-cw-gray uppercase tracking-wider mb-4 text-center">Gross vs Net by Pay Period</h3>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={barData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="period" tick={{ fontSize: 11 }} />
                   <YAxis tickFormatter={(v) => `${c.symbol}${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`} tick={{ fontSize: 11 }} />
                   <Tooltip formatter={(value) => fmtShort(value)} />
                   <Legend />
                   <Bar dataKey="Gross" fill="#64748b" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="Net" fill="#22c55e" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="Net"   fill="#22c55e" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
         )}
 
+        {/* ---- All Periods view ---- */}
         {annualGross > 0 && view === 'periods' && (
-          <ResultDetailed
-            title="Pay Period Breakdown (Net)"
-            rows={rows}
-          />
+          <ResultDetailed title="Pay Period Breakdown (Net)" rows={rows} />
         )}
 
         {annualGross <= 0 && (
@@ -334,17 +552,22 @@ export default function SalaryCalc({ country }) {
         <AdSenseSlot format="leaderboard" />
       </div>
 
-      <CalcIntro intro="This salary calculator converts your gross income to net take-home pay across all pay periods — hourly, daily, weekly, bi-weekly, monthly and annually. It accounts for income tax, social contributions, and standard deductions for 2026." />
-      <CalcFAQ faqs={[
-        { q: 'What is the difference between gross and net salary?', a: 'Gross salary is your total earnings before deductions. Net salary (take-home pay) is what you actually receive after income tax and other contributions.' },
-        { q: 'What deductions are included?', a: 'This calculator includes federal/national income tax, social security contributions (CPP/EI, NI, PRSI etc.), and standard deductions for your country.' },
-        { q: 'How is the effective tax rate calculated?', a: 'Effective tax rate = total tax paid / gross income x 100. It differs from your marginal rate which only applies to your last dollar earned.' },
-      ]} />
-      <CalcRelated links={[
-        { to: `/${country}/tax`, label: 'Tax Calculator' },
-        { to: `/${country}/affordability`, label: 'Affordability Calculator' },
-        { to: `/${country}/rent-vs-buy`, label: 'Rent vs Buy' },
-      ]} />
+      {/* SEO content */}
+      <div className="max-w-4xl mx-auto px-4">
+        <CalcIntro intro="This salary calculator converts your gross income to net take-home pay across all pay periods — hourly, daily, weekly, bi-weekly, monthly and annually. It accounts for income tax, social contributions, and standard deductions for 2026. Use the optional deductions panel to model pre-tax contributions (pension, 401k, RRSP, etc.) and post-tax payroll items to see your true take-home pay." />
+        <CalcFAQ faqs={[
+          { q: 'What is the difference between gross and net salary?', a: 'Gross salary is your total earnings before deductions. Net salary (take-home pay) is what you actually receive after income tax and other contributions.' },
+          { q: 'What deductions are included?', a: 'This calculator includes federal/national income tax, social security contributions (CPP/EI, NI, PRSI etc.), and standard deductions for your country. You can also add optional deductions like pension contributions, health insurance, and union dues.' },
+          { q: 'How is the effective tax rate calculated?', a: 'Effective tax rate = total tax paid / gross income x 100. It differs from your marginal rate which only applies to your last dollar earned.' },
+          { q: 'What are pre-tax deductions?', a: 'Pre-tax deductions (like 401k, RRSP, pension contributions) reduce your taxable income before tax is calculated, which means you pay less income tax overall.' },
+          { q: 'What are post-tax deductions?', a: 'Post-tax deductions (like union dues, some insurance premiums) come out of your pay after tax has been calculated, so they do not reduce your tax bill.' },
+        ]} />
+        <CalcRelated links={[
+          { to: `/${country}/tax`,          label: 'Tax Calculator' },
+          { to: `/${country}/affordability`, label: 'Affordability Calculator' },
+          { to: `/${country}/rent-vs-buy`,   label: 'Rent vs Buy' },
+        ]} />
+      </div>
     </>
   )
 }
