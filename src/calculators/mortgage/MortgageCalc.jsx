@@ -1720,7 +1720,7 @@ export default function MortgageCalc({ country }) {
       </div>
 
       {/* SEO content — kept outside the sticky grid container to avoid stacking context issues */}
-      <div className="max-w-7xl mx-auto px-4 pb-8">
+      <div className="max-w-7xl mx-auto px-4 pb-2">
         <CalcHowTo steps={howToSteps[country] || howToSteps.us} />
         <AdSenseSlot format="in-article" slot="0000000002" placement="in-content" />
         <CalcFAQ faqs={faqs[country] || faqs.us} />

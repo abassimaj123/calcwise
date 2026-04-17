@@ -36,8 +36,8 @@ export function CalcFAQ({ faqs }) {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="mt-6 bg-white border border-slate-200 rounded-xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-        <div className="px-6 pt-6 pb-2">
+      <div className="mt-4 bg-white border border-slate-200 rounded-xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+        <div className="px-6 pt-4 pb-2">
           <h2 className="font-display font-bold text-lg text-slate-900">Frequently Asked Questions</h2>
         </div>
         <div className="px-6 pb-4 space-y-1">
@@ -68,7 +68,7 @@ export function CalcFAQ({ faqs }) {
 
 export function CalcAlsoAvailable({ calcSlug, countries }) {
   return (
-    <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+    <div className="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
       <p className="text-xs text-slate-400 mb-2 font-medium uppercase tracking-wider">Also available for</p>
       <div className="flex flex-wrap gap-2">
         {countries.map(({ code, flag, name }) => (
@@ -107,7 +107,7 @@ export function CalcHowTo({ title, steps }) {
 export function CalcSubTopics({ links }) {
   if (!links || !links.length) return null
   return (
-    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+    <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-xl">
       <p className="text-xs text-primary mb-2 font-bold uppercase tracking-wider">Explore specific topics</p>
       <div className="flex flex-wrap gap-2">
         {links.map(({ to, label }) => (
@@ -126,7 +126,7 @@ export function CalcSubTopics({ links }) {
 
 export function CalcRelated({ links }) {
   return (
-    <div className="mt-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+    <div className="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
       <p className="text-xs text-slate-400 mb-2 font-medium uppercase tracking-wider">Related Calculators</p>
       <div className="flex flex-wrap gap-2">
         {links.map(({ to, label }) => (

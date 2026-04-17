@@ -1,13 +1,12 @@
 // AdSense pub: ca-pub-5379540026739666
 // Slot IDs are placeholders — replace with real ones after AdSense approval.
-// The wrapper always has a fixed minHeight so the page layout never shifts
-// and CLS (Cumulative Layout Shift) score stays clean.
 
 const FORMAT_HEIGHT = {
-  rectangle:  120,
-  leaderboard: 60,
+  rectangle:    120,
+  leaderboard:   60,
   'in-article': 100,
-  auto: 60,
+  'in-content': 100,
+  auto:          60,
 }
 
 export default function AdSenseSlot({ format = 'rectangle', slot, placement = '', className = '' }) {
@@ -20,7 +19,7 @@ export default function AdSenseSlot({ format = 'rectangle', slot, placement = ''
       style={{
         width: '100%',
         minHeight: `${minH}px`,
-        margin: '24px 0',
+        margin: '16px 0',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
@@ -31,6 +30,7 @@ export default function AdSenseSlot({ format = 'rectangle', slot, placement = ''
         borderRadius: '8px',
         padding: '8px',
         boxSizing: 'border-box',
+        overflow: 'hidden',   // prevent ins from expanding beyond wrapper
       }}
     >
       <span style={{
@@ -43,7 +43,12 @@ export default function AdSenseSlot({ format = 'rectangle', slot, placement = ''
       </span>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block', width: '100%', minHeight: `${minH - 20}px` }}
+        style={{
+          display: 'block',
+          width: '100%',
+          height: 0,           // force height 0 until AdSense approved
+          overflow: 'hidden',  // prevent layout expansion
+        }}
         data-ad-client="ca-pub-5379540026739666"
         data-ad-slot={slot || '0000000000'}
         data-ad-format={format === 'rectangle' ? 'auto' : format}
