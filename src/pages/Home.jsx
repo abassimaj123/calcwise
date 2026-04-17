@@ -57,7 +57,7 @@ export default function Home() {
 
       {/* ── Hero ── */}
       <section
-        className="w-full px-4 pt-24 pb-20 text-center relative overflow-hidden"
+        className="w-full px-4 pt-14 md:pt-24 pb-10 md:pb-20 text-center relative overflow-hidden"
         style={{ background: 'linear-gradient(160deg, #F0F6FF 0%, #FAFCFF 50%, #F0F9FF 100%)' }}
       >
         {/* Background decoration */}
@@ -83,7 +83,7 @@ export default function Home() {
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-slate-900 leading-tight tracking-tight">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-slate-900 leading-tight tracking-tight">
             {t('hero.title')}<br />
             <span className="text-primary">{t('hero.titleHighlight')}</span>
           </h1>

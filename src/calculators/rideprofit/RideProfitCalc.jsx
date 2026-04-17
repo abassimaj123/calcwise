@@ -219,7 +219,7 @@ export default function RideProfitCalc({ country }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            {t(`nav.country_${country}`, { defaultValue: c.name })} {t('rideprofit.title')}
+            {t(`nav.country_${country}`, { defaultValue: c.name })} — {t('rideprofit.title')}
           </h1>
           <p className="text-slate-500">
             {t('rideprofit.desc')}
@@ -245,7 +245,7 @@ export default function RideProfitCalc({ country }) {
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">
-                Weekly Distance ({isImperial ? 'miles' : 'km'})
+                {t('rideprofit.weeklyDistance', { defaultValue: 'Weekly Distance' })} ({isImperial ? 'miles' : 'km'})
               </label>
               <NumericInput value={distance} onChange={setDistance} min={0} step={10} />
             </div>
@@ -255,13 +255,13 @@ export default function RideProfitCalc({ country }) {
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">
-                {isImperial ? 'Fuel Efficiency (MPG)' : 'Fuel Consumption (L/100km)'}
+                {isImperial ? t('rideprofit.fuelEfficiency', { defaultValue: 'Fuel Efficiency (MPG)' }) : t('rideprofit.fuelConsumption', { defaultValue: 'Fuel Consumption (L/100km)' })}
               </label>
               <NumericInput value={fuelConsumption} onChange={setFuelConsumption} min={0.1} step={isImperial ? 1 : 0.5} />
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">
-                Fuel Price ({c.symbol}/{isImperial ? 'gallon' : 'litre'})
+                {t('rideprofit.fuelPrice', { defaultValue: 'Fuel Price' })} ({c.symbol}/{isImperial ? 'gallon' : 'litre'})
               </label>
               <NumericInput value={fuelPrice} onChange={setFuelPrice} min={0} step={0.01} prefix={c.symbol} />
             </div>

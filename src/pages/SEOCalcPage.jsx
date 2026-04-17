@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { seoPageMap } from '../data/seoPages'
 import { CalcFAQ, CalcRelated, CalcSubTopics } from '../components/CalcSEO'
 
@@ -25,6 +26,7 @@ const LoadingSpinner = () => (
 
 export default function SEOCalcPage() {
   const { country, calc, slug } = useParams()
+  const { i18n } = useTranslation()
   const pageKey = `${country}/${calc}/${slug}`
   const page = seoPageMap[pageKey]
 
@@ -59,6 +61,11 @@ export default function SEOCalcPage() {
 
         {/* Intro paragraphs */}
         <div className="max-w-3xl">
+          {i18n.language !== 'en' && (
+            <p className="text-xs bg-amber-50 border border-amber-200 text-amber-700 rounded-lg px-3 py-2 mb-3">
+              📝 Article content available in English only · Contenu de l'article disponible en anglais seulement
+            </p>
+          )}
           {page.intro.split('\n\n').map((para, i) => (
             <p key={i} className="text-sm text-slate-600 leading-relaxed mb-3">{para.trim()}</p>
           ))}

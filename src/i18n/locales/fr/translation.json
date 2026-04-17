@@ -477,7 +477,11 @@
     "weeklyProfit": "Profit net hebdomadaire",
     "annualProfit": "Estimation annuelle",
     "driverDetails": "Détails du conducteur",
-    "costDetails": "Coûts et frais"
+    "costDetails": "Coûts et frais",
+    "weeklyDistance": "Distance hebdomadaire",
+    "fuelConsumption": "Consommation (L/100km)",
+    "fuelEfficiency": "Efficacité carburant (MPG)",
+    "fuelPrice": "Prix du carburant"
   },
   "stampduty": {
     "title": "Calculateur de Droits de Timbre",

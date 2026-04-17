@@ -477,7 +477,11 @@
     "weeklyProfit": "Weekly Net Profit",
     "annualProfit": "Annual Estimate",
     "driverDetails": "Driver Details",
-    "costDetails": "Costs & Fees"
+    "costDetails": "Costs & Fees",
+    "weeklyDistance": "Weekly Distance",
+    "fuelConsumption": "Fuel Consumption (L/100km)",
+    "fuelEfficiency": "Fuel Efficiency (MPG)",
+    "fuelPrice": "Fuel Price"
   },
   "stampduty": {
     "title": "Stamp Duty Calculator",

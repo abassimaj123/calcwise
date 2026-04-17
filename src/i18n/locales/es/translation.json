@@ -477,7 +477,11 @@
     "weeklyProfit": "Ganancia neta semanal",
     "annualProfit": "Estimación anual",
     "driverDetails": "Detalles del conductor",
-    "costDetails": "Costos y comisiones"
+    "costDetails": "Costos y comisiones",
+    "weeklyDistance": "Distancia semanal",
+    "fuelConsumption": "Consumo de combustible (L/100km)",
+    "fuelEfficiency": "Eficiencia de combustible (MPG)",
+    "fuelPrice": "Precio del combustible"
   },
   "stampduty": {
     "title": "Calculadora de Impuesto de Timbre",
