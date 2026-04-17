@@ -523,7 +523,12 @@
     "grossYield": "Rendimiento bruto",
     "propertyDetails": "Detalles de la propiedad",
     "financials": "Finanzas",
-    "mortgageRate": "Tasa hipotecaria (%)"
+    "mortgageRate": "Tasa hipotecaria (%)",
+    "operatingExpenses": "Gastos operativos (% del alquiler)",
+    "propertyMgmt": "Gestión inmobiliaria (% del alquiler)",
+    "vacancyRate": "Tasa de vacancia (%)",
+    "propertySpecificCosts": "COSTOS ESPECÍFICOS",
+    "additionalExpenses": "Gastos adicionales"
   },
   "refinance": {
     "title": "Calculadora de Refinanciamiento Hipotecario",

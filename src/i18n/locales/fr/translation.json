@@ -523,7 +523,12 @@
     "grossYield": "Rendement brut",
     "propertyDetails": "Détails de la propriété",
     "financials": "Finances",
-    "mortgageRate": "Taux hypothécaire (%)"
+    "mortgageRate": "Taux hypothécaire (%)",
+    "operatingExpenses": "Charges d'exploitation (% du loyer)",
+    "propertyMgmt": "Gestion immobilière (% du loyer)",
+    "vacancyRate": "Taux d'inoccupation (%)",
+    "propertySpecificCosts": "COÛTS SPÉCIFIQUES",
+    "additionalExpenses": "Dépenses supplémentaires"
   },
   "refinance": {
     "title": "Calculateur de Refinancement Hypothécaire",

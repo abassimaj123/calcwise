@@ -704,3 +704,10 @@ img.emoji {
   vertical-align: -0.1em;
   display: inline;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ADSENSE — collapse unfilled/unloaded ad slots to avoid dead space
+   ──────────────────────────────────────────────────────────────────────────── */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+}

@@ -261,16 +261,16 @@ export default function PropertyROICalc({ country = 'us' }) {
               <NumericInput value={mortgageRate} onChange={setMortgageRate} min={0} step={0.1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Operating Expenses (% of rent)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('propertyroi.operatingExpenses', { defaultValue: 'Operating Expenses (% of rent)' })}</label>
               <NumericInput value={expenses} onChange={setExpenses} min={0} max={100} step={1} suffix="%" />
               <p className="text-xs text-slate-500 mt-1">Taxes, insurance, maintenance</p>
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Property Mgmt (% of rent)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('propertyroi.propertyMgmt', { defaultValue: 'Property Mgmt (% of rent)' })}</label>
               <NumericInput value={management} onChange={setManagement} min={0} max={100} step={1} suffix="%" />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Vacancy Rate (%)</label>
+              <label className="block text-xs text-slate-500 mb-1">{t('propertyroi.vacancyRate', { defaultValue: 'Vacancy Rate (%)' })}</label>
               <NumericInput value={vacancy} onChange={setVacancy} min={0} max={100} step={1} suffix="%" />
             </div>
           </div>
@@ -285,7 +285,7 @@ export default function PropertyROICalc({ country = 'us' }) {
               className="w-full flex items-center justify-between text-left"
             >
               <div className="flex items-center gap-3">
-                <span className="font-semibold text-slate-800">Additional Expenses</span>
+                <span className="font-semibold text-slate-800">{t('propertyroi.additionalExpenses', { defaultValue: 'Additional Expenses' })}</span>
                 {activeExtraCount > 0 && (
                   <span className="text-xs bg-slate-100 border border-slate-200 text-slate-600 rounded-full px-2 py-0.5">
                     {activeExtraCount} active · -{fmtD(extraMonthlyTotal)}/mo
@@ -297,7 +297,7 @@ export default function PropertyROICalc({ country = 'us' }) {
 
             {extraOpen && (
               <div className="mt-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">Property-specific costs</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-green-600 mb-3">{t('propertyroi.propertySpecificCosts', { defaultValue: 'Property-specific costs' })}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-3">
                   {extraDefs.map(def => {
                     const enabled = !!extraEnabled[def.key]

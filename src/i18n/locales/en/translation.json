@@ -523,7 +523,12 @@
     "grossYield": "Gross Yield",
     "propertyDetails": "Property Details",
     "financials": "Financials",
-    "mortgageRate": "Mortgage Rate (%)"
+    "mortgageRate": "Mortgage Rate (%)",
+    "operatingExpenses": "Operating Expenses (% of rent)",
+    "propertyMgmt": "Property Mgmt (% of rent)",
+    "vacancyRate": "Vacancy Rate (%)",
+    "propertySpecificCosts": "PROPERTY-SPECIFIC COSTS",
+    "additionalExpenses": "Additional Expenses"
   },
   "refinance": {
     "title": "Mortgage Refinance Calculator",

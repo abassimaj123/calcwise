@@ -7,9 +7,9 @@ export const seoPages = [
     country: 'ca',
     calc: 'mortgage',
     slug: 'cmhc-insurance',
-    title: 'CMHC Mortgage Insurance Calculator Canada 2025',
+    title: 'CMHC Mortgage Insurance Calculator Canada 2026',
     h1: 'CMHC Mortgage Insurance Calculator',
-    metaDesc: 'Calculate your CMHC mortgage insurance premium instantly. See exactly how much CMHC insurance adds to your mortgage and monthly payment — updated 2025 rates.',
+    metaDesc: 'Calculate your CMHC mortgage insurance premium instantly. See exactly how much CMHC insurance adds to your mortgage and monthly payment — updated 2026 rates.',
     intro: `If your down payment is less than 20% in Canada, CMHC mortgage loan insurance is mandatory. The premium ranges from 2.80% to 4.00% of your loan amount depending on your loan-to-value ratio — and it's added directly to your mortgage, meaning you pay interest on it over the full amortization period.
 
 For a $600,000 home with a 5% down payment ($30,000), CMHC charges 4.00% on the insured loan of $570,000 — that's $22,800 added to your mortgage balance. At a 5% rate over 25 years, the true cost of that insurance including interest is over $38,000.
@@ -21,7 +21,7 @@ Use this calculator to see your exact CMHC premium, how it's added to your balan
         a: 'CMHC mortgage loan insurance is required on all mortgages where the down payment is less than 20% of the purchase price. It is mandatory for homes priced up to $1.5 million (as of late 2024). Homes priced above $1.5 million are ineligible for CMHC insurance and therefore require a minimum 20% down payment.',
       },
       {
-        q: 'What are the CMHC insurance rates for 2025?',
+        q: 'What are the CMHC insurance rates for 2026?',
         a: 'CMHC premiums are based on your loan-to-value (LTV) ratio: 4.00% for LTV 90.01–95%, 3.10% for LTV 85.01–90%, 2.80% for LTV 80.01–85%. The premium is calculated on the total loan amount and added to your mortgage balance. You also pay PST on the premium in some provinces (Ontario, Manitoba, Quebec, Saskatchewan) — this must be paid upfront.',
       },
       {
@@ -52,17 +52,17 @@ Use this calculator to see your exact CMHC premium, how it's added to your balan
     country: 'ca',
     calc: 'mortgage',
     slug: 'stress-test',
-    title: 'Canadian Mortgage Stress Test Calculator 2025',
+    title: 'Canadian Mortgage Stress Test Calculator 2026',
     h1: 'Canadian Mortgage Stress Test Calculator',
-    metaDesc: 'Find out exactly what you qualify for under the OSFI B-20 mortgage stress test. Enter your income and see your maximum mortgage after stress test — 2025 rules.',
-    intro: `Canada's mortgage stress test (OSFI Guideline B-20) requires all federally regulated lenders to qualify borrowers at the higher of either the contract rate + 2%, or 5.25% — whichever is greater. As of 2025, with typical 5-year fixed rates around 4.5–5.0%, the qualifying rate is typically 6.5–7.0%.
+    metaDesc: 'Find out exactly what you qualify for under the OSFI B-20 mortgage stress test. Enter your income and see your maximum mortgage after stress test — 2026 rules.',
+    intro: `Canada's mortgage stress test (OSFI Guideline B-20) requires all federally regulated lenders to qualify borrowers at the higher of either the contract rate + 2%, or 5.25% — whichever is greater. As of 2026, with typical 5-year fixed rates around 4.5–5.0%, the qualifying rate is typically 6.5–7.0%.
 
 This means your maximum mortgage is determined not by what you can afford today, but by what you'd afford if rates rise by 2 percentage points. In practice, the stress test reduces your maximum borrowing power by roughly 20–25% compared to qualifying at the contract rate alone.
 
 For example: a household earning $150,000/year might qualify for up to $800,000 at the contract rate, but only $640,000 after the stress test. Use this calculator to enter your gross annual income, existing debts, and current rates to see your exact qualifying amount under B-20 rules.`,
     faqs: [
       {
-        q: 'What is the Canadian mortgage stress test rate in 2025?',
+        q: 'What is the Canadian mortgage stress test rate in 2026?',
         a: 'The qualifying rate is the higher of: your contract interest rate plus 2 percentage points, or the Bank of Canada 5-year benchmark rate (currently 5.25%). So if you negotiate a 4.8% mortgage, you qualify at 6.8%. The stress test applies to all new mortgages, renewals with a new lender, and refinances with federally regulated lenders.',
       },
       {
@@ -97,9 +97,9 @@ For example: a household earning $150,000/year might qualify for up to $800,000 
     country: 'ca',
     calc: 'mortgage',
     slug: 'first-time-buyer',
-    title: 'First-Time Home Buyer Canada — Mortgage Calculator & Programs 2025',
+    title: 'First-Time Home Buyer Canada — Mortgage Calculator & Programs 2026',
     h1: 'First-Time Home Buyer Mortgage Calculator — Canada',
-    metaDesc: 'Calculate your mortgage as a first-time buyer in Canada. Includes FHSA, HBP RRSP, First Home Savings Account, and CMHC insurance — all 2025 federal programs.',
+    metaDesc: 'Calculate your mortgage as a first-time buyer in Canada. Includes FHSA, HBP RRSP, First Home Savings Account, and CMHC insurance — all 2026 federal programs.',
     intro: `Buying your first home in Canada comes with a unique set of programs, incentives, and rules that can save you tens of thousands of dollars — or cost you dearly if you don't use them strategically.
 
 The First Home Savings Account (FHSA) lets you contribute up to $8,000/year (lifetime max $40,000) with a full tax deduction, and withdrawals for a first home purchase are completely tax-free. Combined with the RRSP Home Buyers' Plan (HBP) — which lets you borrow up to $60,000 from your RRSP tax-free — a couple can access up to $100,000 in tax-advantaged funds for their down payment.
@@ -143,7 +143,7 @@ First-time buyers also receive: a land transfer tax rebate (up to $4,000 in Onta
     country: 'us',
     calc: 'mortgage',
     slug: 'pmi-calculator',
-    title: 'PMI Calculator — Private Mortgage Insurance Cost 2025',
+    title: 'PMI Calculator — Private Mortgage Insurance Cost 2026',
     h1: 'PMI (Private Mortgage Insurance) Calculator',
     metaDesc: 'Calculate your monthly PMI cost and see exactly when it drops off. Find out the true cost of PMI over the life of your loan — plus strategies to avoid or cancel it.',
     intro: `Private Mortgage Insurance (PMI) is required by most U.S. lenders when your down payment is less than 20% of the home's purchase price. The annual PMI cost typically ranges from 0.50% to 1.50% of your loan amount — meaning on a $400,000 loan it costs $2,000–$6,000 per year, or $167–$500 per month added to your payment.
@@ -153,7 +153,7 @@ What many buyers don't realize: PMI doesn't last forever. Under the Homeowners P
 Use this calculator to see your exact PMI cost, how it's factored into your monthly payment, and at what point (date and payment number) your PMI is scheduled to drop off automatically based on your amortization schedule.`,
     faqs: [
       {
-        q: 'What is the average PMI rate in 2025?',
+        q: 'What is the average PMI rate in 2026?',
         a: 'PMI rates typically range from 0.50% to 1.50% of the loan amount per year, depending on your credit score, down payment percentage, loan type, and lender. Borrowers with excellent credit (760+) and a 15% down payment might pay as little as 0.20–0.30%. Those with lower credit scores and a 5% down payment might pay 1.00–1.50%. Your lender is required to disclose the PMI rate in your Loan Estimate.',
       },
       {
@@ -162,7 +162,7 @@ Use this calculator to see your exact PMI cost, how it's factored into your mont
       },
       {
         q: 'Is PMI tax-deductible?',
-        a: 'PMI deductibility has changed over the years and expired for tax years after 2021 under the Tax Cuts and Jobs Act. As of 2025, PMI is not federally tax-deductible for most homeowners. Some states may still allow deductions — check with a tax professional for your state. The mortgage interest deduction (for itemizers) is still available.',
+        a: 'PMI deductibility has changed over the years and expired for tax years after 2021 under the Tax Cuts and Jobs Act. As of 2026, PMI is not federally tax-deductible for most homeowners. Some states may still allow deductions — check with a tax professional for your state. The mortgage interest deduction (for itemizers) is still available.',
       },
       {
         q: 'What is lender-paid PMI (LPMI)?',
@@ -187,7 +187,7 @@ Use this calculator to see your exact PMI cost, how it's factored into your mont
     country: 'us',
     calc: 'mortgage',
     slug: '30-year',
-    title: '30-Year Mortgage Calculator USA — Compare 15 vs 30 Year 2025',
+    title: '30-Year Mortgage Calculator USA — Compare 15 vs 30 Year 2026',
     h1: '30-Year Mortgage Calculator — Is It the Right Choice?',
     metaDesc: 'Calculate payments on a 30-year fixed mortgage and compare total interest cost vs a 15-year loan. See exactly how much the longer term costs you — and when it makes sense.',
     intro: `The 30-year fixed-rate mortgage is America's most popular home loan — but it comes with a hidden price tag that most buyers never fully reckon with. While the lower monthly payment is undeniably attractive, the 30-year term means you pay interest for twice as long as a 15-year mortgage, resulting in dramatically more total interest paid.
@@ -197,16 +197,16 @@ On a $400,000 mortgage at 7.0%, a 30-year loan costs you $557,000 in total inter
 The right choice depends on your income stability, investment discipline, and life plans. If you invest the monthly payment difference at market returns, the 30-year can sometimes win. Use this calculator to model both scenarios, including your opportunity cost if you invest the payment difference.`,
     faqs: [
       {
-        q: 'What is the current 30-year fixed mortgage rate in 2025?',
-        a: '30-year fixed mortgage rates in the US have ranged from 6.5% to 7.5% in early 2025, depending on credit score, down payment, loan size, and lender. The Federal Reserve\'s rate decisions, inflation data, and 10-year Treasury yields are the primary drivers. Check current rates with your lender or mortgage broker as they change daily — this calculator lets you input any rate for an accurate estimate.',
+        q: 'What is the current 30-year fixed mortgage rate in 2026?',
+        a: '30-year fixed mortgage rates in the US have ranged from 6.5% to 7.5% in early 2026, depending on credit score, down payment, loan size, and lender. The Federal Reserve\'s rate decisions, inflation data, and 10-year Treasury yields are the primary drivers. Check current rates with your lender or mortgage broker as they change daily — this calculator lets you input any rate for an accurate estimate.',
       },
       {
         q: 'Should I choose a 30-year or 15-year mortgage?',
         a: 'A 15-year mortgage saves massive amounts in interest (often $150,000–$350,000 on a typical loan) and builds equity faster, but requires higher monthly payments — typically 30–40% more than a 30-year. A 30-year makes sense if: you need the lower payment flexibility, you plan to invest the difference aggressively (historically stock market returns can exceed mortgage rates), or your income is variable. A 30-year with extra principal payments is a common middle-ground approach.',
       },
       {
-        q: 'What is a conforming loan limit in 2025?',
-        a: 'For 2025, the conforming loan limit (set by FHFA) is $806,500 for most US counties. High-cost areas (like parts of California, New York, Colorado) have higher limits up to $1,209,750. Loans above these limits are "jumbo" mortgages with typically higher rates and stricter qualification requirements. Conforming loans can be sold to Fannie Mae or Freddie Mac, which is why they often have better rates.',
+        q: 'What is a conforming loan limit in 2026?',
+        a: 'For 2026, the conforming loan limit (set by FHFA) is $806,500 for most US counties. High-cost areas (like parts of California, New York, Colorado) have higher limits up to $1,209,750. Loans above these limits are "jumbo" mortgages with typically higher rates and stricter qualification requirements. Conforming loans can be sold to Fannie Mae or Freddie Mac, which is why they often have better rates.',
       },
       {
         q: 'Can I pay off a 30-year mortgage early?',
@@ -232,18 +232,18 @@ The right choice depends on your income stability, investment discipline, and li
     country: 'uk',
     calc: 'mortgage',
     slug: 'stamp-duty',
-    title: 'Stamp Duty Calculator UK 2025 — SDLT on Residential Property',
+    title: 'Stamp Duty Calculator UK 2026 — SDLT on Residential Property',
     h1: 'Stamp Duty Land Tax (SDLT) Calculator — UK',
-    metaDesc: 'Calculate your Stamp Duty Land Tax (SDLT) in England and Northern Ireland for 2025. Includes first-time buyer relief, second home surcharge, and the new SDLT bands.',
+    metaDesc: 'Calculate your Stamp Duty Land Tax (SDLT) in England and Northern Ireland for 2026. Includes first-time buyer relief, second home surcharge, and the new SDLT bands.',
     intro: `Stamp Duty Land Tax (SDLT) is one of the largest upfront costs of buying property in England and Northern Ireland. Rates are banded — you pay different percentages on the portion of the price that falls within each band, not a flat rate on the total. This is a critical distinction that many buyers get wrong.
 
-From April 2025, standard SDLT rates return to their pre-pandemic thresholds: 0% on the first £125,000; 2% on £125,001–£250,000; 5% on £250,001–£925,000; 10% on £925,001–£1.5 million; 12% above £1.5 million. First-time buyers receive relief on properties up to £500,000. Second homes (and buy-to-let) attract a 3% surcharge on each band.
+From April 2026, standard SDLT rates return to their pre-pandemic thresholds: 0% on the first £125,000; 2% on £125,001–£250,000; 5% on £250,001–£925,000; 10% on £925,001–£1.5 million; 12% above £1.5 million. First-time buyers receive relief on properties up to £500,000. Second homes (and buy-to-let) attract a 3% surcharge on each band.
 
 For a £450,000 property: standard buyer pays £12,500 in SDLT. First-time buyer pays £10,000. Buying as a second home: £25,500. The difference can be enormous — enter your purchase price and status below.`,
     faqs: [
       {
-        q: 'What are the Stamp Duty rates in England for 2025?',
-        a: 'From April 2025, standard SDLT rates in England are: 0% on the first £125,000; 2% on £125,001–£250,000; 5% on £250,001–£925,000; 10% on £925,001–£1.5 million; 12% above £1.5 million. First-time buyers pay 0% on the first £300,000 and 5% on the portion from £300,001–£500,000 (no relief for properties above £500,000). These rates apply to residential property — commercial property SDLT is different.',
+        q: 'What are the Stamp Duty rates in England for 2026?',
+        a: 'From April 2026, standard SDLT rates in England are: 0% on the first £125,000; 2% on £125,001–£250,000; 5% on £250,001–£925,000; 10% on £925,001–£1.5 million; 12% above £1.5 million. First-time buyers pay 0% on the first £300,000 and 5% on the portion from £300,001–£500,000 (no relief for properties above £500,000). These rates apply to residential property — commercial property SDLT is different.',
       },
       {
         q: 'What is the second home stamp duty surcharge?',
@@ -276,18 +276,18 @@ For a £450,000 property: standard buyer pays £12,500 in SDLT. First-time buyer
     country: 'ca',
     calc: 'tax',
     slug: 'ontario',
-    title: 'Ontario Income Tax Calculator 2025 — Federal + Provincial',
-    h1: 'Ontario Income Tax Calculator 2025',
-    metaDesc: 'Calculate your Ontario income tax for 2025. See federal + provincial taxes, CPP, EI, and your exact net pay after all deductions with the Ontario surtax.',
+    title: 'Ontario Income Tax Calculator 2026 — Federal + Provincial',
+    h1: 'Ontario Income Tax Calculator 2026',
+    metaDesc: 'Calculate your Ontario income tax for 2026. See federal + provincial taxes, CPP, EI, and your exact net pay after all deductions with the Ontario surtax.',
     intro: `Ontario has Canada's most complex provincial income tax structure, featuring not only standard provincial tax brackets but also the Ontario surtax — an additional tax on top of your basic provincial tax that kicks in once your provincial tax exceeds certain thresholds.
 
-For 2025, Ontario provincial rates are: 5.05% on the first $51,446; 9.15% on $51,447–$102,894; 11.16% on $102,895–$150,000; 12.16% on $150,001–$220,000; 13.16% above $220,000. The Ontario surtax adds 20% on provincial tax above $5,554 and 36% on provincial tax above $7,108.
+For 2026, Ontario provincial rates are: 5.05% on the first $51,446; 9.15% on $51,447–$102,894; 11.16% on $102,895–$150,000; 12.16% on $150,001–$220,000; 13.16% above $220,000. The Ontario surtax adds 20% on provincial tax above $5,554 and 36% on provincial tax above $7,108.
 
 Combined with federal tax, CPP contributions (5.70% on $68,500 earnings ceiling), and EI premiums (1.66% on $63,200 insurable earnings), a $100,000 salary in Ontario results in approximately $73,000–$75,000 net pay depending on deductions. See the full breakdown below.`,
     faqs: [
       {
-        q: 'What are the 2025 Ontario provincial tax brackets?',
-        a: 'Ontario 2025 provincial income tax rates: 5.05% on taxable income up to $51,446; 9.15% on $51,447–$102,894; 11.16% on $102,895–$150,000; 12.16% on $150,001–$220,000; 13.16% on income above $220,000. These rates apply to your taxable income after federal and provincial deductions. The Ontario surtax then applies an additional 20% and 36% on top of the basic provincial tax if it exceeds the surtax thresholds.',
+        q: 'What are the 2026 Ontario provincial tax brackets?',
+        a: 'Ontario 2026 provincial income tax rates: 5.05% on taxable income up to $51,446; 9.15% on $51,447–$102,894; 11.16% on $102,895–$150,000; 12.16% on $150,001–$220,000; 13.16% on income above $220,000. These rates apply to your taxable income after federal and provincial deductions. The Ontario surtax then applies an additional 20% and 36% on top of the basic provincial tax if it exceeds the surtax thresholds.',
       },
       {
         q: 'What is the Ontario surtax and how does it work?',
@@ -295,15 +295,15 @@ Combined with federal tax, CPP contributions (5.70% on $68,500 earnings ceiling)
       },
       {
         q: 'Does Ontario have any tax credits to reduce what I owe?',
-        a: 'Yes, several: Ontario Basic Personal Amount ($11,865 for 2025), Ontario Trillium Benefit (combines energy, property tax, and sales tax credits — up to $1,421 for qualifying low-income residents), Ontario Child Care Access and Relief from Expenses (CARE) tax credit, Ontario Caregiver Credit, Ontario Senior Homeowners Property Tax Grant, and Ontario Energy and Property Tax Credit. These are applied after calculating the basic Ontario tax.',
+        a: 'Yes, several: Ontario Basic Personal Amount ($11,865 for 2026), Ontario Trillium Benefit (combines energy, property tax, and sales tax credits — up to $1,421 for qualifying low-income residents), Ontario Child Care Access and Relief from Expenses (CARE) tax credit, Ontario Caregiver Credit, Ontario Senior Homeowners Property Tax Grant, and Ontario Energy and Property Tax Credit. These are applied after calculating the basic Ontario tax.',
       },
       {
         q: 'What is the combined federal and Ontario marginal tax rate?',
-        a: 'Combined 2025 marginal rates in Ontario: approximately 20.05% on income up to ~$16,000; 24.15% on ~$16,001–$51,446; 31.48% on $51,447–$100,392; 39.34% on $100,393–$102,894; 43.41% on $102,895–$150,000; 44.97% on $150,001–$165,430; 48.29% on $165,431–$220,000; 53.53% on income above $220,000. These are marginal rates — your average (effective) rate will be significantly lower.',
+        a: 'Combined 2026 marginal rates in Ontario: approximately 20.05% on income up to ~$16,000; 24.15% on ~$16,001–$51,446; 31.48% on $51,447–$100,392; 39.34% on $100,393–$102,894; 43.41% on $102,895–$150,000; 44.97% on $150,001–$165,430; 48.29% on $165,431–$220,000; 53.53% on income above $220,000. These are marginal rates — your average (effective) rate will be significantly lower.',
       },
       {
         q: 'How are CPP and EI calculated for Ontario residents?',
-        a: 'CPP and EI are federal programs — the same rates apply in all provinces including Ontario. For 2025: CPP1 rate is 5.70% on earnings between $3,500 and $68,500 (max contribution $3,867.50). CPP2 applies an additional 4.00% on earnings between $68,500 and $73,200 (max additional $188). EI rate is 1.66% on insurable earnings up to $63,200 (max $1,049.12). Employers pay 1.4× the employee EI rate.',
+        a: 'CPP and EI are federal programs — the same rates apply in all provinces including Ontario. For 2026: CPP1 rate is 5.70% on earnings between $3,500 and $68,500 (max contribution $3,867.50). CPP2 applies an additional 4.00% on earnings between $68,500 and $73,200 (max additional $188). EI rate is 1.66% on insurable earnings up to $63,200 (max $1,049.12). Employers pay 1.4× the employee EI rate.',
       },
     ],
     parentCalc: '/ca/tax',
@@ -320,18 +320,18 @@ Combined with federal tax, CPP contributions (5.70% on $68,500 earnings ceiling)
     country: 'ca',
     calc: 'tax',
     slug: 'quebec',
-    title: 'Quebec Income Tax Calculator 2025 — Federal + Provincial',
-    h1: 'Quebec Income Tax Calculator 2025',
-    metaDesc: 'Calculate Quebec income tax for 2025. Includes federal tax, Quebec provincial rates, QPP, QPIP, health contribution, and your net take-home pay.',
+    title: 'Quebec Income Tax Calculator 2026 — Federal + Provincial',
+    h1: 'Quebec Income Tax Calculator 2026',
+    metaDesc: 'Calculate Quebec income tax for 2026. Includes federal tax, Quebec provincial rates, QPP, QPIP, health contribution, and your net take-home pay.',
     intro: `Quebec has Canada's highest provincial income tax rates and a completely parallel tax system — Quebecers file two separate tax returns (federal and provincial) and pay into the Quebec Pension Plan (QPP) instead of CPP, plus Quebec Parental Insurance Plan (QPIP) premiums instead of federal EI maternity/parental benefits.
 
-For 2025, Quebec's provincial tax brackets are: 14% on the first $51,780; 19% on $51,781–$103,545; 24% on $103,546–$126,000; 25.75% above $126,000. The combined federal + Quebec marginal top rate (53.31%) is among the highest in North America.
+For 2026, Quebec's provincial tax brackets are: 14% on the first $51,780; 19% on $51,781–$103,545; 24% on $103,546–$126,000; 25.75% above $126,000. The combined federal + Quebec marginal top rate (53.31%) is among the highest in North America.
 
 However, Quebec residents receive a federal tax abatement of 16.5% of basic federal tax, acknowledging that Quebec funds many programs (healthcare, education, family policy) provincially rather than federally. The Quebec Family Allowance, subsidized daycare ($10–$13.85/day for most families), and other Quebec-specific programs partially offset the higher tax burden.`,
     faqs: [
       {
-        q: 'What are the 2025 Quebec provincial tax brackets?',
-        a: 'Quebec 2025 provincial income tax rates: 14% on taxable income up to $51,780; 19% on $51,781–$103,545; 24% on $103,546–$126,000; 25.75% on income above $126,000. Note that Quebec uses its own personal exemption amounts and deductions — your Quebec taxable income may differ from your federal taxable income. Quebec also has its own pension plan (QPP) and parental insurance plan (QPIP).',
+        q: 'What are the 2026 Quebec provincial tax brackets?',
+        a: 'Quebec 2026 provincial income tax rates: 14% on taxable income up to $51,780; 19% on $51,781–$103,545; 24% on $103,546–$126,000; 25.75% on income above $126,000. Note that Quebec uses its own personal exemption amounts and deductions — your Quebec taxable income may differ from your federal taxable income. Quebec also has its own pension plan (QPP) and parental insurance plan (QPIP).',
       },
       {
         q: 'What is the Quebec federal tax abatement?',
@@ -339,11 +339,11 @@ However, Quebec residents receive a federal tax abatement of 16.5% of basic fede
       },
       {
         q: 'What is QPP and how does it differ from CPP?',
-        a: 'Quebec Pension Plan (QPP) replaces CPP for Quebec workers. For 2025, QPP1 rate is 5.70% on earnings between $3,500 and $68,500 (same as CPP1). QPP2 adds 4.00% on earnings between $68,500 and $73,200 (same as CPP2). Benefits at retirement are similar. The key difference: QPP is administered by Quebec (Retraite Québec) while CPP is federal. If you move provinces, your QPP contributions transfer to CPP and vice versa.',
+        a: 'Quebec Pension Plan (QPP) replaces CPP for Quebec workers. For 2026, QPP1 rate is 5.70% on earnings between $3,500 and $68,500 (same as CPP1). QPP2 adds 4.00% on earnings between $68,500 and $73,200 (same as CPP2). Benefits at retirement are similar. The key difference: QPP is administered by Quebec (Retraite Québec) while CPP is federal. If you move provinces, your QPP contributions transfer to CPP and vice versa.',
       },
       {
         q: 'What is QPIP and who pays it?',
-        a: 'Quebec Parental Insurance Plan (QPIP) provides maternity, paternity, and parental leave benefits. All Quebec workers pay QPIP premiums: employee rate is 0.494% on insurable earnings up to $94,000 (2025). Employers pay 0.692%. In exchange, EI parental/maternity premiums do not apply in Quebec (Quebec employees pay a reduced EI rate). QPIP provides more flexible and often more generous parental benefits than federal EI.',
+        a: 'Quebec Parental Insurance Plan (QPIP) provides maternity, paternity, and parental leave benefits. All Quebec workers pay QPIP premiums: employee rate is 0.494% on insurable earnings up to $94,000 (2026). Employers pay 0.692%. In exchange, EI parental/maternity premiums do not apply in Quebec (Quebec employees pay a reduced EI rate). QPIP provides more flexible and often more generous parental benefits than federal EI.',
       },
       {
         q: 'Does Quebec have a health contribution (health levy)?',
@@ -365,9 +365,9 @@ However, Quebec residents receive a federal tax abatement of 16.5% of basic fede
     country: 'us',
     calc: 'tax',
     slug: 'california',
-    title: 'California Income Tax Calculator 2025 — State + Federal',
-    h1: 'California Income Tax Calculator 2025',
-    metaDesc: 'Calculate California state income tax for 2025. Includes SDI, CA brackets, federal tax, and your actual take-home pay. California has the highest state income tax rate in the US.',
+    title: 'California Income Tax Calculator 2026 — State + Federal',
+    h1: 'California Income Tax Calculator 2026',
+    metaDesc: 'Calculate California state income tax for 2026. Includes SDI, CA brackets, federal tax, and your actual take-home pay. California has the highest state income tax rate in the US.',
     intro: `California has the highest marginal state income tax rate in the United States — 13.30% on income above $1 million, and 9.30% on income above approximately $68,000 (single filers). For high earners, the combined federal + California marginal rate reaches 52.90% — the second highest in the developed world after some Scandinavian countries.
 
 California's progressive rate structure means most residents pay significantly less than the top rate. A $75,000 salary in California faces a marginal state rate of 9.30% but an effective state rate of roughly 5–6%, plus SDI (State Disability Insurance) at 1.10% on all wages.
@@ -375,8 +375,8 @@ California's progressive rate structure means most residents pay significantly l
 California also has no standard deduction equivalent to the federal deduction — instead, California has its own set of deductions and credits, including the renter's credit ($60/$120) and the young child tax credit ($1,117 per child under 6 for qualifying taxpayers). Property taxes (Proposition 13) are capped at 1% of assessed value — an important offset for homeowners.`,
     faqs: [
       {
-        q: 'What are the 2025 California state income tax brackets?',
-        a: 'California 2025 tax rates for single filers: 1% on income up to $10,756; 2% on $10,757–$25,499; 4% on $25,500–$40,245; 6% on $40,246–$55,866; 8% on $55,867–$70,606; 9.30% on $70,607–$360,659; 10.30% on $360,660–$432,787; 11.30% on $432,788–$721,314; 12.30% on $721,315–$999,999; 13.30% on income above $1 million. The 1% Mental Health Services Tax applies at $1M+. Married filing jointly thresholds are double.',
+        q: 'What are the 2026 California state income tax brackets?',
+        a: 'California 2026 tax rates for single filers: 1% on income up to $10,756; 2% on $10,757–$25,499; 4% on $25,500–$40,245; 6% on $40,246–$55,866; 8% on $55,867–$70,606; 9.30% on $70,607–$360,659; 10.30% on $360,660–$432,787; 11.30% on $432,788–$721,314; 12.30% on $721,315–$999,999; 13.30% on income above $1 million. The 1% Mental Health Services Tax applies at $1M+. Married filing jointly thresholds are double.',
       },
       {
         q: 'What is California SDI and who pays it?',
@@ -388,7 +388,7 @@ California also has no standard deduction equivalent to the federal deduction �
       },
       {
         q: 'Can I deduct federal taxes on my California return?',
-        a: 'No. California does not allow a deduction for federal income taxes paid. However, California does allow deductions for mortgage interest, charitable contributions, and some business expenses — but these follow California\'s own rules, which sometimes differ from federal treatment. California does conform to federal standard deduction amounts for the basic deduction ($5,540 single / $11,080 married for 2025).',
+        a: 'No. California does not allow a deduction for federal income taxes paid. However, California does allow deductions for mortgage interest, charitable contributions, and some business expenses — but these follow California\'s own rules, which sometimes differ from federal treatment. California does conform to federal standard deduction amounts for the basic deduction ($5,540 single / $11,080 married for 2026).',
       },
       {
         q: 'What is California\'s exit tax for people leaving the state?',
@@ -408,12 +408,12 @@ California also has no standard deduction equivalent to the federal deduction �
     country: 'ca',
     calc: 'rideprofit',
     slug: 'uber',
-    title: 'Uber Driver Profit Calculator Canada 2025 — True Earnings After Tax',
-    h1: 'Uber Driver Profit Calculator — Canada 2025',
+    title: 'Uber Driver Profit Calculator Canada 2026 — True Earnings After Tax',
+    h1: 'Uber Driver Profit Calculator — Canada 2026',
     metaDesc: 'Calculate your true Uber earnings in Canada after gas, depreciation, insurance, CPP, and income tax. See your real hourly rate and whether driving for Uber actually pays.',
     intro: `Uber and other rideshare platforms advertise gross earnings — but your actual take-home as a Canadian Uber driver is dramatically lower once you account for all costs. Gas typically represents 15–25% of gross earnings. Vehicle depreciation — the silent killer — can cost $0.08–$0.15 per kilometre in value lost. And as a self-employed driver, you pay both the employee and employer share of CPP contributions (10.50% combined on net self-employment income), plus income tax on profits.
 
-CRA allows you to deduct actual vehicle expenses (gas, insurance, maintenance, depreciation) proportional to business use, or use the 2025 CRA mileage rate of $0.72/km for the first 5,000km and $0.66/km thereafter. Most active drivers are better off tracking actual expenses.
+CRA allows you to deduct actual vehicle expenses (gas, insurance, maintenance, depreciation) proportional to business use, or use the 2026 CRA mileage rate of $0.72/km for the first 5,000km and $0.66/km thereafter. Most active drivers are better off tracking actual expenses.
 
 After all deductions, many Uber drivers earn an effective hourly rate of $12–$18/hour — sometimes below minimum wage when accounting for time spent waiting for rides, cleaning the vehicle, and doing tax paperwork. Use this calculator to see your real numbers.`,
     faqs: [
@@ -453,26 +453,26 @@ After all deductions, many Uber drivers earn an effective hourly rate of $12–$
     country: 'us',
     calc: 'rideprofit',
     slug: 'uber',
-    title: 'Uber Driver Earnings Calculator USA 2025 — After Tax Profit',
-    h1: 'Uber Driver Earnings Calculator — USA 2025',
-    metaDesc: 'Calculate real Uber driver earnings after IRS deductions, self-employment tax, gas, and depreciation. See your true hourly rate driving for Uber or Lyft in 2025.',
+    title: 'Uber Driver Earnings Calculator USA 2026 — After Tax Profit',
+    h1: 'Uber Driver Earnings Calculator — USA 2026',
+    metaDesc: 'Calculate real Uber driver earnings after IRS deductions, self-employment tax, gas, and depreciation. See your true hourly rate driving for Uber or Lyft in 2026.',
     intro: `Uber advertises earnings of $30–$40/hour, but the reality for most US drivers is $14–$22/hour net after expenses. The gap comes from costs that aren't visible in the app: gas (15–25% of gross), vehicle depreciation ($0.08–0.15/mile in lost value), insurance, and — critically — the 15.3% self-employment tax (SE tax) that covers both employee and employer Social Security and Medicare contributions.
 
-The IRS 2025 standard mileage rate of $0.70/mile is the simplest deduction method. At the average 20–25 miles per Uber trip, this deduction significantly reduces taxable income. Active drivers (15,000+ miles/year) often benefit from tracking actual expenses instead.
+The IRS 2026 standard mileage rate of $0.70/mile is the simplest deduction method. At the average 20–25 miles per Uber trip, this deduction significantly reduces taxable income. Active drivers (15,000+ miles/year) often benefit from tracking actual expenses instead.
 
 Uber, Lyft, and DoorDash drivers earning more than $600/year receive a 1099-K or 1099-NEC (1099-NEC for non-delivery work). Your net profit after deductions is subject to income tax plus the 15.3% SE tax — though you can deduct half the SE tax from your gross income. Use this calculator to model your real take-home.`,
     faqs: [
       {
         q: 'What is self-employment tax and how does it affect Uber drivers?',
-        a: 'Self-employment (SE) tax is 15.3% on the first $168,600 of net self-employment income (2025), composed of 12.4% Social Security + 2.9% Medicare. Above $200,000 ($250,000 married), an additional 0.9% Medicare surtax applies. As an employee, you split these taxes 50/50 with your employer. As a self-employed Uber driver, you pay both halves. The saving grace: you deduct 50% of your SE tax from gross income on Schedule 1.',
+        a: 'Self-employment (SE) tax is 15.3% on the first $168,600 of net self-employment income (2026), composed of 12.4% Social Security + 2.9% Medicare. Above $200,000 ($250,000 married), an additional 0.9% Medicare surtax applies. As an employee, you split these taxes 50/50 with your employer. As a self-employed Uber driver, you pay both halves. The saving grace: you deduct 50% of your SE tax from gross income on Schedule 1.',
       },
       {
-        q: 'What IRS deductions can Uber drivers claim in 2025?',
-        a: 'Uber drivers can deduct: mileage at $0.70/mile (2025 IRS rate) OR actual vehicle expenses (gas, insurance, maintenance, depreciation) — but not both. Also deductible: phone plan (business portion), water/snacks for passengers, car washes, parking and tolls, Uber-related fees, a portion of your phone bill, and any business-related supplies. Keep records — IRS audits Schedule C filers at higher rates than W-2 employees.',
+        q: 'What IRS deductions can Uber drivers claim in 2026?',
+        a: 'Uber drivers can deduct: mileage at $0.70/mile (2026 IRS rate) OR actual vehicle expenses (gas, insurance, maintenance, depreciation) — but not both. Also deductible: phone plan (business portion), water/snacks for passengers, car washes, parking and tolls, Uber-related fees, a portion of your phone bill, and any business-related supplies. Keep records — IRS audits Schedule C filers at higher rates than W-2 employees.',
       },
       {
         q: 'Should I use the IRS standard mileage rate or actual expenses?',
-        a: 'The standard mileage rate ($0.70/mile in 2025) is simpler and often better for newer, less expensive vehicles and moderate mileage drivers (under 15,000 business miles/year). Actual expenses (gas + insurance + maintenance + depreciation via Section 179 or MACRS) are often better for high-mileage drivers with newer/more expensive vehicles, or when leasing. You must choose one method per vehicle per year; switching from actual expenses back to standard mileage has restrictions.',
+        a: 'The standard mileage rate ($0.70/mile in 2026) is simpler and often better for newer, less expensive vehicles and moderate mileage drivers (under 15,000 business miles/year). Actual expenses (gas + insurance + maintenance + depreciation via Section 179 or MACRS) are often better for high-mileage drivers with newer/more expensive vehicles, or when leasing. You must choose one method per vehicle per year; switching from actual expenses back to standard mileage has restrictions.',
       },
       {
         q: 'Do I need to pay quarterly estimated taxes as an Uber driver?',

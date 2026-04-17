@@ -150,7 +150,7 @@ export default function NumericInput({
 
       {/* ── Hint line (avg rate, context info) — always last ── */}
       {hint && (
-        <p className="text-[11px] text-blue-500 font-medium mt-1 text-center">{hint}</p>
+        <p className="text-[11px] text-blue-500 font-medium mt-1 text-left">{hint}</p>
       )}
     </div>
   )

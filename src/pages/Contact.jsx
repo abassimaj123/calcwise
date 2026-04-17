@@ -101,6 +101,12 @@ export default function Contact() {
               Messages are processed via Formspree. By submitting, you agree to our{' '}
               <a href="#/privacy" className="text-primary hover:text-accent">Privacy Policy</a>.
             </p>
+            <p className="text-center text-sm text-slate-500 mt-2">
+              Or email us directly:{' '}
+              <a href="mailto:hello@calqwise.com" className="text-blue-600 hover:underline">
+                hello@calqwise.com
+              </a>
+            </p>
           </form>
         )}
       </div>

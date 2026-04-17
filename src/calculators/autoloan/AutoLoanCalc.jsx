@@ -118,7 +118,7 @@ export default function AutoLoanCalc({ country }) {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display font-bold mb-2">
-            {c.name} {t('autoloan.title')}
+            {t(`nav.country_${country}`)} — {t('autoloan.title')}
           </h1>
           <p className="text-slate-500">{t('autoloan.desc')}</p>
         </div>
