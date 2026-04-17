@@ -424,7 +424,8 @@
     "payoffTime": "Délai de remboursement",
     "interestPaid": "Intérêts totaux payés",
     "months": "mois",
-    "years": "ans"
+    "years": "ans",
+    "calcIntro": "Ce calculateur de remboursement de carte de crédit vous montre exactement combien de temps il faudra pour rembourser votre solde au paiement minimum — et combien vous économiseriez en payant davantage chaque mois."
   },
   "footer": {
     "tagline": "Calculateurs financiers gratuits pour 6 pays. On vous montre ce que les banques omettent.",
@@ -463,7 +464,8 @@
     "maxHomePrice": "Prix maximal de la maison",
     "maxLoan": "Prêt maximal",
     "dtiRatio": "Ratio dettes/revenus",
-    "incomeDetails": "Revenus et dettes"
+    "incomeDetails": "Revenus et dettes",
+    "calcIntro": "Le calculateur de capacité d'emprunt détermine le prix maximal d'une maison que vous pouvez vous permettre selon vos revenus, vos dettes et votre mise de fonds. Il utilise les directives officielles des prêteurs — ratios d'endettement, tests de résistance et plafonds de revenus."
   },
   "rideprofit": {
     "title": "Calculateur de Profit Covoiturage",
@@ -511,7 +513,8 @@
     "totalBuyCost": "Coût total d'achat",
     "betterToBuy": "Mieux d'acheter",
     "betterToRent": "Mieux de louer",
-    "breakEvenYear": "Année de rentabilité"
+    "breakEvenYear": "Année de rentabilité",
+    "calcIntro": "Le calculateur louer vs acheter compare le coût total réel de la location par rapport à l'achat d'une propriété. Il tient compte des versements hypothécaires, de l'appréciation, des hausses de loyer, des avantages fiscaux et du coût d'opportunité de la mise de fonds."
   },
   "propertyroi": {
     "title": "Calculateur de ROI Immobilier",
@@ -532,7 +535,8 @@
     "propertyMgmt": "Gestion immobilière (% du loyer)",
     "vacancyRate": "Taux d'inoccupation (%)",
     "propertySpecificCosts": "COÛTS SPÉCIFIQUES",
-    "additionalExpenses": "Dépenses supplémentaires"
+    "additionalExpenses": "Dépenses supplémentaires",
+    "calcIntro": "Le calculateur de ROI immobilier mesure le rendement sur investissement d'un immeuble locatif. Saisissez le prix d'achat, le loyer, les dépenses et le financement pour obtenir le taux de capitalisation, le rendement sur fonds propres et le ROI total."
   },
   "refinance": {
     "title": "Calculateur de Refinancement Hypothécaire",
@@ -547,7 +551,8 @@
     "breakEven": "Point de rentabilité",
     "lifetimeSavings": "Économies totales",
     "currentLoan": "Prêt actuel",
-    "newLoan": "Nouveau prêt"
+    "newLoan": "Nouveau prêt",
+    "calcIntro": "Le calculateur de refinancement hypothécaire détermine si refinancer est financièrement avantageux. Il calcule vos économies mensuelles, le point d'équilibre et l'intérêt total économisé sur la durée du prêt."
   },
   "heloc": {
     "title": "Calculateur de Marge de Crédit Hypothécaire",
@@ -563,7 +568,8 @@
     "repayPayment": "Paiement mensuel (remboursement)",
     "availableCredit": "Crédit disponible",
     "marginAbovePrime": "Marge au-dessus du taux de base (%)",
-    "additionalCosts": "Coûts additionnels"
+    "additionalCosts": "Coûts additionnels",
+    "calcIntro": "Un HELOC (marge de crédit sur valeur domiciliaire) vous permet d'emprunter sur la valeur nette de votre maison. Ce calculateur affiche votre crédit disponible, les paiements en période de tirage (intérêts seulement) et les paiements en période de remboursement."
   },
   "studentloan": {
     "title": "Calculateur de Prêt Étudiant",
@@ -575,7 +581,8 @@
     "totalInterest": "Intérêts totaux",
     "totalCost": "Coût total",
     "loanDetails": "Détails du prêt",
-    "repaymentPlan": "Plan de remboursement"
+    "repaymentPlan": "Plan de remboursement",
+    "calcIntro": "Le calculateur de prêt étudiant affiche votre paiement mensuel, l'intérêt total et la date de remboursement selon votre solde, votre taux et votre durée. Comparez les plans standard et prolongé pour faire le meilleur choix."
   },
   "salary": {
     "title": "Calculateur de Salaire",

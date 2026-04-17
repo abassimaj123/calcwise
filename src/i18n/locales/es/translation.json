@@ -424,7 +424,8 @@
     "payoffTime": "Tiempo de liquidación",
     "interestPaid": "Interés total pagado",
     "months": "meses",
-    "years": "años"
+    "years": "años",
+    "calcIntro": "Esta calculadora de pago de tarjeta de crédito muestra exactamente cuánto tiempo tardará en pagar su saldo con el pago mínimo — y cuánto podría ahorrar pagando más cada mes."
   },
   "footer": {
     "tagline": "Calculadoras financieras gratuitas para 6 países. Lo que tu banco no te muestra.",
@@ -463,7 +464,8 @@
     "maxHomePrice": "Precio máximo de la casa",
     "maxLoan": "Préstamo máximo",
     "dtiRatio": "Ratio deuda/ingreso",
-    "incomeDetails": "Ingresos y deudas"
+    "incomeDetails": "Ingresos y deudas",
+    "calcIntro": "La calculadora de asequibilidad le indica el precio máximo de vivienda que puede pagar según sus ingresos, deudas y pago inicial. Utiliza las pautas oficiales de los prestamistas: ratios de deuda, pruebas de estrés y límites de ingresos."
   },
   "rideprofit": {
     "title": "Calculadora de Ganancias Rideshare",
@@ -511,7 +513,8 @@
     "totalBuyCost": "Costo total de compra",
     "betterToBuy": "Mejor comprar",
     "betterToRent": "Mejor alquilar",
-    "breakEvenYear": "Año de equilibrio"
+    "breakEvenYear": "Año de equilibrio",
+    "calcIntro": "La calculadora alquilar vs comprar compara el costo total real de alquilar frente a comprar una vivienda. Considera los pagos hipotecarios, la revalorización, los aumentos de alquiler, los beneficios fiscales y el costo de oportunidad del pago inicial."
   },
   "propertyroi": {
     "title": "Calculadora de ROI Inmobiliario",
@@ -532,7 +535,8 @@
     "propertyMgmt": "Gestión inmobiliaria (% del alquiler)",
     "vacancyRate": "Tasa de vacancia (%)",
     "propertySpecificCosts": "COSTOS ESPECÍFICOS",
-    "additionalExpenses": "Gastos adicionales"
+    "additionalExpenses": "Gastos adicionales",
+    "calcIntro": "La calculadora de ROI inmobiliario mide el retorno de inversión de una propiedad en alquiler. Ingrese el precio de compra, el alquiler, los gastos y el financiamiento para ver la tasa de capitalización, el rendimiento sobre el capital y el ROI total."
   },
   "refinance": {
     "title": "Calculadora de Refinanciamiento Hipotecario",
@@ -547,7 +551,8 @@
     "breakEven": "Punto de equilibrio",
     "lifetimeSavings": "Ahorro total",
     "currentLoan": "Préstamo actual",
-    "newLoan": "Nuevo préstamo"
+    "newLoan": "Nuevo préstamo",
+    "calcIntro": "La calculadora de refinanciamiento hipotecario determina si refinanciar es conveniente. Calcula sus ahorros mensuales, el punto de equilibrio y el interés total ahorrado durante la vida del préstamo."
   },
   "heloc": {
     "title": "Calculadora de HELOC",
@@ -563,7 +568,8 @@
     "repayPayment": "Pago mensual",
     "availableCredit": "Crédito disponible",
     "marginAbovePrime": "Margen sobre tasa base (%)",
-    "additionalCosts": "Costos adicionales"
+    "additionalCosts": "Costos adicionales",
+    "calcIntro": "Una HELOC (línea de crédito sobre el valor de la vivienda) le permite pedir prestado contra el valor neto de su hogar. Esta calculadora muestra su crédito disponible, los pagos durante el período de disposición (solo intereses) y los pagos en el período de reembolso."
   },
   "studentloan": {
     "title": "Calculadora de Préstamo Estudiantil",
@@ -575,7 +581,8 @@
     "totalInterest": "Interés total",
     "totalCost": "Costo total",
     "loanDetails": "Detalles del préstamo",
-    "repaymentPlan": "Plan de pago"
+    "repaymentPlan": "Plan de pago",
+    "calcIntro": "La calculadora de préstamos estudiantiles muestra su cuota mensual, el interés total y la fecha de pago según su saldo, tasa y plazo. Compare los planes estándar y ampliado para elegir la mejor opción."
   },
   "salary": {
     "title": "Calculadora de Salario",

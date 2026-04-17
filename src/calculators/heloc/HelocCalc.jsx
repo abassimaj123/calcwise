@@ -130,7 +130,12 @@ function calcHELOC({ homeValue, mortgageBalance, margin, drawAmount, drawPeriodY
 // Main component
 // ---------------------------------------------------------------------------
 export default function HelocCalc({ country = 'us' }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const tYears = (n) => {
+    if (i18n.language.startsWith('fr')) return `${n} ans`
+    if (i18n.language.startsWith('es')) return `${n} años`
+    return `${n} years`
+  }
   const c = countries[country] || { symbol: '$', locale: 'en-US', currency: 'USD', name: 'US' }
   const optionDefs = HELOC_OPTIONS[country] || []
 
@@ -212,7 +217,7 @@ export default function HelocCalc({ country = 'us' }) {
         </div>
 
         <CalcIntro
-          intro="A HELOC (Home Equity Line of Credit) lets you borrow against your home's equity. This calculator shows your available credit, interest-only draw period payments, and full repayment phase payments."
+          intro={t('heloc.calcIntro', { defaultValue: "A HELOC (Home Equity Line of Credit) lets you borrow against your home's equity. This calculator shows your available credit, interest-only draw period payments, and full repayment phase payments." })}
           hiddenCost="Repayment phase payments can be 2-3x the draw phase amount"
         />
 
@@ -239,13 +244,13 @@ export default function HelocCalc({ country = 'us' }) {
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('heloc.drawPeriod')}</label>
               <select className="cw-input" value={drawPeriod} onChange={e => setDrawPeriod(+e.target.value)}>
-                {[5, 10, 15].map(y => <option key={y} value={y}>{y} years</option>)}
+                {[5, 10, 15].map(y => <option key={y} value={y}>{tYears(y)}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">{t('heloc.repayPeriod')}</label>
               <select className="cw-input" value={repayPeriod} onChange={e => setRepayPeriod(+e.target.value)}>
-                {[10, 15, 20].map(y => <option key={y} value={y}>{y} years</option>)}
+                {[10, 15, 20].map(y => <option key={y} value={y}>{tYears(y)}</option>)}
               </select>
             </div>
           </div>

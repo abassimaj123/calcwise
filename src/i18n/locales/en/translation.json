@@ -424,7 +424,8 @@
     "payoffTime": "Payoff Time",
     "interestPaid": "Total Interest Paid",
     "months": "months",
-    "years": "years"
+    "years": "years",
+    "calcIntro": "This credit card payoff calculator shows exactly how long it will take to pay off your balance at minimum payments — and how much you can save by paying more each month."
   },
   "footer": {
     "tagline": "Free financial calculators for 6 countries. We show what banks leave out.",
@@ -463,7 +464,8 @@
     "maxHomePrice": "Maximum Home Price",
     "maxLoan": "Maximum Loan",
     "dtiRatio": "Debt-to-Income Ratio",
-    "incomeDetails": "Income & Debts"
+    "incomeDetails": "Income & Debts",
+    "calcIntro": "The home affordability calculator tells you the maximum home price you can afford based on your income, debts, and down payment. It uses official lender guidelines for your country — DTI ratios, stress tests, and income caps."
   },
   "rideprofit": {
     "title": "Rideshare Profit Calculator",
@@ -511,7 +513,8 @@
     "totalBuyCost": "Total Buy Cost",
     "betterToBuy": "Better to Buy",
     "betterToRent": "Better to Rent",
-    "breakEvenYear": "Break-even Year"
+    "breakEvenYear": "Break-even Year",
+    "calcIntro": "The rent vs buy calculator compares the true total cost of renting versus buying a home over time. It accounts for mortgage payments, property appreciation, rent increases, tax benefits, and opportunity cost of your down payment."
   },
   "propertyroi": {
     "title": "Property ROI Calculator",
@@ -532,7 +535,8 @@
     "propertyMgmt": "Property Mgmt (% of rent)",
     "vacancyRate": "Vacancy Rate (%)",
     "propertySpecificCosts": "PROPERTY-SPECIFIC COSTS",
-    "additionalExpenses": "Additional Expenses"
+    "additionalExpenses": "Additional Expenses",
+    "calcIntro": "The property ROI calculator measures the return on investment of a rental property. Enter purchase price, rent, expenses and financing to see cap rate, cash-on-cash return, and total ROI including appreciation."
   },
   "refinance": {
     "title": "Mortgage Refinance Calculator",
@@ -547,7 +551,8 @@
     "breakEven": "Break-even Point",
     "lifetimeSavings": "Lifetime Savings",
     "currentLoan": "Current Loan",
-    "newLoan": "New Loan"
+    "newLoan": "New Loan",
+    "calcIntro": "The mortgage refinance calculator shows whether refinancing makes financial sense. It calculates your monthly savings, break-even point (when savings exceed closing costs), and total interest saved over the life of the loan."
   },
   "heloc": {
     "title": "HELOC Calculator",
@@ -563,7 +568,8 @@
     "repayPayment": "Monthly Repayment",
     "availableCredit": "Available Credit",
     "marginAbovePrime": "Margin above Prime (%)",
-    "additionalCosts": "Additional Costs"
+    "additionalCosts": "Additional Costs",
+    "calcIntro": "A HELOC (Home Equity Line of Credit) lets you borrow against your home's equity. This calculator shows your available credit, interest-only draw period payments, and full repayment phase payments."
   },
   "studentloan": {
     "title": "Student Loan Calculator",
@@ -575,7 +581,8 @@
     "totalInterest": "Total Interest",
     "totalCost": "Total Cost",
     "loanDetails": "Loan Details",
-    "repaymentPlan": "Repayment Plan"
+    "repaymentPlan": "Repayment Plan",
+    "calcIntro": "The student loan calculator shows your monthly payment, total interest, and payoff date based on your loan balance, interest rate, and repayment term. Compare standard and extended repayment plans to make the best choice."
   },
   "salary": {
     "title": "Salary Calculator",

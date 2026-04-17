@@ -304,7 +304,7 @@ export default function StudentLoanCalc({ country = 'us' }) {
         </div>
 
         <CalcIntro
-          intro="The student loan calculator shows your monthly payment, total interest, and payoff date based on your loan balance, interest rate, and repayment term. Compare standard and extended repayment plans to make the best choice."
+          intro={t('studentloan.calcIntro', { defaultValue: 'The student loan calculator shows your monthly payment, total interest, and payoff date based on your loan balance, interest rate, and repayment term. Compare standard and extended repayment plans to make the best choice.' })}
           hiddenCost="Extended repayment plans double or triple total interest"
         />
 

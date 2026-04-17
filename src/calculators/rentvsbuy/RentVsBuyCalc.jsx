@@ -258,7 +258,7 @@ export default function RentVsBuyCalc({ country }) {
         </div>
 
         <CalcIntro
-          intro="The rent vs buy calculator compares the true total cost of renting versus buying a home over time. It accounts for mortgage payments, property appreciation, rent increases, tax benefits, and opportunity cost of your down payment."
+          intro={t('rentvsbuy.calcIntro', { defaultValue: 'The rent vs buy calculator compares the true total cost of renting versus buying a home over time. It accounts for mortgage payments, property appreciation, rent increases, tax benefits, and opportunity cost of your down payment.' })}
           hiddenCost="Opportunity cost of down payment is often ignored"
         />
 

@@ -269,7 +269,7 @@ export default function AffordabilityCalc({ country = 'us' }) {
         </div>
 
         <CalcIntro
-          intro="The home affordability calculator tells you the maximum home price you can afford based on your income, debts, and down payment. It uses official lender guidelines for your country — DTI ratios, stress tests, and income caps."
+          intro={t('affordability.calcIntro', { defaultValue: 'The home affordability calculator tells you the maximum home price you can afford based on your income, debts, and down payment. It uses official lender guidelines for your country — DTI ratios, stress tests, and income caps.' })}
           hiddenCost="Lender stress tests add 2-3% to qualifying rate"
         />
 

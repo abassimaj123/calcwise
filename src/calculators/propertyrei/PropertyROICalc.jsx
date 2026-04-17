@@ -239,7 +239,7 @@ export default function PropertyROICalc({ country = 'us' }) {
           <p className="text-slate-500">{t('propertyroi.desc')}</p>
         </div>
 
-        <CalcIntro intro="The property ROI calculator measures the return on investment of a rental property. Enter purchase price, rent, expenses and financing to see cap rate, cash-on-cash return, and total ROI including appreciation." hiddenCost="Vacancy costs reduce ROI by 8-10% annually" />
+        <CalcIntro intro={t('propertyroi.calcIntro', { defaultValue: 'The property ROI calculator measures the return on investment of a rental property. Enter purchase price, rent, expenses and financing to see cap rate, cash-on-cash return, and total ROI including appreciation.' })} hiddenCost="Vacancy costs reduce ROI by 8-10% annually" />
 
         {/* Main inputs */}
         <div className="cw-card mb-4">

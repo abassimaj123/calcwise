@@ -147,7 +147,7 @@ export default function RefinanceCalc({ country = 'us' }) {
           <p className="text-slate-500">{t('refinance.desc')}</p>
         </div>
 
-        <CalcIntro intro="The mortgage refinance calculator shows whether refinancing makes financial sense. It calculates your monthly savings, break-even point (when savings exceed closing costs), and total interest saved over the life of the loan." hiddenCost="Closing costs add 2-5% to your new loan" />
+        <CalcIntro intro={t('refinance.calcIntro', { defaultValue: 'The mortgage refinance calculator shows whether refinancing makes financial sense. It calculates your monthly savings, break-even point (when savings exceed closing costs), and total interest saved over the life of the loan.' })} hiddenCost="Closing costs add 2-5% to your new loan" />
 
         <div className="cw-card mb-6">
           <h3 className="text-sm text-slate-500 uppercase tracking-wider mb-4">{t('refinance.currentLoan')}</h3>

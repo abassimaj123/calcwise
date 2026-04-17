@@ -216,7 +216,7 @@ export default function CreditCardCalc({ country = 'us' }) {
         </div>
 
         <CalcIntro
-          intro="This credit card payoff calculator shows exactly how long it will take to pay off your balance at minimum payments — and how much you can save by paying more each month."
+          intro={t('creditcard.calcIntro', { defaultValue: 'This credit card payoff calculator shows exactly how long it will take to pay off your balance at minimum payments — and how much you can save by paying more each month.' })}
           hiddenCost="Minimum payments cost 3-4x more in interest"
         />
 

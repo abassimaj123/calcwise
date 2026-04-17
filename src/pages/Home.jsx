@@ -83,7 +83,7 @@ export default function Home() {
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-slate-900 leading-tight tracking-tight">
+          <h1 className="font-display font-bold mb-6 text-slate-900 leading-tight tracking-tight" style={{ fontSize: 'clamp(1.875rem, 8vw, 3.75rem)' }}>
             {t('hero.title')}<br />
             <span className="text-primary">{t('hero.titleHighlight')}</span>
           </h1>
