@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
@@ -193,6 +194,14 @@ export default function AffordabilityCalc({ country = 'us' }) {
       default: return calcAffordabilityUS({ grossIncome, monthlyDebts, downPayment, rate, loanType })
     }
   }, [grossIncome, monthlyDebts, downPayment, rate, loanType, country])
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('affordability', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const fmt = (n) => new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
   const fmtD = (n) => new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)

@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -150,6 +151,14 @@ export default function CreditCardCalc({ country = 'us' }) {
     () => calcCreditCard({ balance, apr, payMode, minPct, fixedAmount, payoffMonths, extraPayment }),
     [balance, apr, payMode, minPct, fixedAmount, payoffMonths, extraPayment]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('credit-card', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)

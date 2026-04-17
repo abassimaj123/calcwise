@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import {
   AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -108,6 +109,14 @@ export default function RefinanceCalc({ country = 'us' }) {
     () => calcRefinance({ currentBalance: balance, currentRate, remainingMonths: remainingYears * 12, newRate, newTermYears: newTerm, closingCosts }),
     [balance, currentRate, remainingYears, newRate, newTerm, closingCosts]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('refinance', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)

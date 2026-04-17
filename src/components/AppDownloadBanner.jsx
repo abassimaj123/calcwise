@@ -1,4 +1,5 @@
 import { mobileApps, playStoreLinks } from '../config/apps'
+import { trackAppDownloadClick } from '../utils/analytics'
 
 export default function AppDownloadBanner({ calcKey, country }) {
   const status = mobileApps[calcKey]?.[country]
@@ -20,6 +21,7 @@ export default function AppDownloadBanner({ calcKey, country }) {
             href={playLink}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackAppDownloadClick('android', calcKey, country)}
             className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-slate-800 transition-colors"
           >
             ▶ Google Play

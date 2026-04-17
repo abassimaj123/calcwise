@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -11,6 +11,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import { trackCalcUsed } from '../../utils/analytics'
 import { CalcFAQ, CalcRelated, CalcSubTopics } from '../../components/CalcSEO'
 import { subPagesByCalc } from '../../data/seoPages'
 import NumericInput from '../../components/NumericInput'
@@ -411,6 +412,14 @@ export default function TaxCalc({ country }) {
     const engine = calcEngines[country]
     return engine ? engine(taxableGross) : null
   }, [taxableGross, country])
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('tax', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const activeDeductions = deductionDefs.filter(d => dedEnabled[d.key] && dedAmounts[d.key] > 0)
   const activeDedCount = activeDeductions.length

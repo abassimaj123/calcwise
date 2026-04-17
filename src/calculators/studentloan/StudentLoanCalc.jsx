@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   AreaChart, Area, PieChart, Pie, Cell,
@@ -222,6 +223,14 @@ export default function StudentLoanCalc({ country = 'us' }) {
 
     return { standard, ibr, paye, save }
   }, [balance, rate, income, familySize])
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (results && !tracked.current) {
+      trackCalcUsed('student-loan', country)
+      tracked.current = true
+    }
+  }, [results])
 
   // Extra payment savings vs standard
   const extraSavings = useMemo(() => {

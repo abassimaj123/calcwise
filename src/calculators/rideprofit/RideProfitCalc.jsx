@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -13,6 +13,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import { trackCalcUsed } from '../../utils/analytics'
 import NumericInput from '../../components/NumericInput'
 
 // Mileage deduction rates 2025
@@ -171,6 +172,14 @@ export default function RideProfitCalc({ country }) {
       annualNet, annualTaxDeduction, distKm,
     }
   }, [revenue, distance, fuelConsumption, fuelPrice, hoursWorked, isImperial, mr.rate, weeklyExtraTotal])
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('rideprofit', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)

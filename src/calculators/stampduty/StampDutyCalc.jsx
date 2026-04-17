@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -105,6 +106,14 @@ export default function StampDutyCalc() {
   const [tab, setTab] = useState('summary')
 
   const result = useMemo(() => calcSDLT({ price, buyerType }), [price, buyerType])
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('stamp-duty', 'uk')
+      tracked.current = true
+    }
+  }, [result])
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)

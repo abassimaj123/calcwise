@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -215,6 +216,14 @@ export default function DebtPayoffCalc({ country = 'us' }) {
     () => calcDebtPayoff(debts, extraPayment, strategy),
     [debts, extraPayment, strategy]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('debt-payoff', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const jsonLd = {
     '@context': 'https://schema.org',

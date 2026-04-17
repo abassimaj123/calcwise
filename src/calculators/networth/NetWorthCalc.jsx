@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import {
   PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
@@ -112,6 +113,14 @@ export default function NetWorthCalc({ country = 'us' }) {
   const netWorth = totalAssets - totalLiabs
 
   const hasData = totalAssets > 0 || totalLiabs > 0
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (hasData && !tracked.current) {
+      trackCalcUsed('net-worth', country)
+      tracked.current = true
+    }
+  }, [hasData])
 
   const badge = healthBadge(netWorth)
 

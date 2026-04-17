@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
@@ -188,6 +189,14 @@ export default function PropertyROICalc({ country = 'us' }) {
     () => calcPropertyROI({ purchasePrice: price, downPayment: down, monthlyRent: rent, expensePct: expenses, managementPct: management, vacancyRate: vacancy, mortgageRate, extraMonthlyTotal }),
     [price, down, rent, expenses, management, vacancy, mortgageRate, extraMonthlyTotal]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('property-roi', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)

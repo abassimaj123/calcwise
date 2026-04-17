@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { countries } from '../../config/countries'
@@ -8,6 +8,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import { trackCalcUsed } from '../../utils/analytics'
 import NumericInput from '../../components/NumericInput'
 import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
@@ -60,6 +61,14 @@ export default function AutoLoanCalc({ country }) {
     () => calcAutoLoan({ vehiclePrice: price, downPayment: down, tradeIn, apr, termMonths: term, salesTaxRate: taxRate }),
     [price, down, tradeIn, apr, term, taxRate]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('autoloan', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const schedule = useMemo(
     () => result ? buildSchedule(result.loanAmount, apr, term) : [],

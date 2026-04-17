@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import {
   AreaChart, Area, BarChart, Bar,
@@ -136,6 +137,14 @@ export default function SavingsCalc({ country = 'us' }) {
     () => calcSavings({ principal, monthly, rate, years, compoundFreq, inflation, taxRate }),
     [principal, monthly, rate, years, compoundFreq, inflation, taxRate]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('savings', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const yearlyData = useMemo(
     () => buildYearlyData(principal, monthly, rate, years, compoundFreq, inflation),

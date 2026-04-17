@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { countries } from '../../config/countries'
 import { SALARY_DEDUCTIONS } from '../../config/salaryDeductions'
@@ -192,6 +193,14 @@ export default function SalaryCalc({ country }) {
 
   const annualNet = annualGross - incomeTax - contributions - postTaxTotal
   const effectiveRate = annualGross > 0 ? (incomeTax + contributions) / annualGross * 100 : 0
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (annualNet > 0 && !tracked.current) {
+      trackCalcUsed('salary', country)
+      tracked.current = true
+    }
+  }, [annualNet])
 
   const activeDeductions = deductionDefs.filter(d => dedEnabled[d.key] && dedAmounts[d.key] > 0)
   const activeDedTotal = preTaxTotal + postTaxTotal

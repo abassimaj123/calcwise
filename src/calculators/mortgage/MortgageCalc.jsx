@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -11,6 +11,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
+import { trackCalcUsed } from '../../utils/analytics'
 import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated, CalcHowTo, CalcSubTopics } from '../../components/CalcSEO'
 import { subPagesByCalc } from '../../data/seoPages'
 import NumericInput from '../../components/NumericInput'
@@ -1096,6 +1097,14 @@ export default function MortgageCalc({ country }) {
     () => calcMortgage({ price, down, rate, termYears: term, country }),
     [price, down, rate, term, country]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('mortgage', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const amortData = useMemo(() => {
     if (!result) return []

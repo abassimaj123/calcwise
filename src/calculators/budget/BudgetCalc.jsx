@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -201,6 +202,14 @@ export default function BudgetCalc({ country = 'us' }) {
     debtPayments, savings, emergency,
     health, subscriptions, clothing, entertainment, other,
   ])
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('budget', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const isPositive = result && result.surplus >= 0
 

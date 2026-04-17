@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { countries } from '../../config/countries'
 import ResultSimple from '../../components/ResultSimple'
@@ -201,6 +202,14 @@ export default function RentVsBuyCalc({ country }) {
     () => calcRentVsBuy({ homePrice, downPayment, mortgageRate: rate, termYears: term, monthlyRent: rent, rentIncrease, homeAppreciation: appreciation, extraBuyMonthly }),
     [homePrice, downPayment, rate, term, rent, rentIncrease, appreciation, extraBuyMonthly]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('rentvsbuy', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const fmt = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)

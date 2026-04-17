@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   AreaChart, Area,
@@ -169,6 +170,14 @@ export default function HelocCalc({ country = 'us' }) {
     }),
     [homeValue, mortgageBalance, margin, drawAmount, drawPeriod, repayPeriod, extraMonthlyDraw, extraMonthlyRepay]
   )
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('heloc', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const fmt  = (n) => new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
   const fmtD = (n) => new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)

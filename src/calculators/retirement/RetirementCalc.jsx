@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { trackCalcUsed } from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import {
   AreaChart, Area, BarChart, Bar,
@@ -864,6 +865,14 @@ export default function RetirementCalc({ country = 'us' }) {
     currentAge, retireAge, currentSavings, monthlyContrib,
     preRate, monthlyNeed, postRate, inflation, govtBenefit,
   }), [currentAge, retireAge, currentSavings, monthlyContrib, preRate, monthlyNeed, postRate, inflation, govtBenefit])
+
+  const tracked = useRef(false)
+  useEffect(() => {
+    if (result && !tracked.current) {
+      trackCalcUsed('retirement', country)
+      tracked.current = true
+    }
+  }, [result])
 
   const shortfallAmt = result.savingsNeeded - result.projectedSavings
 
