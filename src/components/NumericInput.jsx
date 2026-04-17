@@ -6,12 +6,31 @@
  *   showSlider?  boolean  — show a range slider below the input (default false)
  *   label?       string   — label shown above the input
  *   hint?        string   — small help text shown below min/max labels
+ *
+ * Display behaviour:
+ *   When unfocused and value ≥ 1000, shows compact form: 700k, 1.2M
+ *   When focused, shows the raw number for editing.
+ *   Percentage / small values (step < 1) are never compacted.
  */
+import { useState } from 'react'
+
+// Compact formatter: 700000 → "700k", 1200000 → "1.2M"
+function fmtCompact(v, step) {
+  const n = parseFloat(v)
+  if (isNaN(n)) return String(v)
+  // Don't compact decimals/percentages
+  if (step < 1 || Math.abs(n) < 1000) return String(n)
+  if (Math.abs(n) >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
+  return Math.round(n / 1000) + 'k'
+}
+
 export default function NumericInput({
   value, onChange, min = -Infinity, max = Infinity, step = 1,
   prefix = '', suffix = '', className = '', inputMode = 'decimal',
   showSlider = false, label = '', hint = '',
 }) {
+  const [focused, setFocused] = useState(false)
+
   const clamp = (v) => Math.min(Math.max(v, min), max)
   const decrement = () => onChange(clamp(parseFloat((+value - step).toFixed(10))))
   const increment = () => onChange(clamp(parseFloat((+value + step).toFixed(10))))
@@ -23,15 +42,25 @@ export default function NumericInput({
     if (!isNaN(parsed)) onChange(clamp(parsed))
   }
 
+  const handleFocus = (e) => {
+    setFocused(true)
+    // Select all on focus so typing replaces the value
+    setTimeout(() => e.target.select(), 0)
+  }
+  const handleBlur = () => setFocused(false)
+
   const handleSlider = (e) => onChange(clamp(parseFloat(e.target.value)))
 
   const sliderPct = (max !== Infinity && min !== -Infinity)
     ? Math.round(((value - min) / (max - min)) * 100)
     : 50
 
+  // When focused: show raw number. When blurred: show compact format.
+  const displayValue = focused ? value : fmtCompact(value, step)
+
   const btnBase = [
     'flex items-center justify-center',
-    'w-7 min-h-[44px]',             // 28px — leaves more room for value area
+    'w-7 min-h-[44px]',             // 28px — compact; leaves max room for value
     'bg-slate-100 hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100',
     'text-slate-600 font-bold text-xl transition-colors select-none shrink-0',
   ].join(' ')
@@ -67,15 +96,17 @@ export default function NumericInput({
             </span>
           )}
           <input
-            type="number"
+            type={focused ? 'number' : 'text'}
             inputMode={inputMode}
-            value={value}
+            value={displayValue}
             onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             min={min}
             max={max}
             step={step}
             className="flex-1 min-w-0 min-h-[44px] bg-white text-center text-slate-900 font-semibold text-sm focus:outline-none"
-            style={{ minWidth: '100px' }}
+            style={{ minWidth: '60px' }}
           />
           {suffix && (
             <span className="pr-2 text-slate-500 text-sm font-medium pointer-events-none select-none shrink-0 leading-none">
@@ -111,8 +142,8 @@ export default function NumericInput({
             }}
           />
           <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-            <span>{prefix}{min}{suffix}</span>
-            <span>{prefix}{max}{suffix}</span>
+            <span>{prefix}{fmtCompact(min, step)}{suffix}</span>
+            <span>{prefix}{fmtCompact(max, step)}{suffix}</span>
           </div>
         </div>
       )}
