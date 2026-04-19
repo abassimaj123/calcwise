@@ -739,7 +739,6 @@ export default function TaxCalc({ country, embedded = false }) {
         <CalcIntro intro={taxIntroText[country] || taxIntroText.us} />
         <CalcFeatures features={taxFeatures[country] || taxFeatures.us} />
         <CalcHowTo steps={taxHowToSteps[country] || taxHowToSteps.us} />
-        <AdSenseSlot format="in-article" placement="in-content" />
         <CalcFAQ faqs={TAX_FAQS[country] || TAX_FAQS.us} />
         <CalcSubTopics links={subPagesByCalc[`${country}/tax`] || []} />
         <CalcRelated links={[

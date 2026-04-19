@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { seoPageMap } from '../data/seoPages'
 import { CalcFAQ, CalcRelated, CalcSubTopics } from '../components/CalcSEO'
-import AdSenseSlot from '../components/AdSenseSlot'
 
 // Calc components keyed by "country/calc"
 const calcComponents = {
@@ -146,11 +145,6 @@ export default function SEOCalcPage() {
         )}
       </div>
 
-      {/* In-article ad before calculator — high viewability, user engaged */}
-      <div className="max-w-7xl mx-auto px-4">
-        <AdSenseSlot format="in-article" placement="before-calc" />
-      </div>
-
       {/* Embedded Calculator */}
       {CalcComponent && (
         <Suspense fallback={<LoadingSpinner />}>
@@ -161,7 +155,6 @@ export default function SEOCalcPage() {
       {/* FAQ + Related */}
       <div className="max-w-7xl mx-auto px-4 pb-8">
         <CalcFAQ faqs={page.faqs} />
-        <AdSenseSlot format="rectangle" placement="after-faq" />
         {page.relatedCalcs && page.relatedCalcs.length > 0 && (
           <CalcRelated links={page.relatedCalcs} />
         )}
@@ -173,7 +166,6 @@ export default function SEOCalcPage() {
             ← Back to full {calc} calculator
           </Link>
         </div>
-        <AdSenseSlot format="leaderboard" placement="bottom" />
       </div>
     </>
   )

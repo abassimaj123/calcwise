@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
 
 // Sticky bottom banner — mobile only (<768px).
-// Dismissed state persists 4 hours via localStorage so it re-appears on return visits.
-
-const DISMISS_KEY = 'cw_sticky_ad_dismissed'
-const DISMISS_TTL = 4 * 60 * 60 * 1000 // 4 hours
+// Renders a fixed bottom AdSense unit that stays visible while scrolling.
+// Industry data: 30-40% of total AdSense revenue comes from sticky mobile banners.
+// Dismissed after user taps ✕.
 
 export default function StickyAdBanner() {
-  const [dismissed, setDismissed] = useState(true) // start hidden, check localStorage
+  const [dismissed, setDismissed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -16,18 +15,6 @@ export default function StickyAdBanner() {
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
-
-  useEffect(() => {
-    const stored = localStorage.getItem(DISMISS_KEY)
-    if (!stored || Date.now() - Number(stored) > DISMISS_TTL) {
-      setDismissed(false)
-    }
-  }, [])
-
-  const handleDismiss = () => {
-    localStorage.setItem(DISMISS_KEY, String(Date.now()))
-    setDismissed(true)
-  }
 
   if (!isMobile || dismissed) return null
 
@@ -58,7 +45,7 @@ export default function StickyAdBanner() {
         Ad
       </span>
       <button
-        onClick={handleDismiss}
+        onClick={() => setDismissed(true)}
         aria-label="Close ad"
         style={{
           position: 'absolute', top: 2, right: 6,
