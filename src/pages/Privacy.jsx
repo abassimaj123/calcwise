@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import AdSenseSlot from '../components/AdSenseSlot'
 
 const CONTACT_EMAIL = 'hello@calqwise.com'
 
@@ -174,6 +175,7 @@ export default function Privacy() {
             </P>
           </Section>
 
+          <AdSenseSlot format="leaderboard" placement="bottom" />
         </div>
       </div>
     </>

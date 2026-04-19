@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { countries } from '../config/countries'
+import AdSenseSlot from '../components/AdSenseSlot'
 
 const OFFICIAL_SOURCES = [
   { name: 'IRS (US Income Tax)', url: 'https://www.irs.gov/tax-professionals/tax-code-regulations-and-official-guidance', country: '🇺🇸' },
@@ -226,6 +227,7 @@ export default function About() {
           </div>
 
         </div>
+        <AdSenseSlot format="leaderboard" placement="bottom" />
       </div>
     </>
   )

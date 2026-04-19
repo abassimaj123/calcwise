@@ -43,12 +43,7 @@ export default function AdSenseSlot({ format = 'rectangle', slot, placement = ''
       </span>
       <ins
         className="adsbygoogle"
-        style={{
-          display: 'block',
-          width: '100%',
-          height: 0,           // force height 0 until AdSense approved
-          overflow: 'hidden',  // prevent layout expansion
-        }}
+        style={{ display: 'block', width: '100%' }}
         data-ad-client="ca-pub-5379540026739666"
         data-ad-slot={slot || '0000000000'}
         data-ad-format={format === 'rectangle' ? 'auto' : format}

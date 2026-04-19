@@ -328,17 +328,21 @@ export default function AutoLoanCalc({ country, embedded = false }) {
         <AdSenseSlot format="leaderboard" />
       </div>
 
-      <CalcIntro intro="An auto loan calculator helps you find the exact monthly payment for your vehicle financing. Enter the vehicle price, your down payment, trade-in value, APR and loan term to see total interest and true cost of ownership." />
-      <CalcFAQ faqs={[
-        { q: 'What is a good APR for a car loan?', a: 'In 2026, good credit borrowers get 5-7% APR. Average is around 7-9%. Credit unions often offer lower rates than dealerships.' },
-        { q: 'Should I put more money down?', a: 'Yes — a larger down payment reduces your loan amount, monthly payments and total interest paid. Aim for at least 10-20% down.' },
-        { q: 'Is a longer loan term better?', a: 'Longer terms (72-84 months) lower monthly payments but significantly increase total interest. 48-60 months is typically the sweet spot.' },
-      ]} />
-      <CalcRelated links={[
-        { to: `/${country}/mortgage`, label: 'Mortgage Calculator' },
-        { to: `/${country}/loan-payoff`, label: 'Loan Payoff' },
-        { to: `/${country}/affordability`, label: 'Affordability Calculator' },
-      ]} />
+      <div className="max-w-7xl mx-auto px-4 pb-8">
+        <CalcIntro intro="An auto loan calculator helps you find the exact monthly payment for your vehicle financing. Enter the vehicle price, your down payment, trade-in value, APR and loan term to see total interest and true cost of ownership." />
+        <AdSenseSlot format="in-article" placement="in-content" />
+        <CalcFAQ faqs={[
+          { q: 'What is a good APR for a car loan?', a: 'In 2026, good credit borrowers get 5-7% APR. Average is around 7-9%. Credit unions often offer lower rates than dealerships.' },
+          { q: 'Should I put more money down?', a: 'Yes — a larger down payment reduces your loan amount, monthly payments and total interest paid. Aim for at least 10-20% down.' },
+          { q: 'Is a longer loan term better?', a: 'Longer terms (72-84 months) lower monthly payments but significantly increase total interest. 48-60 months is typically the sweet spot.' },
+        ]} />
+        <CalcRelated links={[
+          { to: `/${country}/mortgage`, label: 'Mortgage Calculator' },
+          { to: `/${country}/loan-payoff`, label: 'Loan Payoff' },
+          { to: `/${country}/affordability`, label: 'Affordability Calculator' },
+        ]} />
+        <AdSenseSlot format="leaderboard" placement="bottom" />
+      </div>
     </>
   )
 }

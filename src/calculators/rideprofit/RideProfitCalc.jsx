@@ -454,6 +454,7 @@ export default function RideProfitCalc({ country, embedded = false }) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 pb-8">
+        <AdSenseSlot format="in-article" placement="in-content" />
         <CalcFAQ faqs={[
           { q: 'What mileage deduction can I claim?', a: 'Canada: $0.72/km for the first 5,000km, $0.66/km after. US: $0.67/mile (2024). UK: 45p/mile for first 10,000 miles, 25p after. These significantly reduce taxable income.' },
           { q: 'What expenses can rideshare drivers deduct?', a: 'Mileage (or actual car expenses), phone plan (business portion), car washes, parking fees, insurance premium increase, and any supplies used for passengers.' },
