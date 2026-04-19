@@ -12,7 +12,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
-import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 const COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444']
 
@@ -202,10 +202,13 @@ export default function CreditCardCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta
+        country={country}
+        slug="credit-card"
+        title={`Credit Card Payoff Calculator ${c.name} 2026 — APR & Minimum Payment Cost | CalqWise`}
+        description={`Free ${c.name} credit card payoff calculator. See how long to pay off your balance and total interest at any APR. Compare minimum payment vs accelerated payoff strategy.`}
+      />
       <Helmet>
-        <title>Credit Card Payoff Calculator {c.name} 2026 | CalcWise</title>
-        <meta name="description" content={`Calculate how long to pay off your credit card in ${c.name} and how much interest you'll pay. See savings from extra payments. Free credit card payoff calculator.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/credit-card`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

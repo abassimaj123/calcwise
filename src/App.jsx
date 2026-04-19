@@ -11,6 +11,7 @@ const CountryHub = lazy(() => import('./pages/CountryHub'))
 const About = lazy(() => import('./pages/About'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Contact = lazy(() => import('./pages/Contact'))
+const Embed = lazy(() => import('./pages/Embed'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const SEOCalcPage = lazy(() => import('./pages/SEOCalcPage'))
 
@@ -171,6 +172,7 @@ export default function App() {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/embed" element={<Embed />} />
 
             {/* URL alias redirects — common typos / old slugs */}
             {['us','ca','uk','au','ie','nz'].flatMap(c => [

@@ -8,7 +8,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 import { countries } from '../../config/countries'
-import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -226,10 +226,13 @@ export default function PropertyROICalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta
+        country={country}
+        slug="property-roi"
+        title={`Rental Property ROI Calculator ${c.name} 2026 — Cap Rate, Cash Flow & CoC | CalqWise`}
+        description={`Free ${c.name} rental property calculator. Cap rate, cash-on-cash return, monthly cash flow, and 1% rule check. Analyze any investment property in seconds. Updated 2026.`}
+      />
       <Helmet>
-        <title>Property ROI Calculator {c.name} 2026 — Cash Flow &amp; Cap Rate | CalcWise</title>
-        <meta name="description" content={`Calculate rental property ROI, cash-on-cash return, cap rate, and monthly cash flow in ${c.name}. Free investment property calculator. Updated 2026.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/property-roi`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd(country))}</script>
       </Helmet>
 

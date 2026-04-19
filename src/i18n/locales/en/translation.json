@@ -47,7 +47,7 @@
     "step2Desc": "Input your details. Results update instantly — no submissions, no waiting.",
     "step3Title": "See what others miss",
     "step3Desc": "Simple view for quick answers. Detailed view reveals hidden costs, amortization, and full breakdowns.",
-    "whyTitle": "Why CalcWise?",
+    "whyTitle": "Why CalqWise?",
     "whyAccurateTitle": "Accurate 2026 Rates",
     "whyAccurateDesc": "Updated tax brackets, mortgage rates, and contribution limits for all 6 countries.",
     "whyInstantTitle": "Instant Results",
@@ -162,30 +162,30 @@
     "monthlyCostEstimates": "Monthly Cost Estimates",
     "oneTimeAdded": "One-time: {{amount}} added to loan",
     "opt": {
-      "pmi":       "PMI (Mortgage Insurance)",
+      "pmi": "PMI (Mortgage Insurance)",
       "propertax": "Property Tax",
-      "homeins":   "Home Insurance",
-      "hoa":       "HOA Fees",
-      "cmhc":      "CMHC Insurance",
-      "lmi":       "LMI (Lenders Mortgage Ins.)",
-      "condo":     "Condo / Strata Fees",
-      "lifeins":   "Life Insurance (mortgage)",
-      "service":   "Service Charge (leasehold)",
-      "strata":    "Strata / Body Corporate",
-      "body":      "Body Corporate Fees"
+      "homeins": "Home Insurance",
+      "hoa": "HOA Fees",
+      "cmhc": "CMHC Insurance",
+      "lmi": "LMI (Lenders Mortgage Ins.)",
+      "condo": "Condo / Strata Fees",
+      "lifeins": "Life Insurance (mortgage)",
+      "service": "Service Charge (leasehold)",
+      "strata": "Strata / Body Corporate",
+      "body": "Body Corporate Fees"
     },
     "optHint": {
-      "pmi":       "Required if down < 20% · avg 0.5–1.5% of loan/yr",
+      "pmi": "Required if down < 20% · avg 0.5–1.5% of loan/yr",
       "propertax": "Annual rate",
-      "homeins":   "Annual premium",
-      "hoa":       "Monthly homeowners association fee",
-      "cmhc":      "Required if down < 20% · 2.8–4.0% of loan",
-      "lmi":       "Required if LVR > 80% · 1–3% of loan",
-      "condo":     "Monthly strata/condo fees",
-      "lifeins":   "Monthly decreasing term policy",
-      "service":   "Annual leasehold service charge",
-      "strata":    "Annual strata fees (units/apts)",
-      "body":      "Annual fees for units/apartments"
+      "homeins": "Annual premium",
+      "hoa": "Monthly homeowners association fee",
+      "cmhc": "Required if down < 20% · 2.8–4.0% of loan",
+      "lmi": "Required if LVR > 80% · 1–3% of loan",
+      "condo": "Monthly strata/condo fees",
+      "lifeins": "Monthly decreasing term policy",
+      "service": "Annual leasehold service charge",
+      "strata": "Annual strata fees (units/apts)",
+      "body": "Annual fees for units/apartments"
     }
   },
   "tax": {
@@ -624,5 +624,89 @@
     "desc": "This calculator doesn't exist yet. Try one of our popular ones.",
     "home": "Back to Home",
     "calc": "Mortgage Calculator"
+  },
+  "privacy": {
+    "meta": {
+      "title": "Privacy Policy | CalqWise",
+      "desc": "CalqWise privacy policy — website and Android apps. GDPR and CCPA compliant."
+    },
+    "heading": "Privacy Policy",
+    "updated": "Last updated",
+    "s1": {
+      "title": "Overview",
+      "p1": "CalqWise (\"we\", \"our\", \"us\") operates calqwise.com and a suite of Android financial calculator apps. This Privacy Policy explains how we collect, use, and protect information when you use our services.",
+      "keyFact": "Key fact",
+      "p2": "All financial calculations run entirely in your browser or on your device. We never transmit your financial inputs (income, home price, debt amounts, etc.) to our servers."
+    },
+    "s2": {
+      "title": "Website — Information We Collect",
+      "calcTitle": "2.1 Calculator Inputs",
+      "calcText": "We do NOT collect, store, or process any financial data you enter into our calculators. All calculations are performed client-side using JavaScript.",
+      "analyticsTitle": "2.2 Usage Data (Google Analytics 4)",
+      "analyticsText": "We use Google Analytics 4 to collect anonymized usage data: pages visited, time on page, browser type, approximate geographic region, and referring websites.",
+      "analyticsOptOut": "GA4 data is processed by Google LLC. You can opt out via the Google Analytics Opt-out Browser Add-on.",
+      "adsenseTitle": "2.3 Advertising (Google AdSense)",
+      "adsenseText": "We display ads via Google AdSense. Google may use cookies to serve personalized ads. Manage preferences at adssettings.google.com.",
+      "contactTitle": "2.4 Contact Form",
+      "contactText": "If you submit our contact form, your name, email, and message are processed through Formspree, solely to respond to your inquiry."
+    },
+    "s3": {
+      "title": "Android Apps — Data Collection",
+      "intro": "Our Android apps use third-party SDKs that may collect data. The following apps are covered by this policy:",
+      "admobTitle": "3.1 Advertising (Google AdMob)",
+      "admobText": "Our apps display ads via Google AdMob. AdMob may collect device identifiers, IP address, and usage data. Opt out in Google Settings > Ads on your device.",
+      "analyticsTitle": "3.2 Usage Analytics (Firebase Analytics)",
+      "analyticsText": "We use Firebase Analytics to collect anonymized usage data (screens viewed, session duration, device type, country). Data is aggregated and cannot identify you personally.",
+      "crashlyticsTitle": "3.3 Crash Reporting (Firebase Crashlytics)",
+      "crashlyticsText": "Firebase Crashlytics automatically collects crash reports including device model, OS version, and stack trace. No personal or financial data is included.",
+      "noSale": "We do not sell data collected through our apps to third parties. All third-party SDKs are governed by Google's Privacy Policy."
+    },
+    "s4": {
+      "title": "Cookies",
+      "intro": "Our website uses the following cookies:",
+      "analyticsCookie": "Analytics cookies",
+      "analyticsCookieText": "Google Analytics tracks page views anonymously. Persist for up to 2 years.",
+      "adsCookie": "Advertising cookies",
+      "adsCookieText": "Google AdSense uses cookies to serve and measure ads. Managed by Google.",
+      "functionalCookie": "Functional cookies",
+      "functionalCookieText": "We store your language preference and calculator settings in localStorage. This data never leaves your device.",
+      "control": "You can control cookies through your browser settings. Blocking cookies may affect analytics and ad functionality."
+    },
+    "s5": {
+      "title": "GDPR (European Users)",
+      "intro": "If you are in the EEA, you have the following rights under GDPR:",
+      "access": "Right to access",
+      "accessText": "Request a copy of personal data we hold about you.",
+      "erasure": "Right to erasure",
+      "erasureText": "Request deletion of your personal data.",
+      "object": "Right to object",
+      "objectText": "Object to processing of your data for marketing.",
+      "portability": "Right to portability",
+      "portabilityText": "Receive your data in a structured, machine-readable format.",
+      "basis": "Our legal basis for analytics is legitimate interest. For advertising, we rely on consent where required by law."
+    },
+    "s6": {
+      "title": "CCPA (California Users)",
+      "text": "California residents have the right to: know what personal information we collect; request deletion; opt out of the sale of personal information (we do not sell data); and non-discrimination for exercising your rights.",
+      "note": "Sharing data with Google for analytics and advertising may constitute a 'sale' under CCPA. To opt out, use Google's opt-out tools or enable the Global Privacy Control (GPC) in your browser."
+    },
+    "s7": {
+      "title": "Children's Privacy",
+      "text": "CalqWise and our apps are not directed to children under 13. We do not knowingly collect personal information from children. Contact us immediately if you believe a child has provided personal information."
+    },
+    "s8": {
+      "title": "Third-Party Links",
+      "text": "Our website and apps may link to third-party services (Google Play, App Store, financial websites). We are not responsible for their privacy practices."
+    },
+    "s9": {
+      "title": "Changes to This Policy",
+      "text": "We may update this Privacy Policy from time to time. Changes will be posted with an updated date. Continued use of CalqWise after changes constitutes acceptance."
+    },
+    "s10": {
+      "title": "Contact Us",
+      "text": "For privacy inquiries, data requests, or concerns, email us at",
+      "or": "or use our",
+      "contactPage": "Contact page"
+    }
   }
 }

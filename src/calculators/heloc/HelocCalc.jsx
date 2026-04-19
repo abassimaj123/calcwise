@@ -12,7 +12,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
-import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 const PRIME_RATE = 8.5 // Current US prime rate estimate
 
@@ -202,10 +202,8 @@ export default function HelocCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="heloc" title={`HELOC Calculator ${c.name} 2026 — Draw Period, Repayment & Interest | CalqWise`} description={`Free ${c.name} HELOC calculator. Calculate available credit, interest-only draw period payments, and principal + interest repayment phase. Prime + margin rate. Updated 2026.`} />
       <Helmet>
-        <title>HELOC Calculator {c.name} 2026 — Home Equity Line of Credit | CalcWise</title>
-        <meta name="description" content={`Calculate your HELOC available credit, draw period payments, and repayment schedule. Free ${c.name} HELOC calculator with Prime + margin rate. Updated 2026.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/heloc`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

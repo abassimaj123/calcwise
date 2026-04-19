@@ -16,11 +16,16 @@ i18n
       es: { translation: es },
     },
     fallbackLng: 'en',
+    lng: undefined, // let detection decide; fallback is 'en'
     supportedLngs: ['en', 'fr', 'es'],
     detection: {
+      // Check localStorage first (respects user's explicit choice),
+      // then browser language, but we default to 'en' via fallbackLng.
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
       lookupLocalStorage: 'cw_lang',
+      // Only accept supported languages; anything else falls back to 'en'
+      checkWhitelist: true,
     },
     interpolation: { escapeValue: false },
   })

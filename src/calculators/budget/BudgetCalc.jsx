@@ -11,7 +11,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
-import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 const BUDGET_FAQS = [
   { q: 'What is the 50/30/20 budgeting rule?', a: 'Allocate 50% of after-tax income to needs (housing, food, utilities, transport), 30% to wants (dining out, entertainment, hobbies), and 20% to savings and debt repayment. It\'s a flexible starting point, not a rigid rule.' },
@@ -226,10 +226,8 @@ export default function BudgetCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="budget" title={`Monthly Budget Calculator ${c.name} 2026 — 50/30/20 Rule | CalqWise`} description={`Free ${c.name} monthly budget calculator. Track income vs expenses, check the 50/30/20 rule, and visualize where your money goes. See your monthly surplus or deficit.`} />
       <Helmet>
-        <title>Monthly Budget Calculator {c.name} 2026 | CalcWise</title>
-        <meta name="description" content={`Free monthly budget calculator for ${c.name}. See your surplus or deficit, check the 50/30/20 rule, and visualize where your money goes.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/budget`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

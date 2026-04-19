@@ -32,9 +32,15 @@ export default function Contact() {
   return (
     <>
       <Helmet>
-        <title>Contact CalcWise</title>
-        <meta name="description" content="Get in touch with the CalcWise team. Report a bug, suggest a calculator, or ask a question." />
+        <title>Contact CalqWise — Bug Reports, Feature Requests & Questions</title>
+        <meta name="description" content="Get in touch with the CalqWise team. Report a bug, suggest a calculator, or ask a question. We respond within 2 business days." />
         <link rel="canonical" href="https://calqwise.com/contact" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Contact CalqWise" />
+        <meta property="og:description" content="Report a bug, suggest a calculator, or ask a question. We read everything." />
+        <meta property="og:url" content="https://calqwise.com/contact" />
+        <meta property="og:image" content="https://calqwise.com/og-image.jpg" />
+        <meta property="og:site_name" content="CalqWise" />
       </Helmet>
 
       <div className="max-w-2xl mx-auto px-4 py-12">

@@ -9,7 +9,7 @@ import { countries } from '../../config/countries'
 import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
-import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 const NETWORTH_FAQS = [
   { q: 'What is net worth and why should I track it?', a: 'Net worth = total assets − total liabilities. It\'s the most complete picture of your financial health — more meaningful than income alone. Tracking it monthly or quarterly shows whether you\'re building wealth or falling behind.' },
@@ -148,13 +148,8 @@ export default function NetWorthCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="net-worth" title={`Net Worth Calculator ${c.name} 2026 — Assets Minus Liabilities | CalqWise`} description={`Free ${c.name} net worth calculator. Add assets (cash, investments, property) and subtract liabilities (mortgage, loans, credit cards) to see your true financial position.`} />
       <Helmet>
-        <title>{c.name} Net Worth Calculator 2026 | CalcWise</title>
-        <meta
-          name="description"
-          content={`Free net worth calculator for ${c.name}. Add your assets and liabilities to calculate your net worth and financial health score.`}
-        />
-        <link rel="canonical" href={`https://calqwise.com/${country}/net-worth`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

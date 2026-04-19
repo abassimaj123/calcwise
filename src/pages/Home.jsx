@@ -10,6 +10,40 @@ import { calcIconMap } from '../config/calcIcons'
 import AdSenseSlot from '../components/AdSenseSlot'
 import CountryFlag from '../components/CountryFlag'
 
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'CalqWise',
+  url: 'https://calqwise.com',
+  logo: 'https://calqwise.com/favicon.svg',
+  description: '57+ free financial calculators for US, UK, Canada, Australia, Ireland and New Zealand.',
+}
+
+const webSiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'CalqWise',
+  url: 'https://calqwise.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://calqwise.com/{search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+}
+
+const homeFaqs = [
+  { q: 'Are all calculators on CalqWise free?', a: 'Yes. Every calculator on CalqWise is 100% free with no signup, no subscription, and no hidden fees.' },
+  { q: 'Which countries are supported?', a: 'CalqWise supports the United States, Canada, United Kingdom, Australia, Ireland, and New Zealand with country-specific tax rates and regulations.' },
+  { q: 'Are the tax rates up to date for 2026?', a: 'Yes. All tax brackets, mortgage rates, and contribution limits are updated for 2026 across all supported countries.' },
+  { q: 'How does the mortgage calculator work?', a: 'Enter your home price, down payment, interest rate, and loan term. The calculator shows monthly payment, total interest, amortization schedule, and hidden costs like PMI, CMHC, and property tax.' },
+  { q: 'Can I calculate my take-home salary?', a: 'Yes. The Salary Calculator converts gross to net pay, including federal and state/provincial taxes, social security, and other deductions for your specific country.' },
+  { q: 'What is the RideProfit calculator?', a: 'RideProfit calculates the true profit for Uber, Lyft, and DoorDash drivers, factoring in mileage deductions (CRA $0.72/km for Canada, HMRC 45p/mi for UK), gas, depreciation, and taxes.' },
+  { q: 'Does CalqWise store my financial data?', a: 'No. All calculations happen in your browser. CalqWise does not collect, store, or transmit any personal financial information.' },
+]
+
 const ICON_COLOR = '#1A6AFF'
 
 const featuredCalcs = [
@@ -50,9 +84,17 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>CalcWise — Free Financial Calculators for US, CA, UK, AU, IE, NZ</title>
-        <meta name="description" content="Free mortgage, tax, salary, auto loan and more calculators for US, Canada, UK, Australia, Ireland and New Zealand. Accurate 2026 rates. No signup required." />
-        <link rel="canonical" href="https://calqwise.com" />
+        <title>CalqWise - Free Financial Calculators for Mortgage, Tax, Salary 2026</title>
+        <meta name="description" content="57+ free financial calculators for US, UK, Canada, Australia. Calculate mortgage, taxes, salary, loans with 2026 rates. No signup required." />
+        <link rel="canonical" href="https://calqwise.com/" />
+        <link rel="alternate" hreflang="en" href="https://calqwise.com/" />
+        <link rel="alternate" hreflang="x-default" href="https://calqwise.com/" />
+        <meta property="og:title" content="CalqWise - Free Financial Calculators for Mortgage, Tax, Salary 2026" />
+        <meta property="og:description" content="57+ free financial calculators for US, UK, Canada, Australia. Calculate mortgage, taxes, salary, loans with 2026 rates. No signup required." />
+        <meta property="og:url" content="https://calqwise.com/" />
+        <meta property="og:type" content="website" />
+        <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(webSiteJsonLd)}</script>
       </Helmet>
 
       {/* ── Hero ── */}
@@ -267,6 +309,51 @@ export default function Home() {
                 <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ Section ── */}
+      <section className="py-16 bg-white">
+        <div className="max-w-3xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-display font-bold mb-10 text-center text-slate-900">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-3">
+            {homeFaqs.map(({ q, a }, i) => (
+              <div key={i} className="border border-slate-200 rounded-xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+                <div className="px-5 py-4">
+                  <h3 className="font-semibold text-sm text-slate-800 mb-2">{q}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">{a}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <Helmet>
+            <script type="application/ld+json">{JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: homeFaqs.map(({ q, a }) => ({
+                '@type': 'Question',
+                name: q,
+                acceptedAnswer: { '@type': 'Answer', text: a },
+              })),
+            })}</script>
+          </Helmet>
+        </div>
+      </section>
+
+      {/* ── CTA to Main Calculators ── */}
+      <section className="py-12 bg-slate-50">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-xl font-display font-bold text-slate-900 mb-6">Start Calculating for Free</h2>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link to="/us/mortgage" className="cw-btn text-sm px-6 py-3"><HomeIcon size={16} /> US Mortgage</Link>
+            <Link to="/ca/mortgage" className="cw-btn-ghost text-sm px-6 py-3">CA Mortgage</Link>
+            <Link to="/uk/mortgage" className="cw-btn-ghost text-sm px-6 py-3">UK Mortgage</Link>
+            <Link to="/us/tax" className="cw-btn-ghost text-sm px-6 py-3">US Tax</Link>
+            <Link to="/us/salary" className="cw-btn-ghost text-sm px-6 py-3">Salary Calculator</Link>
+            <Link to="/us/affordability" className="cw-btn-ghost text-sm px-6 py-3">Affordability</Link>
           </div>
         </div>
       </section>

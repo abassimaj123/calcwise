@@ -12,7 +12,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
-import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 const RETIREMENT_FAQS = [
   { q: 'How much do I need to retire?', a: 'The 25× rule: save 25 times your expected annual expenses in retirement. This supports a 4% annual withdrawal rate. For $60,000/year spending, you need $1.5M. Adjust for state pension/government benefits you expect to receive.' },
@@ -878,9 +878,18 @@ export default function RetirementCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="retirement" title={`Retirement Calculator ${c.name} 2026 — Projected Balance & Shortfall | CalqWise`} description={`Free ${c.name} retirement calculator. Project your retirement balance with contributions, employer match, and returns. See if you're on track and how much more to save. Updated 2026.`} />
       <Helmet>
-        <title>{c.name} Retirement Calculator 2026 | CalcWise</title>
-        <meta name="description" content={`Plan your retirement in ${c.name}. Project savings, calculate ${COUNTRY_TAB_LABEL[country]} contributions, and find out if you're on track. Free 2026 calculator.`} />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: `${c.name} Retirement Calculator`,
+          description: `Plan your retirement in ${c.name}. Project savings, calculate ${COUNTRY_TAB_LABEL[country]} contributions, and find out if you're on track.`,
+          url: `https://calqwise.com/${country}/retirement`,
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'Web',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: c.currency },
+        })}</script>
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 py-8">

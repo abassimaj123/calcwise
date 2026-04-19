@@ -10,7 +10,8 @@ import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcHowTo, CalcAlsoAvailable, CalcRelated, CalcSubTopics, CalcFeatures, CalcPageMeta } from '../../components/CalcSEO'
+import { subPagesByCalc } from '../../data/seoPages'
 
 // ---------------------------------------------------------------------------
 // Tax calculation — returns { incomeTax, contributions, total }
@@ -154,7 +155,7 @@ function Toggle({ on, onChange, color = 'green' }) {
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
-export default function SalaryCalc({ country }) {
+export default function SalaryCalc({ country, embedded = false }) {
   const { t } = useTranslation()
   const c = countries[country]
   const deductionDefs = SALARY_DEDUCTIONS[country] || []
@@ -246,14 +247,96 @@ export default function SalaryCalc({ country }) {
   const preDefs  = deductionDefs.filter(d =>  d.preTax)
   const postDefs = deductionDefs.filter(d => !d.preTax)
 
-  const pageTitle = `${c.name} Salary Calculator 2026 — Gross to Net Take-Home | CalcWise`
+  const pageTitles = {
+    us: 'Salary Calculator US — Hourly, Annual & Take-Home Pay | CalqWise',
+    ca: 'Canada Salary Calculator — Gross to Net, All Provinces | CalqWise',
+    uk: 'UK Salary Calculator — Take-Home Pay After Tax & NI | CalqWise',
+    au: 'Australia Salary Calculator — Take-Home Pay & Super | CalqWise',
+    ie: 'Irish Salary Calculator — Take-Home After Tax, PRSI & USC | CalqWise',
+    nz: 'NZ Salary Calculator — Take-Home After PAYE & KiwiSaver | CalqWise',
+  }
+  const pageDescs = {
+    us: 'Free US salary calculator 2026. Convert hourly, weekly, monthly, annual pay. Take-home after federal tax, all 50 state taxes, Social Security, and Medicare. Updated 2026.',
+    ca: 'Free Canadian salary calculator 2026. Gross to net after federal and provincial tax, CPP, and EI. All provinces and territories. Updated 2026 rates.',
+    uk: 'Free UK salary calculator 2026/27. Take-home pay after Income Tax and National Insurance. Pension, student loan, and Scottish tax included. Weekly, monthly, annual breakdown.',
+    au: 'Free Australian salary calculator 2025/26. Take-home after income tax, Medicare levy, and employer super (11.5%). Salary sacrifice modelling. Updated ATO rates.',
+    ie: 'Free Irish salary calculator 2026. Net pay after income tax, PRSI, and USC. Personal and PAYE tax credits pre-applied. All pay periods. Updated 2026.',
+    nz: 'Free NZ salary calculator 2026. Take-home after PAYE, ACC levy, and KiwiSaver. Student loan repayment option. Weekly, fortnightly, monthly output.',
+  }
+  const pageTitle = pageTitles[country] || pageTitles.us
+  const pageDesc = pageDescs[country] || pageDescs.us
+
+  const salaryIntroText = {
+    us: 'Our US salary calculator converts any gross income to net take-home pay for all pay periods — hourly, daily, weekly, bi-weekly, semi-monthly, monthly, and annually. It applies federal income tax, FICA (Social Security 6.2% + Medicare 1.45%), and state income taxes for all 50 states. Model 401(k), HSA, and other pre-tax deductions to see your real take-home.',
+    ca: 'Our Canadian salary calculator shows gross-to-net for all provinces and territories. We apply federal and provincial income tax, CPP (5.95% up to $68,500), CPP2, and EI (1.66% up to $65,700). Enter RRSP contributions and employment expenses to see how much tax you can save. Results are shown weekly, bi-weekly, semi-monthly, monthly, and annually.',
+    uk: 'Our UK salary calculator converts annual salary to net take-home using 2026/27 PAYE rates and National Insurance (8% / 2%). It handles the Personal Allowance taper above £100K, Scottish income tax rates, and pension contributions under Auto-Enrolment. See exactly what hits your bank account each week or month.',
+    au: 'Our Australian salary calculator applies 2025–26 ATO tax rates, 2% Medicare Levy, and superannuation (11.5% employer SG rate). See your PAYG withholding, net salary, and employer super contributions side-by-side. Model salary sacrifice arrangements to see how pre-tax super boosts your retirement while reducing today\'s tax.',
+    ie: 'Our Irish salary calculator applies Standard Rate (20%), Higher Rate (40%), PRSI, and USC tiers for 2026. Tax credits (Personal Credit €1,875 + PAYE Credit €1,875) are pre-applied, giving you accurate take-home pay results. Model pension contributions to see the immediate tax saving from employee contributions.',
+    nz: 'Our New Zealand salary calculator applies PAYE brackets for 2026, the ACC earners levy (1.33%), and KiwiSaver contributions. See your weekly, fortnightly, and monthly take-home with all deductions transparent. Toggle student loan repayment to see the combined impact on your pay.',
+  }
+
+  const salaryFeatures = {
+    us: ['Federal income tax (all 7 brackets)', 'All 50 US state income taxes', 'Social Security + Medicare (FICA)', 'Pre-tax: 401(k), HSA, traditional IRA', 'Post-tax deductions modelling', 'Standard vs itemized deduction', 'All pay frequencies (hourly to annual)', 'Effective and marginal rate display'],
+    ca: ['Federal + all provincial/territorial tax', 'CPP contributions (CPP1 + CPP2)', 'EI premium calculation', 'RRSP deduction modelling', 'Quebec QPIP included', 'All pay frequencies', 'Combined effective tax rate', 'Net pay displayed by pay period'],
+    uk: ['PAYE income tax (2026/27 rates)', 'National Insurance Class 1', 'Personal Allowance taper (£100K+)', 'Scottish income tax rates option', 'Pension (% or fixed amount)', 'Auto-Enrolment employer contribution shown', 'Weekly, monthly, annual take-home', 'Student loan Plan 1/2/4 repayments'],
+    au: ['ATO income tax (all brackets)', 'Medicare Levy (2%)', 'Medicare Levy Surcharge', 'Employer super (11.5% SG rate)', 'Salary sacrifice / pre-tax super', 'LITO and LMITO offsets', 'Weekly, fortnightly, monthly, annual', 'PAYG reconciliation shown'],
+    ie: ['Income tax Standard + Higher Rate', 'PRSI Class A (4%)', 'All USC tiers (0.5%–8%)', 'Personal + PAYE tax credits', 'Pension contribution relief', 'Gross-to-net by pay period', 'Effective vs marginal tax rates', 'SARP and other relief options'],
+    nz: ['PAYE tax across all brackets', 'ACC earners levy (1.33%)', 'KiwiSaver (3%, 4%, 6%, 8%, 10%)', 'Employer KiwiSaver contribution', 'Student loan repayment (12%)', 'Independent earner tax credit', 'Weekly, fortnightly, monthly output', 'Effective tax rate breakdown'],
+  }
+
+  const salaryHowToSteps = {
+    us: [
+      'Enter your gross salary (annual, or hourly rate and hours/week).',
+      'Select your state for accurate state income tax and any local tax.',
+      'Choose your filing status and add 401(k), HSA, or other pre-tax deductions.',
+      'Review the Summary: federal tax, state tax, FICA, deductions, and net take-home.',
+      'Toggle pay frequency to see weekly, bi-weekly, or monthly deposit amounts.',
+    ],
+    ca: [
+      'Enter your gross annual salary and select your province or territory.',
+      'Add RRSP contributions to see the tax savings applied immediately.',
+      'CPP and EI are auto-calculated — edit if you\'re self-employed or exempt.',
+      'Review federal tax, provincial tax, CPP, EI, and net take-home by pay period.',
+      'Use the Deductions panel to add union dues, health benefits, or other items.',
+    ],
+    uk: [
+      'Enter your gross annual salary. PAYE bands and the Personal Allowance are applied automatically.',
+      'Select Scotland if you pay Scottish income tax rates.',
+      'Enter your pension contribution percentage (or fixed amount per month).',
+      'Add student loan plan if applicable (Plan 1, Plan 2, or Plan 4).',
+      'Review weekly, monthly, and annual take-home net of all deductions.',
+    ],
+    au: [
+      'Enter your gross annual salary. ATO tax rates are applied automatically.',
+      'Employer super (11.5%) is shown alongside your salary — toggle salary sacrifice to add pre-tax contributions.',
+      'Enable Medicare Levy Surcharge if you earn above $93,000 without private hospital cover.',
+      'Review your fortnightly PAYG withholding and annual net income.',
+      'Use the chart to compare gross vs net and see how super grows alongside your take-home.',
+    ],
+    ie: [
+      'Enter your gross annual salary. Standard and Higher Rate income tax are applied automatically.',
+      'Default tax credits (Personal + PAYE €3,750 total) are pre-applied — adjust if different.',
+      'Add pension contributions (%) to see the immediate tax saving.',
+      'Review income tax, PRSI, USC, and net take-home by pay period.',
+      'Toggle pay frequency between weekly, fortnightly, and monthly.',
+    ],
+    nz: [
+      'Enter your gross annual salary or hourly rate and hours per week.',
+      'Select your KiwiSaver rate (3%, 4%, 6%, 8%, or 10%). Employer match is shown separately.',
+      'Toggle student loan repayment (12%) if applicable.',
+      'Review PAYE tax, ACC levy, KiwiSaver, and net take-home.',
+      'Switch between weekly, fortnightly, and monthly output to match your pay cycle.',
+    ],
+  }
+
+  const otherCountriesSalary = Object.entries(countries)
+    .filter(([code]) => code !== country)
+    .map(([code, ct]) => ({ code, flag: ct.flag, name: ct.name }))
 
   return (
     <>
+      <CalcPageMeta country={country} slug="salary" title={pageTitle} description={pageDesc} embedded={embedded} />
       <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={`Free ${c.name} salary calculator 2026. Convert gross to net. See hourly, weekly, monthly, annual take-home pay. Updated tax brackets.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/salary`} />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'SoftwareApplication',
@@ -539,20 +622,24 @@ export default function SalaryCalc({ country }) {
       </div>
 
       {/* SEO content */}
-      <div className="max-w-4xl mx-auto px-4">
-        <CalcIntro intro="This salary calculator converts your gross income to net take-home pay across all pay periods — hourly, daily, weekly, bi-weekly, monthly and annually. It accounts for income tax, social contributions, and standard deductions for 2026. Use the optional deductions panel to model pre-tax contributions (pension, 401k, RRSP, etc.) and post-tax payroll items to see your true take-home pay." />
+      <div className="max-w-4xl mx-auto px-4 pb-8">
+        <CalcIntro intro={salaryIntroText[country] || salaryIntroText.us} />
+        <CalcFeatures features={salaryFeatures[country] || salaryFeatures.us} />
+        <CalcHowTo steps={salaryHowToSteps[country] || salaryHowToSteps.us} />
         <CalcFAQ faqs={[
-          { q: 'What is the difference between gross and net salary?', a: 'Gross salary is your total earnings before deductions. Net salary (take-home pay) is what you actually receive after income tax and other contributions.' },
-          { q: 'What deductions are included?', a: 'This calculator includes federal/national income tax, social security contributions (CPP/EI, NI, PRSI etc.), and standard deductions for your country. You can also add optional deductions like pension contributions, health insurance, and union dues.' },
-          { q: 'How is the effective tax rate calculated?', a: 'Effective tax rate = total tax paid / gross income x 100. It differs from your marginal rate which only applies to your last dollar earned.' },
-          { q: 'What are pre-tax deductions?', a: 'Pre-tax deductions (like 401k, RRSP, pension contributions) reduce your taxable income before tax is calculated, which means you pay less income tax overall.' },
-          { q: 'What are post-tax deductions?', a: 'Post-tax deductions (like union dues, some insurance premiums) come out of your pay after tax has been calculated, so they do not reduce your tax bill.' },
+          { q: 'What is the difference between gross and net salary?', a: 'Gross salary is your total earnings before any deductions. Net salary (take-home pay) is what you actually receive after income tax, social insurance contributions, and any voluntary deductions like pension or health insurance.' },
+          { q: 'What deductions does this calculator include?', a: 'This calculator includes national income tax, social security contributions (CPP/EI in Canada, National Insurance in the UK, FICA in the US, PRSI + USC in Ireland, Medicare Levy in Australia, ACC in New Zealand), and standard deductions for your country. Optional deductions like pension, 401(k), RRSP, and health insurance can be added manually.' },
+          { q: 'How is the effective tax rate calculated?', a: 'Effective tax rate = total tax and deductions paid ÷ gross income × 100. It reflects your actual tax burden across all sources. It is always lower than your marginal (top bracket) rate because lower earnings are taxed at lower rates under progressive systems.' },
+          { q: 'What are pre-tax deductions and why do they matter?', a: 'Pre-tax deductions (401(k), RRSP, pension contributions, HSA) reduce your taxable income before tax is calculated. This saves you money at your marginal rate — a $500/month RRSP contribution in the 33% federal bracket saves about $165/month in federal tax alone.' },
+          { q: 'Does this include employer contributions?', a: 'This calculator shows employee-side deductions only (what comes from your pay). Employer contributions to super (Australia), pension auto-enrolment (UK), or CPP/EI matching (Canada) are shown separately where applicable but do not reduce your take-home pay.' },
         ]} />
+        <CalcSubTopics links={subPagesByCalc[`${country}/salary`] || []} />
         <CalcRelated links={[
           { to: `/${country}/tax`,          label: 'Tax Calculator' },
           { to: `/${country}/affordability`, label: 'Affordability Calculator' },
           { to: `/${country}/rent-vs-buy`,   label: 'Rent vs Buy' },
         ]} />
+        <CalcAlsoAvailable calcSlug="salary" calcLabel="Salary" countries={otherCountriesSalary} />
       </div>
     </>
   )

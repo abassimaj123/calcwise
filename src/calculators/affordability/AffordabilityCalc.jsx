@@ -7,7 +7,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
-import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell,
 } from 'recharts'
@@ -170,7 +170,7 @@ const meterColor = (pct) => {
   return '#ef4444'                  // red: aggressive
 }
 
-export default function AffordabilityCalc({ country = 'us' }) {
+export default function AffordabilityCalc({ country = 'us', embedded = false }) {
   const { t } = useTranslation()
   const c = countries[country]
   const d = defaultsByCountry[country] || defaultsByCountry.us
@@ -253,10 +253,28 @@ export default function AffordabilityCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta
+        country={country}
+        slug="affordability"
+        title={{
+          us: 'How Much House Can I Afford — US Affordability Calculator | CalqWise',
+          ca: 'How Much Can I Borrow Canada — Mortgage Affordability | CalqWise',
+          uk: 'How Much Can I Borrow UK — Mortgage Affordability Calculator | CalqWise',
+          au: 'Australia Mortgage Affordability Calculator — Borrowing Power | CalqWise',
+          ie: 'Ireland Mortgage Affordability — How Much Can I Borrow? | CalqWise',
+          nz: 'NZ Mortgage Affordability — How Much Can I Borrow? | CalqWise',
+        }[country] || `${c.name} Affordability Calculator 2026 | CalqWise`}
+        description={{
+          us: 'Free US home affordability calculator. Based on 28/36 DTI rules. Compare FHA, VA, and conventional loan limits based on your income and debts. Updated 2026.',
+          ca: 'Free Canadian mortgage affordability calculator. Maximum borrowing based on GDS/TDS ratios and OSFI stress test. All provinces. Updated 2026.',
+          uk: 'Free UK mortgage affordability calculator. FCA stress test compliant. Maximum borrowing based on income, deposit, and 4.5× income rule. Updated 2026.',
+          au: 'Free Australian borrowing power calculator. APRA serviceability buffer (rate + 3%) applied. See your maximum loan and repayment. Updated 2025/26.',
+          ie: 'Free Irish mortgage affordability calculator. Central Bank 3.5× income cap applied. LTV rules for first-time and second buyers. Updated 2026.',
+          nz: 'Free NZ mortgage affordability calculator. RBNZ DTI cap and LVR restrictions applied. See your maximum borrowing power. Updated 2026.',
+        }[country] || `How much property can you afford in ${c.name}? ${descByCountry[country] || ''} Free calculator. Updated 2026.`}
+        embedded={embedded}
+      />
       <Helmet>
-        <title>{c.name} Affordability Calculator 2026 | CalcWise</title>
-        <meta name="description" content={`How much property can you afford in ${c.name}? ${descByCountry[country] || ''} Free calculator. Updated 2026.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/affordability`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

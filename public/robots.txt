@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /private
+
 Sitemap: https://calqwise.com/sitemap.xml
 
 User-agent: GPTBot

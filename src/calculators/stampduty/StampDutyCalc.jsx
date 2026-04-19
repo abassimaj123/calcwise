@@ -11,7 +11,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
-import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 // SDLT rates as of April 2025
 function calcSDLT({ price, buyerType }) {
@@ -145,10 +145,8 @@ export default function StampDutyCalc() {
 
   return (
     <>
+      <CalcPageMeta country="uk" slug="stamp-duty" title="UK Stamp Duty Calculator 2026 — SDLT Rates, Bands & First-Time Buyer Relief | CalqWise" description="Free UK stamp duty (SDLT) calculator. April 2025 rates applied. Covers standard rates, first-time buyer relief, and additional property surcharge. Instant SDLT estimate." />
       <Helmet>
-        <title>UK Stamp Duty Calculator 2025 — SDLT Rates & Bands | CalcWise</title>
-        <meta name="description" content="Calculate UK Stamp Duty Land Tax (SDLT) for 2025. Covers first-time buyers, standard rates, and additional property surcharge. Free UK stamp duty calculator." />
-        <link rel="canonical" href="https://calqwise.com/uk/stamp-duty" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

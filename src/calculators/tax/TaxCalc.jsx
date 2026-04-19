@@ -12,7 +12,7 @@ import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
 import { trackCalcUsed } from '../../utils/analytics'
-import { CalcFAQ, CalcRelated, CalcSubTopics } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcHowTo, CalcRelated, CalcSubTopics, CalcAlsoAvailable, CalcFeatures, CalcPageMeta } from '../../components/CalcSEO'
 import { subPagesByCalc } from '../../data/seoPages'
 import NumericInput from '../../components/NumericInput'
 
@@ -382,7 +382,7 @@ function Toggle({ on, onChange }) {
   )
 }
 
-export default function TaxCalc({ country }) {
+export default function TaxCalc({ country, embedded = false }) {
   const { t } = useTranslation()
   const c = countries[country]
   const deductionDefs = TAX_DEDUCTIONS[country] || []
@@ -430,14 +430,106 @@ export default function TaxCalc({ country }) {
   const fmtShort = (n) =>
     new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, maximumFractionDigits: 0 }).format(n)
 
-  const pageTitle = `${c.name} Tax Calculator 2026 — Income Tax & Take-Home Pay | CalcWise`
+  const pageTitles = {
+    us: 'US Tax Calculator 2026 — Federal, State Income Tax & FICA | CalqWise',
+    ca: 'Canada Tax Calculator 2026 — Federal, Provincial, CPP & EI | CalqWise',
+    uk: 'UK Tax Calculator 2026/27 — Income Tax, NI & Take-Home Pay | CalqWise',
+    au: 'Australia Tax Calculator 2025/26 — Income Tax & Medicare Levy | CalqWise',
+    ie: 'Ireland Tax Calculator 2026 — Income Tax, PRSI & USC | CalqWise',
+    nz: 'New Zealand Tax Calculator 2026 — PAYE, ACC & KiwiSaver | CalqWise',
+  }
+  const pageDescs = {
+    us: 'Free US income tax calculator 2026. Federal brackets, all 50 state income taxes, Social Security and Medicare (FICA). Calculate take-home pay by filing status. Updated 2026.',
+    ca: 'Free Canadian income tax calculator 2026. Federal + all provincial/territorial tax, CPP, EI, and net take-home. All provinces. Updated 2026 brackets.',
+    uk: 'Free UK income tax calculator 2026/27. Income Tax, National Insurance, and take-home pay. Scottish tax bands, pension contribution modelling. Updated rates.',
+    au: 'Free Australian income tax calculator 2025/26. Tax, Medicare levy, HELP/HECS repayments, and take-home pay. Super contributions modelled. Updated ATO rates.',
+    ie: 'Free Irish income tax calculator 2026. Income tax, PRSI, Universal Social Charge (USC), and take-home pay. All tax credits applied. Updated 2026 rates.',
+    nz: 'Free New Zealand income tax calculator 2026. PAYE brackets, ACC earners levy, KiwiSaver, and student loan repayment. All pay frequencies. Updated 2026.',
+  }
+  const pageTitle = pageTitles[country] || pageTitles.us
+  const pageDesc = pageDescs[country] || pageDescs.us
+
+  const taxIntroText = {
+    us: 'Our US income tax calculator covers all seven federal brackets (10%–37%), FICA (Social Security + Medicare), and all 50 state income taxes. Enter your gross salary to instantly see federal tax, state tax, FICA, and your true net take-home — broken down by pay period. Model 401(k), HSA, and other pre-tax deductions to reduce your taxable income.',
+    ca: 'Our Canadian income tax calculator combines federal brackets (15%–33%) with all 13 provincial and territorial tax rates. We automatically calculate CPP contributions (5.95% up to $68,500) and EI premiums (1.66%), then show your federal and provincial taxes side-by-side. Enter RRSP contributions to see how they reduce your tax bill.',
+    uk: 'Our UK income tax calculator applies 2026/27 PAYE rates and National Insurance contributions. See exactly how much income tax you pay across the Personal Allowance (£12,570), Basic Rate (20%), Higher Rate (40%), and Additional Rate (45%), plus NI Class 1 at 8% and 2%. Includes pension contribution modelling to show take-home at any salary.',
+    au: 'Our Australian income tax calculator uses 2025–26 ATO rates with the full progressive bracket structure, 2% Medicare Levy, and optional Medicare Levy Surcharge. See the before and after impact of the Stage 3 tax cuts and model super contributions, salary sacrifice, and other pre-tax deductions to optimize your take-home pay.',
+    ie: 'Our Irish income tax calculator covers the Standard Rate (20%) and Higher Rate (40%), PRSI (4%), and the Universal Social Charge (0.5%–8%). See your exact tax credits (Personal, PAYE, Employee Tax Credit) applied, and model pension contributions to legally reduce your taxable income.',
+    nz: 'Our New Zealand income tax calculator applies 2026 PAYE rates across all five brackets, plus the ACC earners levy (1.33%). See your weekly, fortnightly, and monthly take-home pay with KiwiSaver contribution options modelled across all employee rates (3%–10%).',
+  }
+
+  const taxFeatures = {
+    us: ['Federal income tax (10%–37%)', 'All 50 state income taxes', 'Social Security (6.2%)', 'Medicare (1.45% + 0.9% surcharge)', 'Pre-tax deductions: 401(k), HSA, IRA', 'Standard vs itemized deduction comparison', 'Effective vs marginal rate breakdown', 'All pay period outputs (hourly to annual)'],
+    ca: ['Federal tax (15%–33%)', 'All provincial/territorial tax rates', 'CPP contributions (CPP1 + CPP2)', 'EI premiums', 'RRSP deduction modelling', 'Quebec QPIP included', 'Federal + provincial effective rate', 'Net pay by pay period'],
+    uk: ['Income tax across all PAYE bands', 'National Insurance Class 1', 'Personal Allowance taper (£100K+)', 'Pension contribution impact', 'Blind Person\'s Allowance option', 'Scotland / RUK rate comparison', 'Gross to net by pay period', 'Effective and marginal rates'],
+    au: ['All ATO income tax brackets', 'Medicare Levy (2%)', 'Medicare Levy Surcharge', 'Low Income Tax Offset (LITO)', 'Low & Middle Income Tax Offset (LMITO)', 'Superannuation contribution modelling', 'Salary sacrifice impact', 'PAYG vs actual tax reconciliation'],
+    ie: ['Standard Rate (20%) and Higher Rate (40%)', 'PRSI Class A contributions', 'Universal Social Charge (USC)', 'Personal + PAYE Tax Credits', 'Pension contribution relief', 'Net take-home by pay period', 'Effective and marginal tax rates', 'Comparison with neighboring tax systems'],
+    nz: ['All PAYE tax brackets (10.5%–39%)', 'ACC earners levy (1.33%)', 'KiwiSaver contributions (3%–10%)', 'Employer KiwiSaver match shown', 'Student loan repayment (12%)', 'Independent earner tax credit', 'Net pay weekly, fortnightly, monthly', 'Effective tax rate visualized'],
+  }
+
+  const taxHowToSteps = {
+    us: [
+      'Enter your gross annual salary or hourly rate and select your filing status (Single, MFJ, MFS, HOH).',
+      'Select your state to apply the correct state income tax rate.',
+      'Add pre-tax deductions like 401(k), HSA, or traditional IRA contributions to reduce your taxable income.',
+      'Review the Summary: federal tax, state tax, FICA, and net take-home across all pay periods.',
+      'Check the Breakdown chart to see your effective tax rate vs. marginal rate.',
+    ],
+    ca: [
+      'Enter your gross annual income and select your province or territory.',
+      'Add any RRSP contributions to see the immediate tax savings.',
+      'CPP and EI are automatically calculated based on your earnings.',
+      'Review the Summary showing federal tax, provincial tax, CPP, EI, and net take-home.',
+      'Switch pay periods (weekly, bi-weekly, monthly) to match your actual pay schedule.',
+    ],
+    uk: [
+      'Enter your gross annual salary. The calculator applies the 2026/27 PAYE bands automatically.',
+      'Add pension contributions (% or fixed) to see how they reduce your income tax and NI.',
+      'Select Scotland if you pay Scottish income tax rates (different from England/Wales/NI).',
+      'Review income tax, National Insurance, and net take-home for each pay period.',
+      'Adjust salary to model a pay rise, and see how your effective rate changes.',
+    ],
+    au: [
+      'Enter your gross annual income. ATO tax rates and the Medicare Levy are applied automatically.',
+      'Add salary sacrifice or super contributions to see how pre-tax contributions reduce your tax.',
+      'Toggle the Medicare Levy Surcharge if you earn above $93,000 without private hospital cover.',
+      'Review the breakdown of income tax, Medicare Levy, and net take-home.',
+      'Switch between pay periods to see your actual bank deposit amount.',
+    ],
+    ie: [
+      'Enter your gross annual salary. Standard Rate (20%) and Higher Rate (40%) are applied automatically.',
+      'Tax credits (Personal + PAYE Employee Credit) are applied by default — edit if yours differ.',
+      'Add pension contributions to see the tax relief on your contributions.',
+      'Review PRSI, USC, and income tax totals alongside your net take-home.',
+      'Compare different salary scenarios to understand the marginal tax rate impact.',
+    ],
+    nz: [
+      'Enter your gross annual salary. PAYE rates across all brackets are applied automatically.',
+      'Select your KiwiSaver contribution rate (3%, 4%, 6%, 8%, or 10%).',
+      'Toggle student loan repayment (12%) if applicable.',
+      'Review income tax, ACC levy, KiwiSaver, and net take-home for your pay frequency.',
+      'Adjust income to see how NZ\'s progressive brackets affect your effective tax rate.',
+    ],
+  }
+
+  const otherCountriesTax = Object.entries(countries)
+    .filter(([code]) => code !== country)
+    .map(([code, ct]) => ({ code, flag: ct.flag, name: ct.name }))
 
   return (
     <>
+      <CalcPageMeta country={country} slug="tax" title={pageTitle} description={pageDesc} embedded={embedded} />
       <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={`Free ${c.name} income tax calculator 2026. Calculate take-home pay, effective rate, ${country === 'us' ? 'federal + state + FICA' : country === 'ca' ? 'federal + provincial + CPP + EI' : country === 'uk' ? 'PAYE + National Insurance' : 'income tax + levies'}. Updated 2026 brackets.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/tax`} />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: `${c.name} Tax Calculator`,
+          description: `Free ${c.name} income tax calculator 2026. Calculate take-home pay, effective rate, and deductions.`,
+          url: `https://calqwise.com/${country}/tax`,
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'Web',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: c.currency },
+        })}</script>
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
@@ -644,6 +736,9 @@ export default function TaxCalc({ country }) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 pb-8">
+        <CalcIntro intro={taxIntroText[country] || taxIntroText.us} />
+        <CalcFeatures features={taxFeatures[country] || taxFeatures.us} />
+        <CalcHowTo steps={taxHowToSteps[country] || taxHowToSteps.us} />
         <CalcFAQ faqs={TAX_FAQS[country] || TAX_FAQS.us} />
         <CalcSubTopics links={subPagesByCalc[`${country}/tax`] || []} />
         <CalcRelated links={[
@@ -651,6 +746,7 @@ export default function TaxCalc({ country }) {
           { to: `/${country}/affordability`, label: 'Affordability Calculator' },
           { to: `/${country}/budget`,        label: 'Budget Planner' },
         ]} />
+        <CalcAlsoAvailable calcSlug="tax" calcLabel="Tax" countries={otherCountriesTax} />
         <AdSenseSlot format="leaderboard" />
       </div>
     </>

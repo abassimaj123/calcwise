@@ -8,14 +8,31 @@ import { CalcFAQ, CalcRelated, CalcSubTopics } from '../components/CalcSEO'
 
 // Calc components keyed by "country/calc"
 const calcComponents = {
-  'us/mortgage':    lazy(() => import('../calculators/mortgage/MortgageCalc')),
-  'ca/mortgage':    lazy(() => import('../calculators/mortgage/MortgageCalc')),
-  'uk/mortgage':    lazy(() => import('../calculators/mortgage/MortgageCalc')),
-  'au/mortgage':    lazy(() => import('../calculators/mortgage/MortgageCalc')),
-  'us/tax':         lazy(() => import('../calculators/tax/TaxCalc')),
-  'ca/tax':         lazy(() => import('../calculators/tax/TaxCalc')),
-  'us/rideprofit':  lazy(() => import('../calculators/rideprofit/RideProfitCalc')),
-  'ca/rideprofit':  lazy(() => import('../calculators/rideprofit/RideProfitCalc')),
+  'us/mortgage':      lazy(() => import('../calculators/mortgage/MortgageCalc')),
+  'ca/mortgage':      lazy(() => import('../calculators/mortgage/MortgageCalc')),
+  'uk/mortgage':      lazy(() => import('../calculators/mortgage/MortgageCalc')),
+  'au/mortgage':      lazy(() => import('../calculators/mortgage/MortgageCalc')),
+  'ie/mortgage':      lazy(() => import('../calculators/mortgage/MortgageCalc')),
+  'nz/mortgage':      lazy(() => import('../calculators/mortgage/MortgageCalc')),
+  'us/tax':           lazy(() => import('../calculators/tax/TaxCalc')),
+  'ca/tax':           lazy(() => import('../calculators/tax/TaxCalc')),
+  'uk/tax':           lazy(() => import('../calculators/tax/TaxCalc')),
+  'au/tax':           lazy(() => import('../calculators/tax/TaxCalc')),
+  'ie/tax':           lazy(() => import('../calculators/tax/TaxCalc')),
+  'nz/tax':           lazy(() => import('../calculators/tax/TaxCalc')),
+  'us/salary':        lazy(() => import('../calculators/salary/SalaryCalc')),
+  'ca/salary':        lazy(() => import('../calculators/salary/SalaryCalc')),
+  'uk/salary':        lazy(() => import('../calculators/salary/SalaryCalc')),
+  'au/salary':        lazy(() => import('../calculators/salary/SalaryCalc')),
+  'us/rideprofit':    lazy(() => import('../calculators/rideprofit/RideProfitCalc')),
+  'ca/rideprofit':    lazy(() => import('../calculators/rideprofit/RideProfitCalc')),
+  'uk/rideprofit':    lazy(() => import('../calculators/rideprofit/RideProfitCalc')),
+  'au/rideprofit':    lazy(() => import('../calculators/rideprofit/RideProfitCalc')),
+  'us/affordability': lazy(() => import('../calculators/affordability/AffordabilityCalc')),
+  'ca/affordability': lazy(() => import('../calculators/affordability/AffordabilityCalc')),
+  'uk/affordability': lazy(() => import('../calculators/affordability/AffordabilityCalc')),
+  'us/autoloan':      lazy(() => import('../calculators/autoloan/AutoLoanCalc')),
+  'ca/autoloan':      lazy(() => import('../calculators/autoloan/AutoLoanCalc')),
 }
 
 const LoadingSpinner = () => (
@@ -37,16 +54,56 @@ export default function SEOCalcPage() {
   return (
     <>
       <Helmet>
-        <title>{page.title} | CalcWise</title>
+        <title>{page.title} | CalqWise</title>
         <meta name="description" content={page.metaDesc} />
         <link rel="canonical" href={`https://calqwise.com/${country}/${calc}/${slug}`} />
+        {/* Open Graph */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`${page.title} | CalqWise`} />
+        <meta property="og:description" content={page.metaDesc} />
+        <meta property="og:url" content={`https://calqwise.com/${country}/${calc}/${slug}`} />
+        <meta property="og:image" content="https://calqwise.com/og-image.jpg" />
+        <meta property="og:site_name" content="CalqWise" />
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${page.title} | CalqWise`} />
+        <meta name="twitter:description" content={page.metaDesc} />
+        <meta name="twitter:image" content="https://calqwise.com/og-image.jpg" />
+        {/* Breadcrumb JSON-LD */}
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'CalqWise', item: 'https://calqwise.com/' },
+            { '@type': 'ListItem', position: 2, name: country.toUpperCase(), item: `https://calqwise.com/${country}` },
+            { '@type': 'ListItem', position: 3, name: calc.charAt(0).toUpperCase() + calc.slice(1), item: `https://calqwise.com/${country}/${calc}` },
+            { '@type': 'ListItem', position: 4, name: page.h1, item: `https://calqwise.com/${country}/${calc}/${slug}` },
+          ],
+        })}</script>
+        {/* Article JSON-LD — signals authoritative content for Google */}
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: page.h1,
+          description: page.metaDesc,
+          url: `https://calqwise.com/${country}/${calc}/${slug}`,
+          dateModified: '2026-04-19',
+          author: { '@type': 'Organization', name: 'CalqWise', url: 'https://calqwise.com' },
+          publisher: {
+            '@type': 'Organization',
+            name: 'CalqWise',
+            url: 'https://calqwise.com',
+            logo: { '@type': 'ImageObject', url: 'https://calqwise.com/og-image.jpg' },
+          },
+          mainEntityOfPage: { '@type': 'WebPage', '@id': `https://calqwise.com/${country}/${calc}/${slug}` },
+        })}</script>
       </Helmet>
 
       {/* SEO Article Header */}
       <div className="max-w-7xl mx-auto px-4 pt-8 pb-4">
         {/* Breadcrumb */}
         <nav className="text-xs text-slate-400 mb-4 flex items-center gap-1 flex-wrap">
-          <Link to="/" className="hover:text-primary transition-colors">CalcWise</Link>
+          <Link to="/" className="hover:text-primary transition-colors">CalqWise</Link>
           <span>/</span>
           <Link to={`/${country}`} className="hover:text-primary transition-colors capitalize">{country.toUpperCase()}</Link>
           <span>/</span>
@@ -91,7 +148,7 @@ export default function SEOCalcPage() {
       {/* Embedded Calculator */}
       {CalcComponent && (
         <Suspense fallback={<LoadingSpinner />}>
-          <CalcComponent country={country} />
+          <CalcComponent country={country} embedded={true} />
         </Suspense>
       )}
 

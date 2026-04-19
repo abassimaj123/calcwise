@@ -10,7 +10,7 @@ import {
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
-import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 import { countries } from '../../config/countries'
 
 // ---------------------------------------------------------------------------
@@ -290,10 +290,8 @@ export default function StudentLoanCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="student-loan" title="Student Loan Calculator US 2026 — IBR, PAYE, SAVE & Standard Plan | CalqWise" description="Free US student loan repayment calculator. Compare Standard, IBR, PAYE, and SAVE plans. Monthly payment, total interest, and loan forgiveness date. Updated 2026." />
       <Helmet>
-        <title>Student Loan Calculator US 2026 — IBR, PAYE, SAVE Plan Comparison | CalcWise</title>
-        <meta name="description" content="Compare US student loan repayment plans: Standard, IBR, PAYE, SAVE. Calculate monthly payment, total interest, and loan forgiveness. Updated 2026." />
-        <link rel="canonical" href="https://calqwise.com/us/student-loan" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

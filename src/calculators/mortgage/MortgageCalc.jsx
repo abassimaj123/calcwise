@@ -12,7 +12,7 @@ import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import AppDownloadBanner from '../../components/AppDownloadBanner'
 import { trackCalcUsed } from '../../utils/analytics'
-import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated, CalcHowTo, CalcSubTopics } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated, CalcHowTo, CalcSubTopics, CalcFeatures, CalcPageMeta } from '../../components/CalcSEO'
 import { subPagesByCalc } from '../../data/seoPages'
 import NumericInput from '../../components/NumericInput'
 
@@ -1070,7 +1070,7 @@ function CountryMortgageSpecialist({ country, price, down, rate, term, c }) {
   }
 }
 
-export default function MortgageCalc({ country }) {
+export default function MortgageCalc({ country, embedded = false }) {
   const { t } = useTranslation()
   const c = countries[country]
   const sym = c.symbol
@@ -1190,8 +1190,33 @@ export default function MortgageCalc({ country }) {
     ? '2026 avg: 6.5%'
     : '2026 avg: 5.0%'
 
-  const pageTitle = `${c.name} Mortgage Calculator 2026 — Monthly Payment | CalcWise`
-  const pageDesc = `Free ${c.name} mortgage calculator. Instant monthly payment, total interest, amortization.${country === 'uk' ? ' SDLT included.' : country === 'ca' ? ' CMHC & stress test.' : ''} Updated 2026.`
+  const pageTitles = {
+    us: 'Mortgage Calculator US — Monthly Payment, PMI & Amortization | CalqWise',
+    ca: 'Canada Mortgage Calculator — Monthly Payment & CMHC Insurance | CalqWise',
+    uk: 'UK Mortgage Calculator — Monthly Repayment & Stamp Duty | CalqWise',
+    au: 'Australia Mortgage Calculator — Repayment, LMI & Schedule | CalqWise',
+    ie: 'Ireland Mortgage Calculator — Monthly Repayment 2026 | CalqWise',
+    nz: 'NZ Mortgage Calculator — Fortnightly & Monthly Repayment | CalqWise',
+  }
+  const pageDescs = {
+    us: 'Free US mortgage calculator. Monthly payment with PMI, property tax, HOA, and full amortization schedule. Supports conventional, FHA, and VA loans. Updated 2026.',
+    ca: 'Free Canadian mortgage calculator. Monthly payment with CMHC insurance, stress test qualifying rate, and amortization schedule. All provinces. Updated 2026.',
+    uk: 'Free UK mortgage calculator. Monthly repayment, stamp duty (SDLT April 2025 rates), and affordability. First-time buyer and buy-to-let supported. Updated 2026.',
+    au: 'Free Australian mortgage calculator. Monthly repayment with LMI, APRA serviceability buffer, and full amortization schedule. Updated 2025/26 rates.',
+    ie: 'Free Irish mortgage calculator. Monthly repayment with Central Bank LTV and income rules, stamp duty, and mortgage protection. Updated 2026.',
+    nz: 'Free New Zealand mortgage calculator. Fortnightly and monthly repayment with RBNZ LVR guidance and KiwiSaver deposit info. Updated 2026.',
+  }
+  const pageTitle = pageTitles[country] || pageTitles.us
+  const pageDesc = pageDescs[country] || pageDescs.us
+
+  const mortgageFeatures = {
+    us: ['Monthly P&I payment (principal + interest)', 'PMI auto-calculated when LTV > 80%', 'State-average property tax estimate', 'Homeowner\'s insurance included', 'HOA fee option', 'Full amortization schedule (month-by-month)', 'LTV ratio and equity tracker', 'Total interest over loan lifetime'],
+    ca: ['Monthly P&I with semi-annual compounding (Interest Act)', 'CMHC insurance (2.80%–4.00% by LTV band)', 'Stress test qualifying rate (contract rate + 2%)', 'Property tax and home insurance', 'Condo/strata fee option', 'Bi-weekly payment option', 'Full amortization schedule', 'True CMHC cost including interest'],
+    uk: ['Monthly repayment (capital + interest)', 'SDLT (Stamp Duty) calculation — April 2025 rates', 'LTV ratio displayed', 'Council tax and buildings insurance', 'Leasehold service charge option', 'Life insurance (mortgage protection) option', 'Full amortization schedule', 'Fixed vs tracker comparison'],
+    au: ['Monthly repayment (P&I or interest-only)', 'LMI auto-calculated when LVR > 80%', 'APRA serviceability buffer shown', 'Council rates, strata fees, home insurance', 'Fortnightly payment option', 'Offset account impact modelling', 'Full amortization schedule', 'Equity build-up chart'],
+    ie: ['Monthly repayment (capital + interest)', 'Central Bank LTV and income multiple rules', 'Local Property Tax (LPT) estimate', 'Home insurance and mortgage protection', 'Stamp duty (1% / 2%) calculation', 'Solicitor and valuation fee guidance', 'Full amortization schedule', 'ECB rate sensitivity shown'],
+    nz: ['Fortnightly and monthly repayment', 'RBNZ LVR restriction guidance', 'Council rates and home insurance', 'Body corporate fee option', 'Fixed term vs floating comparison', 'KiwiSaver First Home Withdrawal info', 'Full amortization schedule', 'Equity build-up chart'],
+  }
 
   const otherCountries = Object.entries(countries)
     .filter(([code]) => code !== country)
@@ -1325,12 +1350,8 @@ export default function MortgageCalc({ country }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="mortgage" title={pageTitle} description={pageDesc} embedded={embedded} />
       <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDesc} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/mortgage`} />
-        {country === 'ca' && <link rel="alternate" hreflang="fr-ca" href="https://calqwise.com/ca/mortgage" />}
-        <link rel="alternate" hreflang="en" href={`https://calqwise.com/${country}/mortgage`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
@@ -1721,6 +1742,7 @@ export default function MortgageCalc({ country }) {
 
       {/* SEO content — kept outside the sticky grid container to avoid stacking context issues */}
       <div className="max-w-7xl mx-auto px-4 pb-2">
+        <CalcFeatures features={mortgageFeatures[country] || mortgageFeatures.us} />
         <CalcHowTo steps={howToSteps[country] || howToSteps.us} />
         <AdSenseSlot format="in-article" slot="0000000002" placement="in-content" />
         <CalcFAQ faqs={faqs[country] || faqs.us} />

@@ -11,7 +11,7 @@ import AppDownloadBanner from '../../components/AppDownloadBanner'
 import { trackCalcUsed } from '../../utils/analytics'
 import NumericInput from '../../components/NumericInput'
 import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 function calcAutoLoan({ vehiclePrice, downPayment, tradeIn, apr, termMonths, salesTaxRate }) {
   const taxAmount = vehiclePrice * (salesTaxRate / 100)
@@ -44,7 +44,7 @@ function buildSchedule(loanAmount, apr, termMonths) {
 
 const termOptions = [24, 36, 48, 60, 72, 84]
 
-export default function AutoLoanCalc({ country }) {
+export default function AutoLoanCalc({ country, embedded = false }) {
   const { t } = useTranslation()
   const c = countries[country]
   const d = AUTOLOAN_DEFAULTS[country] || AUTOLOAN_DEFAULTS.us
@@ -96,14 +96,25 @@ export default function AutoLoanCalc({ country }) {
 
   const aprHint = (AUTOLOAN_RATES_2026[country] || AUTOLOAN_RATES_2026.us).hint
 
-  const pageTitle = `${c.name} Auto Loan Calculator 2026 | Monthly Payment | CalcWise`
+  const pageTitles = {
+    us: 'Auto Loan Calculator US — Monthly Car Payment & Total Interest | CalqWise',
+    ca: 'Canada Auto Loan Calculator — Car Payment with GST, HST & TVQ | CalqWise',
+    uk: 'UK Car Finance Calculator — PCP, HP & Personal Loan Comparison | CalqWise',
+    au: 'Australia Car Loan Calculator — Monthly Payment & Amortization | CalqWise',
+  }
+  const pageDescs = {
+    us: 'Free US auto loan calculator. Monthly car payment, total interest, and full amortization schedule. Includes sales tax, trade-in value, and down payment. Updated 2026.',
+    ca: 'Free Canadian auto loan calculator. Monthly car payment with GST, HST, and provincial sales tax (TVQ). Trade-in and down payment included. Updated 2026.',
+    uk: 'Free UK car finance calculator. Compare PCP, HP, and personal loan. Monthly payment, balloon payment, and total interest side-by-side. Updated 2026.',
+    au: 'Free Australian car loan calculator. Monthly payment, total interest, and amortization schedule. Stamp duty on vehicles included. Updated 2026.',
+  }
+  const pageTitle = pageTitles[country] || `${c.name} Auto Loan Calculator 2026 | CalqWise`
+  const pageDesc = pageDescs[country] || `Free ${c.name} auto loan calculator. Monthly car payment, total interest, and amortization. Updated 2026.`
 
   return (
     <>
+      <CalcPageMeta country={country} slug="autoloan" title={pageTitle} description={pageDesc} embedded={embedded} />
       <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={`Free ${c.name} auto loan calculator. Calculate monthly car payment, total interest, and total cost. Updated 2026.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/autoloan`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",

@@ -7,7 +7,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 import { countries } from '../../config/countries'
-import { CalcIntro, CalcFAQ, CalcRelated, CalcSubTopics } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcSubTopics, CalcPageMeta } from '../../components/CalcSEO'
 import { subPagesByCalc } from '../../data/seoPages'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
@@ -100,7 +100,7 @@ function Toggle({ on, onChange }) {
   )
 }
 
-export default function RideProfitCalc({ country }) {
+export default function RideProfitCalc({ country, embedded = false }) {
   const { t } = useTranslation()
   const c = countries[country]
   const mr = mileageRates[country] || mileageRates.ca
@@ -205,14 +205,25 @@ export default function RideProfitCalc({ country }) {
     ...(result.weeklyExtraTotal > 0 ? [{ name: 'Additional Expenses', value: Math.round(result.weeklyExtraTotal) }] : []),
   ] : []
 
-  const pageTitle = `${c.name} RideProfit Calculator — Real Uber/DoorDash Earnings | CalcWise`
+  const pageTitles = {
+    us: 'Rideshare Profit Calculator US — Real Uber, Lyft & DoorDash Earnings | CalqWise',
+    ca: 'Rideshare Profit Calculator Canada — True Uber & DoorDash Profit | CalqWise',
+    uk: 'UK Rideshare Profit Calculator — Real Uber & Deliveroo Earnings | CalqWise',
+    au: 'Australia Rideshare Profit Calculator — Real Uber & DoorDash Profit | CalqWise',
+  }
+  const pageDescs = {
+    us: 'Free US rideshare profit calculator. True earnings after fuel, wear & tear, depreciation, and taxes. GPS mileage tracking for IRS deductions. Uber, Lyft, DoorDash, Uber Eats.',
+    ca: 'Free Canadian rideshare profit calculator. Real hourly rate after fuel, vehicle costs, and CRA mileage deductions. Uber, DoorDash, Skip the Dishes, Instacart.',
+    uk: 'Free UK rideshare profit calculator. True earnings after fuel, wear & tear, depreciation, and HMRC mileage allowance. Uber, Deliveroo, Just Eat, Amazon Flex.',
+    au: 'Free Australian rideshare profit calculator. True earnings after fuel, vehicle depreciation, and ATO mileage deductions. Uber, DoorDash, Deliveroo, Menulog.',
+  }
+  const pageTitle = pageTitles[country] || pageTitles.us
+  const pageDesc = pageDescs[country] || pageDescs.us
 
   return (
     <>
+      <CalcPageMeta country={country} slug="rideprofit" title={pageTitle} description={pageDesc} embedded={embedded} />
       <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={`Calculate your real rideshare and delivery profit in ${c.name}. True hourly rate after fuel, wear & tear, depreciation. ${mr.label}.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/rideprofit`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd(country))}</script>
       </Helmet>
 

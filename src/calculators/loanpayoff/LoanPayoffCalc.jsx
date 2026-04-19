@@ -11,7 +11,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
-import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 const COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444']
 
@@ -153,10 +153,13 @@ export default function LoanPayoffCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta
+        country={country}
+        slug="loan-payoff"
+        title={`Loan Payoff Calculator ${c.name} 2026 — Early Payoff & Interest Savings | CalqWise`}
+        description={`Free ${c.name} loan payoff calculator. See how extra monthly payments reduce total interest and shorten your loan term. Works for mortgage, auto, student, and personal loans.`}
+      />
       <Helmet>
-        <title>Loan Payoff Calculator {c.name} 2026 — Extra Payments Savings | CalcWise</title>
-        <meta name="description" content={`Calculate how extra loan payments save you interest and time in ${c.name}. See payoff date comparison with and without extra payments. Free loan payoff calculator.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/loan-payoff`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

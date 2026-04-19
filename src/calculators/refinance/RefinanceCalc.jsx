@@ -7,7 +7,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 import { countries } from '../../config/countries'
-import { CalcIntro, CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
@@ -134,10 +134,13 @@ export default function RefinanceCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta
+        country={country}
+        slug="refinance"
+        title={`Mortgage Refinance Calculator ${c.name} 2026 — Break-Even & Lifetime Savings | CalqWise`}
+        description={`Should you refinance? Free ${c.name} refinance calculator. Break-even month, monthly payment reduction, and total interest saved with closing costs factored in. Updated 2026.`}
+      />
       <Helmet>
-        <title>Refinance Calculator {c.name} 2026 — Break-Even &amp; Monthly Savings | CalcWise</title>
-        <meta name="description" content={`Calculate mortgage refinance savings, break-even point, and lifetime savings in ${c.name}. Free refinance calculator. Updated 2026.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/refinance`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd(country))}</script>
       </Helmet>
 

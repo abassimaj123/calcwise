@@ -2,6 +2,60 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown } from 'lucide-react'
+import { countries } from '../config/countries'
+
+const BASE_URL = 'https://calqwise.com'
+const OG_IMAGE = `${BASE_URL}/og-image.jpg`
+
+/**
+ * Drop-in replacement for the <Helmet> block in every calculator page.
+ * Emits: title, meta description, canonical, OG tags, Twitter card,
+ * and a BreadcrumbList JSON-LD — all from a single component call.
+ *
+ * Usage:
+ *   <CalcPageMeta country="ca" slug="mortgage" title={pageTitle} description={pageDesc} />
+ *
+ * Extra schemas (e.g. SoftwareApplication) can still be added via a
+ * separate <Helmet> block after this component.
+ */
+export function CalcPageMeta({ country, slug, title, description, embedded = false }) {
+  if (embedded) return null
+  const c = countries[country]
+  const countryName = c?.name ?? country.toUpperCase()
+  const url = `${BASE_URL}/${country}/${slug}`
+
+  const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'CalqWise', item: BASE_URL + '/' },
+      { '@type': 'ListItem', position: 2, name: `${countryName} Calculators`, item: `${BASE_URL}/${country}` },
+      { '@type': 'ListItem', position: 3, name: title, item: url },
+    ],
+  }
+
+  return (
+    <Helmet>
+      <title>{title}</title>
+      <meta name="description" content={description} />
+      <link rel="canonical" href={url} />
+      {/* Open Graph */}
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={url} />
+      <meta property="og:image" content={OG_IMAGE} />
+      <meta property="og:site_name" content="CalqWise" />
+      {/* Twitter Card */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={OG_IMAGE} />
+      {/* Breadcrumb */}
+      <script type="application/ld+json">{JSON.stringify(breadcrumb)}</script>
+    </Helmet>
+  )
+}
 
 export function CalcIntro({ intro, hiddenCost }) {
   return (
@@ -120,6 +174,25 @@ export function CalcSubTopics({ links }) {
           </Link>
         ))}
       </div>
+    </div>
+  )
+}
+
+export function CalcFeatures({ features }) {
+  if (!features || !features.length) return null
+  return (
+    <div className="mt-2 bg-white border border-slate-200 rounded-xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+      <div className="px-6 pt-4 pb-2">
+        <h2 className="font-display font-bold text-base text-slate-900">What's included</h2>
+      </div>
+      <ul className="px-6 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+        {features.map((f, i) => (
+          <li key={i} className="flex items-start gap-2 text-sm text-slate-600 leading-relaxed">
+            <span className="shrink-0 text-primary mt-0.5">✓</span>
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

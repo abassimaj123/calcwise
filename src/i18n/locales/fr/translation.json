@@ -47,7 +47,7 @@
     "step2Desc": "Saisissez vos données. Les résultats se calculent en temps réel — aucune soumission requise.",
     "step3Title": "Découvrez ce que les autres cachent",
     "step3Desc": "Vue simple pour une réponse rapide. Vue détaillée pour les coûts cachés, l'amortissement complet et les déductions.",
-    "whyTitle": "Pourquoi CalcWise?",
+    "whyTitle": "Pourquoi CalqWise?",
     "whyAccurateTitle": "Taux 2026 Exacts",
     "whyAccurateDesc": "Paliers d'imposition, taux hypothécaires et plafonds de cotisation mis à jour pour les 6 pays.",
     "whyInstantTitle": "Résultats Instantanés",
@@ -162,30 +162,30 @@
     "monthlyCostEstimates": "Coûts mensuels estimés",
     "oneTimeAdded": "Unique : {{amount}} ajouté au prêt",
     "opt": {
-      "pmi":       "PMI (Assurance hypothécaire)",
+      "pmi": "PMI (Assurance hypothécaire)",
       "propertax": "Taxe foncière",
-      "homeins":   "Assurance habitation",
-      "hoa":       "Frais de copropriété",
-      "cmhc":      "Assurance SCHL",
-      "lmi":       "Assurance prêt hypothécaire LMI",
-      "condo":     "Frais de condo / strata",
-      "lifeins":   "Assurance vie hypothécaire",
-      "service":   "Charges de service (emphytéose)",
-      "strata":    "Frais de strata / copropriété",
-      "body":      "Frais de copropriété"
+      "homeins": "Assurance habitation",
+      "hoa": "Frais de copropriété",
+      "cmhc": "Assurance SCHL",
+      "lmi": "Assurance prêt hypothécaire LMI",
+      "condo": "Frais de condo / strata",
+      "lifeins": "Assurance vie hypothécaire",
+      "service": "Charges de service (emphytéose)",
+      "strata": "Frais de strata / copropriété",
+      "body": "Frais de copropriété"
     },
     "optHint": {
-      "pmi":       "Requis si mise de fonds < 20% · moy. 0,5–1,5% du prêt/an",
+      "pmi": "Requis si mise de fonds < 20% · moy. 0,5–1,5% du prêt/an",
       "propertax": "Taux annuel",
-      "homeins":   "Prime annuelle",
-      "hoa":       "Frais mensuels de copropriété",
-      "cmhc":      "Requis si mise de fonds < 20% · 2,8–4,0% du prêt",
-      "lmi":       "Requis si LVR > 80% · 1–3% du prêt",
-      "condo":     "Frais mensuels de condo/strata",
-      "lifeins":   "Police à terme décroissant mensuelle",
-      "service":   "Charges de service annuelles (bail emphytéotique)",
-      "strata":    "Frais de strata annuels (unités/appartements)",
-      "body":      "Frais annuels pour unités/appartements"
+      "homeins": "Prime annuelle",
+      "hoa": "Frais mensuels de copropriété",
+      "cmhc": "Requis si mise de fonds < 20% · 2,8–4,0% du prêt",
+      "lmi": "Requis si LVR > 80% · 1–3% du prêt",
+      "condo": "Frais mensuels de condo/strata",
+      "lifeins": "Police à terme décroissant mensuelle",
+      "service": "Charges de service annuelles (bail emphytéotique)",
+      "strata": "Frais de strata annuels (unités/appartements)",
+      "body": "Frais annuels pour unités/appartements"
     }
   },
   "tax": {
@@ -624,5 +624,89 @@
     "desc": "Ce calculateur n'existe pas encore. Essayez un de nos calculateurs populaires.",
     "home": "Retour à l'accueil",
     "calc": "Calculateur Hypothécaire"
+  },
+  "privacy": {
+    "meta": {
+      "title": "Politique de confidentialite | CalqWise",
+      "desc": "Politique de confidentialite de CalqWise pour le site et les apps Android. Conforme RGPD et CCPA."
+    },
+    "heading": "Politique de confidentialite",
+    "updated": "Derniere mise a jour",
+    "s1": {
+      "title": "Apercu",
+      "p1": "CalqWise exploite le site calqwise.com et une suite d'applications Android. Cette politique explique comment nous collectons, utilisons et protegeons les informations.",
+      "keyFact": "Fait important",
+      "p2": "Tous les calculs financiers s'effectuent dans votre navigateur ou sur votre appareil. Nous ne transmettons jamais vos donnees financieres a nos serveurs."
+    },
+    "s2": {
+      "title": "Site web - Informations collectees",
+      "calcTitle": "2.1 Donnees des calculateurs",
+      "calcText": "Nous ne collectons, ne stockons ni ne traitons aucune donnee financiere saisie dans nos calculateurs. Tous les calculs sont effectues cote client.",
+      "analyticsTitle": "2.2 Donnees d'utilisation (Google Analytics 4)",
+      "analyticsText": "Nous utilisons Google Analytics 4 pour des donnees anonymisees : pages visitees, duree de session, type de navigateur, region geographique et sites referents.",
+      "analyticsOptOut": "Les donnees GA4 sont traitees par Google LLC. Desactivez via le module complementaire de desinscription Google Analytics.",
+      "adsenseTitle": "2.3 Publicite (Google AdSense)",
+      "adsenseText": "Nous affichons des publicites via Google AdSense. Google peut utiliser des cookies pour des annonces personnalisees. Gerez vos preferences sur adssettings.google.com.",
+      "contactTitle": "2.4 Formulaire de contact",
+      "contactText": "Si vous soumettez notre formulaire, votre nom, e-mail et message sont traites via Formspree uniquement pour repondre a votre demande."
+    },
+    "s3": {
+      "title": "Applications Android - Collecte de donnees",
+      "intro": "Nos applications Android utilisent des SDK tiers pouvant collecter des donnees. Les applications suivantes sont couvertes par cette politique :",
+      "admobTitle": "3.1 Publicite (Google AdMob)",
+      "admobText": "Nos apps affichent des publicites via Google AdMob. AdMob peut collecter des identifiants d'appareil, l'adresse IP et des donnees d'utilisation. Desactivez dans Parametres Google > Annonces.",
+      "analyticsTitle": "3.2 Analyse d'utilisation (Firebase Analytics)",
+      "analyticsText": "Nous utilisons Firebase Analytics pour des donnees anonymisees (ecrans consultes, duree de session, type d'appareil, pays). Ces donnees ne permettent pas de vous identifier.",
+      "crashlyticsTitle": "3.3 Rapports de plantage (Firebase Crashlytics)",
+      "crashlyticsText": "Firebase Crashlytics collecte des rapports de plantage incluant le modele d'appareil, la version d'OS et la trace de debogage. Aucune donnee personnelle n'est incluse.",
+      "noSale": "Nous ne vendons pas les donnees collectees via nos applications. Tous les SDK tiers sont regis par la politique de confidentialite de Google."
+    },
+    "s4": {
+      "title": "Cookies",
+      "intro": "Notre site web utilise les cookies suivants :",
+      "analyticsCookie": "Cookies analytiques",
+      "analyticsCookieText": "Google Analytics suit les pages visitees anonymement. Duree jusqu'a 2 ans.",
+      "adsCookie": "Cookies publicitaires",
+      "adsCookieText": "Google AdSense utilise des cookies pour diffuser et mesurer les publicites.",
+      "functionalCookie": "Cookies fonctionnels",
+      "functionalCookieText": "Nous stockons vos preferences dans localStorage. Ces donnees ne quittent jamais votre appareil.",
+      "control": "Vous pouvez controler les cookies via les parametres de votre navigateur."
+    },
+    "s5": {
+      "title": "RGPD (Utilisateurs europeens)",
+      "intro": "Si vous etes dans l'Espace economique europeen, vous disposez des droits suivants :",
+      "access": "Droit d'acces",
+      "accessText": "Demander une copie des donnees personnelles que nous detenons sur vous.",
+      "erasure": "Droit a l'effacement",
+      "erasureText": "Demander la suppression de vos donnees personnelles.",
+      "object": "Droit d'opposition",
+      "objectText": "Vous opposer au traitement de vos donnees a des fins marketing.",
+      "portability": "Droit a la portabilite",
+      "portabilityText": "Recevoir vos donnees dans un format structure et lisible par machine.",
+      "basis": "Notre base legale pour l'analytique est l'interet legitime. Pour la publicite, nous nous appuyons sur le consentement."
+    },
+    "s6": {
+      "title": "CCPA (Utilisateurs californiens)",
+      "text": "Les residents californiens ont le droit de : savoir quelles donnees nous collectons ; demander leur suppression ; refuser la vente de donnees (nous ne vendons pas de donnees) ; et ne pas subir de discrimination.",
+      "note": "Le partage de donnees avec Google peut constituer une vente au sens du CCPA. Utilisez les outils de desinscription de Google ou activez le signal Global Privacy Control (GPC)."
+    },
+    "s7": {
+      "title": "Protection des mineurs",
+      "text": "CalqWise et nos applications ne sont pas destines aux enfants de moins de 13 ans. Nous ne collectons pas sciemment de donnees aupres d'enfants. Contactez-nous immediatement si necessaire."
+    },
+    "s8": {
+      "title": "Liens tiers",
+      "text": "Notre site et nos applications peuvent contenir des liens vers des services tiers. Nous ne sommes pas responsables de leurs pratiques de confidentialite."
+    },
+    "s9": {
+      "title": "Modifications de cette politique",
+      "text": "Nous pouvons mettre a jour cette politique. Les modifications seront publiees avec une date mise a jour. L'utilisation continue de CalqWise vaut acceptation."
+    },
+    "s10": {
+      "title": "Nous contacter",
+      "text": "Pour toute question relative a la confidentialite, ecrivez-nous a",
+      "or": "ou utilisez notre",
+      "contactPage": "page de contact"
+    }
   }
 }

@@ -47,7 +47,7 @@
     "step2Desc": "Ingresa tus datos. Todos los cálculos ocurren al instante en tu navegador.",
     "step3Title": "Obtén el desglose completo",
     "step3Desc": "Ve resultados simples o cambia a vista detallada con amortización completa.",
-    "whyTitle": "¿Por qué CalcWise?",
+    "whyTitle": "¿Por qué CalqWise?",
     "whyAccurateTitle": "Tasas 2026 Exactas",
     "whyAccurateDesc": "Tramos impositivos, tasas hipotecarias y límites de aportación actualizados para los 6 países.",
     "whyInstantTitle": "Resultados Instantáneos",
@@ -162,30 +162,30 @@
     "monthlyCostEstimates": "Estimaciones de costos mensuales",
     "oneTimeAdded": "Único: {{amount}} agregado al préstamo",
     "opt": {
-      "pmi":       "PMI (Seguro hipotecario)",
+      "pmi": "PMI (Seguro hipotecario)",
       "propertax": "Impuesto predial",
-      "homeins":   "Seguro de hogar",
-      "hoa":       "Cuotas HOA",
-      "cmhc":      "Seguro CMHC",
-      "lmi":       "LMI (Seguro hipotecario)",
-      "condo":     "Cuotas de condominio/strata",
-      "lifeins":   "Seguro de vida hipotecario",
-      "service":   "Cargo de servicio (arrendamiento)",
-      "strata":    "Cuotas de estrata / copropietarios",
-      "body":      "Cuotas de administración"
+      "homeins": "Seguro de hogar",
+      "hoa": "Cuotas HOA",
+      "cmhc": "Seguro CMHC",
+      "lmi": "LMI (Seguro hipotecario)",
+      "condo": "Cuotas de condominio/strata",
+      "lifeins": "Seguro de vida hipotecario",
+      "service": "Cargo de servicio (arrendamiento)",
+      "strata": "Cuotas de estrata / copropietarios",
+      "body": "Cuotas de administración"
     },
     "optHint": {
-      "pmi":       "Requerido si entrada < 20% · prom. 0,5–1,5% del préstamo/año",
+      "pmi": "Requerido si entrada < 20% · prom. 0,5–1,5% del préstamo/año",
       "propertax": "Tasa anual",
-      "homeins":   "Prima anual",
-      "hoa":       "Cuota mensual de propietarios",
-      "cmhc":      "Requerido si entrada < 20% · 2,8–4,0% del préstamo",
-      "lmi":       "Requerido si LVR > 80% · 1–3% del préstamo",
-      "condo":     "Cuotas mensuales de condo/strata",
-      "lifeins":   "Póliza de término decreciente mensual",
-      "service":   "Cargo de servicio anual (arrendamiento)",
-      "strata":    "Cuotas anuales de strata (unidades/apartamentos)",
-      "body":      "Cuotas anuales para unidades/apartamentos"
+      "homeins": "Prima anual",
+      "hoa": "Cuota mensual de propietarios",
+      "cmhc": "Requerido si entrada < 20% · 2,8–4,0% del préstamo",
+      "lmi": "Requerido si LVR > 80% · 1–3% del préstamo",
+      "condo": "Cuotas mensuales de condo/strata",
+      "lifeins": "Póliza de término decreciente mensual",
+      "service": "Cargo de servicio anual (arrendamiento)",
+      "strata": "Cuotas anuales de strata (unidades/apartamentos)",
+      "body": "Cuotas anuales para unidades/apartamentos"
     }
   },
   "tax": {
@@ -624,5 +624,89 @@
     "desc": "Esta calculadora no existe aún. Prueba una de nuestras más populares.",
     "home": "Volver al inicio",
     "calc": "Calculadora de Hipoteca"
+  },
+  "privacy": {
+    "meta": {
+      "title": "Politica de privacidad | CalqWise",
+      "desc": "Politica de privacidad de CalqWise para el sitio web y apps Android. Cumplimiento GDPR y CCPA."
+    },
+    "heading": "Politica de privacidad",
+    "updated": "Ultima actualizacion",
+    "s1": {
+      "title": "Descripcion general",
+      "p1": "CalqWise opera el sitio calqwise.com y una suite de aplicaciones Android. Esta politica explica como recopilamos, usamos y protegemos la informacion.",
+      "keyFact": "Dato clave",
+      "p2": "Todos los calculos financieros se ejecutan en su navegador o dispositivo. Nunca transmitimos sus datos financieros a nuestros servidores."
+    },
+    "s2": {
+      "title": "Sitio web - Informacion recopilada",
+      "calcTitle": "2.1 Datos de calculadoras",
+      "calcText": "NO recopilamos, almacenamos ni procesamos ningun dato financiero. Todos los calculos se realizan en el lado del cliente.",
+      "analyticsTitle": "2.2 Datos de uso (Google Analytics 4)",
+      "analyticsText": "Usamos Google Analytics 4 para datos anonimos: paginas visitadas, duracion de sesion, tipo de navegador, region y sitios de referencia.",
+      "analyticsOptOut": "Los datos de GA4 son procesados por Google LLC. Desactivelo mediante el complemento de exclusion de Google Analytics.",
+      "adsenseTitle": "2.3 Publicidad (Google AdSense)",
+      "adsenseText": "Mostramos anuncios mediante Google AdSense. Google puede usar cookies para anuncios personalizados. Gestione preferencias en adssettings.google.com.",
+      "contactTitle": "2.4 Formulario de contacto",
+      "contactText": "Si envia nuestro formulario, su nombre, correo y mensaje son procesados por Formspree para responder su consulta."
+    },
+    "s3": {
+      "title": "Aplicaciones Android - Recopilacion de datos",
+      "intro": "Nuestras apps Android utilizan SDKs de terceros que pueden recopilar datos. Las siguientes aplicaciones estan cubiertas:",
+      "admobTitle": "3.1 Publicidad (Google AdMob)",
+      "admobText": "Nuestras apps muestran anuncios mediante Google AdMob. AdMob puede recopilar identificadores de dispositivo e IP. Desactive en Configuracion de Google > Anuncios.",
+      "analyticsTitle": "3.2 Analisis de uso (Firebase Analytics)",
+      "analyticsText": "Usamos Firebase Analytics para datos anonimos (pantallas, sesion, dispositivo, pais). Los datos son agregados y no permiten identificarle.",
+      "crashlyticsTitle": "3.3 Informes de fallos (Firebase Crashlytics)",
+      "crashlyticsText": "Firebase Crashlytics recopila informes de fallos con modelo de dispositivo, version SO y traza de error. No se incluyen datos personales.",
+      "noSale": "No vendemos datos recopilados a traves de nuestras apps. Todos los SDKs se rigen por la politica de privacidad de Google."
+    },
+    "s4": {
+      "title": "Cookies",
+      "intro": "Nuestro sitio web usa las siguientes cookies:",
+      "analyticsCookie": "Cookies analiticas",
+      "analyticsCookieText": "Google Analytics rastrea paginas de forma anonima. Persisten hasta 2 anos.",
+      "adsCookie": "Cookies publicitarias",
+      "adsCookieText": "Google AdSense usa cookies para mostrar y medir anuncios.",
+      "functionalCookie": "Cookies funcionales",
+      "functionalCookieText": "Guardamos preferencias en localStorage. Estos datos no abandonan su dispositivo.",
+      "control": "Puede controlar las cookies en la configuracion de su navegador."
+    },
+    "s5": {
+      "title": "GDPR (Usuarios europeos)",
+      "intro": "Si esta en el EEE, tiene los siguientes derechos:",
+      "access": "Derecho de acceso",
+      "accessText": "Solicitar copia de los datos que tenemos sobre usted.",
+      "erasure": "Derecho de supresion",
+      "erasureText": "Solicitar la eliminacion de sus datos personales.",
+      "object": "Derecho de oposicion",
+      "objectText": "Oponerse al tratamiento de sus datos con fines de marketing.",
+      "portability": "Derecho de portabilidad",
+      "portabilityText": "Recibir sus datos en formato estructurado y legible por maquina.",
+      "basis": "Nuestra base legal para analisis es el interes legitimo. Para publicidad, nos basamos en el consentimiento."
+    },
+    "s6": {
+      "title": "CCPA (Usuarios de California)",
+      "text": "Los residentes de California tienen derecho a: saber que datos recopilamos; solicitar su eliminacion; rechazar la venta de datos (no vendemos datos); y no sufrir discriminacion.",
+      "note": "Compartir datos con Google puede constituir una venta bajo el CCPA. Use las herramientas de exclusion de Google o active el Global Privacy Control (GPC)."
+    },
+    "s7": {
+      "title": "Privacidad de menores",
+      "text": "CalqWise y nuestras apps no estan dirigidos a menores de 13 anos. No recopilamos datos de menores. Contactenos de inmediato si cree que un menor ha proporcionado informacion."
+    },
+    "s8": {
+      "title": "Enlaces de terceros",
+      "text": "Nuestro sitio y apps pueden enlazar a servicios de terceros. No somos responsables de sus practicas de privacidad."
+    },
+    "s9": {
+      "title": "Cambios en esta politica",
+      "text": "Podemos actualizar esta politica. Los cambios se publicaran con fecha actualizada. El uso continuado de CalqWise constituye aceptacion."
+    },
+    "s10": {
+      "title": "Contactenos",
+      "text": "Para consultas de privacidad, escribanos a",
+      "or": "o use nuestra",
+      "contactPage": "pagina de contacto"
+    }
   }
 }

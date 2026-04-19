@@ -12,7 +12,7 @@ import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import SmartAlert from '../../components/SmartAlert'
-import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 
 const SAVINGS_FAQS = [
   { q: 'What is compound interest and why does it matter?', a: 'Compound interest is interest earned on both your principal and previously earned interest. Over time it creates exponential growth — $10,000 at 7% for 30 years grows to over $76,000 without adding a single dollar.' },
@@ -166,13 +166,8 @@ export default function SavingsCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="savings" title={`Savings & Compound Interest Calculator ${c.name} 2026 | CalqWise`} description={`Free ${c.name} compound interest calculator. See how savings grow with regular deposits, reinvested returns, and inflation adjustment. Project your balance at any time horizon.`} />
       <Helmet>
-        <title>{c.name} Savings &amp; Compound Interest Calculator 2026 | CalcWise</title>
-        <meta
-          name="description"
-          content={`Free savings calculator for ${c.name}. Calculate compound interest, savings growth, and inflation-adjusted returns. See how your deposits grow over time.`}
-        />
-        <link rel="canonical" href={`https://calqwise.com/${country}/savings`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

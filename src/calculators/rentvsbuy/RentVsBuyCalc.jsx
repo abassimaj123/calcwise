@@ -8,7 +8,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import AdSenseSlot from '../../components/AdSenseSlot'
 import NumericInput from '../../components/NumericInput'
-import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated } from '../../components/CalcSEO'
+import { CalcIntro, CalcFAQ, CalcAlsoAvailable, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 import {
   AreaChart, Area, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -220,7 +220,20 @@ export default function RentVsBuyCalc({ country }) {
 
   const fmtAxis = currencyFormatter(c.locale, c.currency)
 
-  const pageTitle = `${c.name} Rent vs Buy Calculator 2026 — Break-Even Year | CalcWise`
+  const pageTitles = {
+    us: 'Rent vs Buy Calculator US — Break-Even Year & Wealth Comparison | CalqWise',
+    ca: 'Rent vs Buy Calculator Canada — Break-Even Year & True Cost | CalqWise',
+    uk: 'Rent vs Buy Calculator UK — Is Buying Worth It in 2026? | CalqWise',
+    au: 'Rent vs Buy Calculator Australia — Break-Even Analysis 2026 | CalqWise',
+  }
+  const pageDescs = {
+    us: 'Should you rent or buy in the US? Calculate your break-even year with mortgage costs, property tax, maintenance, rent increases, and opportunity cost of your down payment factored in.',
+    ca: 'Rent or buy in Canada? Compare true cost of ownership (CMHC, property tax, maintenance) vs renting and investing your down payment. Free 2026 break-even calculator.',
+    uk: 'Rent or buy in the UK? Calculate break-even after stamp duty, mortgage, council tax, and opportunity cost of your deposit. Free 2026 rent vs buy calculator.',
+    au: 'Rent or buy in Australia? Compare ownership costs (LMI, rates, insurance) with renting and investing your deposit. Free 2026 break-even analysis.',
+  }
+  const pageTitle = pageTitles[country] || pageTitles.us
+  const pageDesc = pageDescs[country] || pageDescs.us
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -242,10 +255,8 @@ export default function RentVsBuyCalc({ country }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="rent-vs-buy" title={pageTitle} description={pageDesc} />
       <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={`Should you rent or buy in ${c.name}? Find your break-even year with our free calculator. Compare wealth building over time. Updated 2026.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/rent-vs-buy`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

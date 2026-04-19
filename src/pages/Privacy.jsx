@@ -1,130 +1,179 @@
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+
+const CONTACT_EMAIL = 'hello@calqwise.com'
+
+const ANDROID_APPS = [
+  'Mortgage Calculator CA', 'Mortgage Calculator UK', 'Mortgage Calculator US',
+  'Auto Loan CA', 'Auto Loan UK', 'Auto Loan US',
+  'Tax Calculator CA', 'Tax Calculator UK', 'Tax Calculator US', 'Tax Calculator AU',
+  'RideProfit', 'Salary Calculator CA', 'Salary Calculator UK', 'Salary Calculator US',
+]
+
+function Section({ number, title, children }) {
+  return (
+    <div className="cw-card">
+      <h2 className="text-xl font-semibold text-white mb-3">{number}. {title}</h2>
+      {children}
+    </div>
+  )
+}
+
+function Sub({ title, children }) {
+  return (
+    <>
+      <h3 className="font-semibold text-white mt-4 mb-2">{title}</h3>
+      {children}
+    </>
+  )
+}
+
+function P({ children, className = '' }) {
+  return <p className={`text-sm leading-relaxed ${className}`}>{children}</p>
+}
+
+function Bullet({ children }) {
+  return (
+    <li className="flex gap-3">
+      <span className="text-accent shrink-0">•</span>
+      <span>{children}</span>
+    </li>
+  )
+}
 
 export default function Privacy() {
+  const { t } = useTranslation()
+
   return (
     <>
       <Helmet>
-        <title>Privacy Policy | CalcWise</title>
-        <meta name="description" content="CalcWise privacy policy. How we handle your data, cookies, Google Analytics and AdSense. GDPR and CCPA compliant." />
+        <title>{t('privacy.meta.title')}</title>
+        <meta name="description" content={t('privacy.meta.desc')} />
         <link rel="canonical" href="https://calqwise.com/privacy" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Privacy Policy | CalqWise" />
+        <meta property="og:description" content="CalqWise privacy policy — website and Android apps. GDPR and CCPA compliant. No personal data collected during calculations." />
+        <meta property="og:url" content="https://calqwise.com/privacy" />
+        <meta property="og:site_name" content="CalqWise" />
+        <meta name="robots" content="noindex, follow" />
       </Helmet>
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-display font-bold mb-4">Privacy Policy</h1>
-          <p className="text-slate-500">Last updated: January 1, 2026</p>
+          <h1 className="text-4xl font-display font-bold mb-4">{t('privacy.heading')}</h1>
+          <p className="text-slate-500">{t('privacy.updated')}: April 17, 2026</p>
         </div>
 
-        <div className="space-y-6 text-slate-500">
+        <div className="space-y-6 text-slate-400">
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">1. Overview</h2>
-            <p className="text-sm leading-relaxed">
-              CalcWise ("we", "our", "us") operates the website calqwise.com (the "Service"). This Privacy Policy explains how we collect, use, and protect information when you use our Service.
-            </p>
-            <p className="text-sm leading-relaxed mt-3">
-              <strong className="text-white">Key fact:</strong> All financial calculations on CalcWise run entirely in your browser. We never transmit your financial inputs (income, home price, debt amounts, etc.) to our servers. That data stays on your device.
-            </p>
-          </div>
+          {/* 1. Overview */}
+          <Section number="1" title={t('privacy.s1.title')}>
+            <P>{t('privacy.s1.p1')}</P>
+            <P className="mt-3">
+              <strong className="text-white">{t('privacy.s1.keyFact')}:</strong>{' '}
+              {t('privacy.s1.p2')}
+            </P>
+          </Section>
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">2. Information We Collect</h2>
-            <h3 className="font-semibold text-white mt-4 mb-2">2.1 Calculator Inputs</h3>
-            <p className="text-sm leading-relaxed">
-              We do NOT collect, store, or process any financial data you enter into our calculators. All calculations are performed client-side using JavaScript.
-            </p>
-            <h3 className="font-semibold text-white mt-4 mb-2">2.2 Usage Data (Google Analytics 4)</h3>
-            <p className="text-sm leading-relaxed">
-              We use Google Analytics 4 to collect anonymized usage data including: pages visited, time on page, browser type, approximate geographic region (country/city level), and referring websites. This data is used to improve our calculators and understand which features are most useful.
-            </p>
-            <p className="text-sm leading-relaxed mt-2">
-              GA4 data is processed by Google LLC under their Privacy Policy. You can opt out via the Google Analytics Opt-out Browser Add-on.
-            </p>
-            <h3 className="font-semibold text-white mt-4 mb-2">2.3 Advertising (Google AdSense)</h3>
-            <p className="text-sm leading-relaxed">
-              We display advertisements via Google AdSense. Google may use cookies and similar technologies to serve personalized ads based on your browsing history. You can manage ad personalization at adssettings.google.com.
-            </p>
-            <h3 className="font-semibold text-white mt-4 mb-2">2.4 Contact Form</h3>
-            <p className="text-sm leading-relaxed">
-              If you submit our contact form, your name, email address and message are processed through Formspree (our form backend provider). We use this information solely to respond to your inquiry.
-            </p>
-          </div>
+          {/* 2. Website Data */}
+          <Section number="2" title={t('privacy.s2.title')}>
+            <Sub title={t('privacy.s2.calcTitle')}>
+              <P>{t('privacy.s2.calcText')}</P>
+            </Sub>
+            <Sub title={t('privacy.s2.analyticsTitle')}>
+              <P>{t('privacy.s2.analyticsText')}</P>
+              <P className="mt-2">{t('privacy.s2.analyticsOptOut')}</P>
+            </Sub>
+            <Sub title={t('privacy.s2.adsenseTitle')}>
+              <P>{t('privacy.s2.adsenseText')}</P>
+            </Sub>
+            <Sub title={t('privacy.s2.contactTitle')}>
+              <P>{t('privacy.s2.contactText')}</P>
+            </Sub>
+          </Section>
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">3. Cookies</h2>
-            <p className="text-sm leading-relaxed">We use the following cookies:</p>
-            <ul className="mt-3 space-y-2 text-sm">
-              <li className="flex gap-3">
-                <span className="text-accent shrink-0">•</span>
-                <span><strong className="text-white">Analytics cookies</strong> (Google Analytics): Track page views and user behavior anonymously. Persist for up to 2 years.</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-accent shrink-0">•</span>
-                <span><strong className="text-white">Advertising cookies</strong> (Google AdSense): Used to serve and measure advertisements. Managed by Google.</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-accent shrink-0">•</span>
-                <span><strong className="text-white">Functional cookies</strong>: We may store your calculator preferences (e.g., last selected country) in localStorage. This data never leaves your device.</span>
-              </li>
+          {/* 3. Mobile Apps */}
+          <Section number="3" title={t('privacy.s3.title')}>
+            <P>{t('privacy.s3.intro')}</P>
+            <ul className="mt-3 mb-4 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+              {ANDROID_APPS.map(app => (
+                <li key={app} className="flex gap-2 items-center">
+                  <span className="text-accent shrink-0">•</span>
+                  <span>{app}</span>
+                </li>
+              ))}
             </ul>
-            <p className="text-sm leading-relaxed mt-3">
-              You can control cookies through your browser settings. Note that blocking cookies may affect the functionality of third-party services (analytics, ads).
-            </p>
-          </div>
+            <Sub title={t('privacy.s3.admobTitle')}>
+              <P>{t('privacy.s3.admobText')}</P>
+            </Sub>
+            <Sub title={t('privacy.s3.analyticsTitle')}>
+              <P>{t('privacy.s3.analyticsText')}</P>
+            </Sub>
+            <Sub title={t('privacy.s3.crashlyticsTitle')}>
+              <P>{t('privacy.s3.crashlyticsText')}</P>
+            </Sub>
+            <P className="mt-3">{t('privacy.s3.noSale')}</P>
+          </Section>
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">4. GDPR (European Users)</h2>
-            <p className="text-sm leading-relaxed">
-              If you are located in the European Economic Area (EEA), you have the following rights under GDPR:
-            </p>
+          {/* 4. Cookies */}
+          <Section number="4" title={t('privacy.s4.title')}>
+            <P>{t('privacy.s4.intro')}</P>
             <ul className="mt-3 space-y-2 text-sm">
-              <li className="flex gap-3"><span className="text-accent shrink-0">•</span><span><strong className="text-white">Right to access:</strong> Request a copy of personal data we hold about you.</span></li>
-              <li className="flex gap-3"><span className="text-accent shrink-0">•</span><span><strong className="text-white">Right to erasure:</strong> Request deletion of your personal data.</span></li>
-              <li className="flex gap-3"><span className="text-accent shrink-0">•</span><span><strong className="text-white">Right to object:</strong> Object to processing of your data for marketing purposes.</span></li>
-              <li className="flex gap-3"><span className="text-accent shrink-0">•</span><span><strong className="text-white">Right to portability:</strong> Receive your data in a structured, machine-readable format.</span></li>
+              <Bullet><strong className="text-white">{t('privacy.s4.analyticsCookie')}</strong> — {t('privacy.s4.analyticsCookieText')}</Bullet>
+              <Bullet><strong className="text-white">{t('privacy.s4.adsCookie')}</strong> — {t('privacy.s4.adsCookieText')}</Bullet>
+              <Bullet><strong className="text-white">{t('privacy.s4.functionalCookie')}</strong> — {t('privacy.s4.functionalCookieText')}</Bullet>
             </ul>
-            <p className="text-sm leading-relaxed mt-3">
-              Our legal basis for processing analytics data is legitimate interest. For advertising, we rely on consent where required by law. To exercise your rights, contact us via the Contact page.
-            </p>
-          </div>
+            <P className="mt-3">{t('privacy.s4.control')}</P>
+          </Section>
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">5. CCPA (California Users)</h2>
-            <p className="text-sm leading-relaxed">
-              California residents have the right to: know what personal information we collect and how it's used; request deletion of personal information; opt out of the "sale" of personal information (we do not sell personal information); and non-discrimination for exercising your rights.
-            </p>
-            <p className="text-sm leading-relaxed mt-3">
-              Note: Sharing data with Google for analytics and advertising purposes may constitute a "sale" under CCPA's broad definition. To opt out, you can use Google's opt-out tools or enable the Global Privacy Control (GPC) signal in your browser.
-            </p>
-          </div>
+          {/* 5. GDPR */}
+          <Section number="5" title={t('privacy.s5.title')}>
+            <P>{t('privacy.s5.intro')}</P>
+            <ul className="mt-3 space-y-2 text-sm">
+              <Bullet><strong className="text-white">{t('privacy.s5.access')}</strong> — {t('privacy.s5.accessText')}</Bullet>
+              <Bullet><strong className="text-white">{t('privacy.s5.erasure')}</strong> — {t('privacy.s5.erasureText')}</Bullet>
+              <Bullet><strong className="text-white">{t('privacy.s5.object')}</strong> — {t('privacy.s5.objectText')}</Bullet>
+              <Bullet><strong className="text-white">{t('privacy.s5.portability')}</strong> — {t('privacy.s5.portabilityText')}</Bullet>
+            </ul>
+            <P className="mt-3">{t('privacy.s5.basis')}</P>
+          </Section>
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">6. Children's Privacy</h2>
-            <p className="text-sm leading-relaxed">
-              CalcWise is not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided personal information, please contact us immediately.
-            </p>
-          </div>
+          {/* 6. CCPA */}
+          <Section number="6" title={t('privacy.s6.title')}>
+            <P>{t('privacy.s6.text')}</P>
+            <P className="mt-3">{t('privacy.s6.note')}</P>
+          </Section>
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">7. Third-Party Links</h2>
-            <p className="text-sm leading-relaxed">
-              Our website may contain links to third-party websites (e.g., Google Play Store, App Store). We are not responsible for the privacy practices of those sites. We encourage you to review their privacy policies.
-            </p>
-          </div>
+          {/* 7. Children */}
+          <Section number="7" title={t('privacy.s7.title')}>
+            <P>{t('privacy.s7.text')}</P>
+          </Section>
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">8. Changes to This Policy</h2>
-            <p className="text-sm leading-relaxed">
-              We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "last modified" date. Continued use of CalcWise after changes constitutes acceptance of the updated policy.
-            </p>
-          </div>
+          {/* 8. Third-party links */}
+          <Section number="8" title={t('privacy.s8.title')}>
+            <P>{t('privacy.s8.text')}</P>
+          </Section>
 
-          <div className="cw-card">
-            <h2 className="text-xl font-semibold text-white mb-3">9. Contact Us</h2>
-            <p className="text-sm leading-relaxed">
-              For privacy-related inquiries, data requests, or concerns, please use our <a href="#/contact" className="text-primary hover:text-accent">Contact page</a>.
-            </p>
-          </div>
+          {/* 9. Changes */}
+          <Section number="9" title={t('privacy.s9.title')}>
+            <P>{t('privacy.s9.text')}</P>
+          </Section>
+
+          {/* 10. Contact */}
+          <Section number="10" title={t('privacy.s10.title')}>
+            <P>
+              {t('privacy.s10.text')}{' '}
+              <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary hover:text-accent transition-colors">
+                {CONTACT_EMAIL}
+              </a>{' '}
+              {t('privacy.s10.or')}{' '}
+              <Link to="/contact" className="text-primary hover:text-accent transition-colors">
+                {t('privacy.s10.contactPage')}
+              </Link>.
+            </P>
+          </Section>
+
         </div>
       </div>
     </>

@@ -10,7 +10,7 @@ import ResultSimple from '../../components/ResultSimple'
 import ResultDetailed from '../../components/ResultDetailed'
 import NumericInput from '../../components/NumericInput'
 import AdSenseSlot from '../../components/AdSenseSlot'
-import { CalcFAQ, CalcRelated } from '../../components/CalcSEO'
+import { CalcFAQ, CalcRelated, CalcPageMeta } from '../../components/CalcSEO'
 import { Plus, Trash2 } from 'lucide-react'
 
 const DEBTPAYOFF_FAQS = [
@@ -238,10 +238,8 @@ export default function DebtPayoffCalc({ country = 'us' }) {
 
   return (
     <>
+      <CalcPageMeta country={country} slug="debt-payoff" title={`Debt Payoff Calculator ${c.name} 2026 — Snowball vs Avalanche | CalqWise`} description={`Free ${c.name} debt payoff calculator. Compare Snowball (smallest balance first) and Avalanche (highest rate first) methods. See your debt-free date and total interest saved.`} />
       <Helmet>
-        <title>Debt Payoff Calculator {c.name} 2026 — Snowball vs Avalanche | CalcWise</title>
-        <meta name="description" content={`Free debt payoff calculator for ${c.name}. Compare the Snowball and Avalanche methods to pay off credit cards, loans and more. See your debt-free date and interest savings.`} />
-        <link rel="canonical" href={`https://calqwise.com/${country}/debt-payoff`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
