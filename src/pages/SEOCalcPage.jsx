@@ -63,13 +63,14 @@ export default function SEOCalcPage() {
         <meta property="og:title" content={`${page.title} | CalqWise`} />
         <meta property="og:description" content={page.metaDesc} />
         <meta property="og:url" content={`https://calqwise.com/${country}/${calc}/${slug}`} />
-        <meta property="og:image" content="https://calqwise.com/og-image.jpg" />
+        <meta property="og:image" content="https://calqwise.com/og-image.svg" />
+        <meta property="og:image:alt" content={`${page.title} — CalqWise`} />
         <meta property="og:site_name" content="CalqWise" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${page.title} | CalqWise`} />
         <meta name="twitter:description" content={page.metaDesc} />
-        <meta name="twitter:image" content="https://calqwise.com/og-image.jpg" />
+        <meta name="twitter:image" content="https://calqwise.com/og-image.svg" />
         {/* Breadcrumb JSON-LD */}
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
@@ -94,7 +95,7 @@ export default function SEOCalcPage() {
             '@type': 'Organization',
             name: 'CalqWise',
             url: 'https://calqwise.com',
-            logo: { '@type': 'ImageObject', url: 'https://calqwise.com/og-image.jpg' },
+            logo: { '@type': 'ImageObject', url: 'https://calqwise.com/og-image.svg' },
           },
           mainEntityOfPage: { '@type': 'WebPage', '@id': `https://calqwise.com/${country}/${calc}/${slug}` },
         })}</script>

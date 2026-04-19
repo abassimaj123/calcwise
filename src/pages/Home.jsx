@@ -85,7 +85,7 @@ export default function Home() {
     <>
       <Helmet>
         <title>CalqWise - Free Financial Calculators for Mortgage, Tax, Salary 2026</title>
-        <meta name="description" content="57+ free financial calculators for US, UK, Canada, Australia. Calculate mortgage, taxes, salary, loans with 2026 rates. No signup required." />
+        <meta name="description" content="Free mortgage calculator, income tax calculator, salary calculator & loan calculator for US, Canada, UK, Australia, Ireland & New Zealand. 57+ calculators, 2026 rates, no signup." />
         <link rel="canonical" href="https://calqwise.com/" />
         <link rel="alternate" hreflang="en" href="https://calqwise.com/" />
         <link rel="alternate" hreflang="x-default" href="https://calqwise.com/" />

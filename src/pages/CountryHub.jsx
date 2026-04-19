@@ -62,13 +62,14 @@ export default function CountryHub({ country }) {
         <meta property="og:title" content={`${c.name} Financial Calculators 2026 | CalqWise`} />
         <meta property="og:description" content={`Free financial calculators for ${c.name}: mortgage, tax, salary, auto loan and more. Accurate 2026 rates.`} />
         <meta property="og:url" content={`https://calqwise.com/${country}`} />
-        <meta property="og:image" content="https://calqwise.com/og-image.jpg" />
+        <meta property="og:image" content="https://calqwise.com/og-image.svg" />
+        <meta property="og:image:alt" content={`${c.name} Financial Calculators — CalqWise`} />
         <meta property="og:site_name" content="CalqWise" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${c.name} Financial Calculators 2026 | CalqWise`} />
         <meta name="twitter:description" content={`Free financial calculators for ${c.name}: mortgage, tax, salary and more.`} />
-        <meta name="twitter:image" content="https://calqwise.com/og-image.jpg" />
+        <meta name="twitter:image" content="https://calqwise.com/og-image.svg" />
         {/* Structured data */}
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',

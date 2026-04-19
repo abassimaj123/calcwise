@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react'
 import { countries } from '../config/countries'
 
 const BASE_URL = 'https://calqwise.com'
-const OG_IMAGE = `${BASE_URL}/og-image.jpg`
+const OG_IMAGE = `${BASE_URL}/og-image.svg`
 
 /**
  * Drop-in replacement for the <Helmet> block in every calculator page.

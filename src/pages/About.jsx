@@ -60,7 +60,7 @@ export default function About() {
     '@type': 'Organization',
     name: 'CalqWise',
     url: 'https://calqwise.com',
-    logo: 'https://calqwise.com/og-image.jpg',
+    logo: 'https://calqwise.com/og-image.svg',
     description: 'Free financial calculators for mortgage, tax, salary, and more — covering US, Canada, UK, Australia, Ireland, and New Zealand.',
     foundingDate: '2024',
     areaServed: ['US', 'CA', 'GB', 'AU', 'IE', 'NZ'],
@@ -80,12 +80,12 @@ export default function About() {
         <meta property="og:title" content="About CalqWise — Methodology & Data Sources" />
         <meta property="og:description" content="Our calculation methodology, official data sources (IRS, CRA, HMRC, ATO), and update policy." />
         <meta property="og:url" content="https://calqwise.com/about" />
-        <meta property="og:image" content="https://calqwise.com/og-image.jpg" />
+        <meta property="og:image" content="https://calqwise.com/og-image.svg" />
         <meta property="og:site_name" content="CalqWise" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="About CalqWise — Methodology & Data Sources" />
         <meta name="twitter:description" content="How we calculate mortgage, tax, and salary — with links to official sources." />
-        <meta name="twitter:image" content="https://calqwise.com/og-image.jpg" />
+        <meta name="twitter:image" content="https://calqwise.com/og-image.svg" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

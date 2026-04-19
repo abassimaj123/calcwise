@@ -39,7 +39,7 @@ export default function Contact() {
         <meta property="og:title" content="Contact CalqWise" />
         <meta property="og:description" content="Report a bug, suggest a calculator, or ask a question. We read everything." />
         <meta property="og:url" content="https://calqwise.com/contact" />
-        <meta property="og:image" content="https://calqwise.com/og-image.jpg" />
+        <meta property="og:image" content="https://calqwise.com/og-image.svg" />
         <meta property="og:site_name" content="CalqWise" />
       </Helmet>
 
