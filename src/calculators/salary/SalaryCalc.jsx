@@ -618,7 +618,6 @@ export default function SalaryCalc({ country, embedded = false }) {
         </div>{/* /calc-grid */}
 
         <AdSenseSlot format="rectangle" />
-        <AdSenseSlot format="leaderboard" />
       </div>
 
       {/* SEO content */}
@@ -626,6 +625,7 @@ export default function SalaryCalc({ country, embedded = false }) {
         <CalcIntro intro={salaryIntroText[country] || salaryIntroText.us} />
         <CalcFeatures features={salaryFeatures[country] || salaryFeatures.us} />
         <CalcHowTo steps={salaryHowToSteps[country] || salaryHowToSteps.us} />
+        <AdSenseSlot format="in-article" placement="in-content" />
         <CalcFAQ faqs={[
           { q: 'What is the difference between gross and net salary?', a: 'Gross salary is your total earnings before any deductions. Net salary (take-home pay) is what you actually receive after income tax, social insurance contributions, and any voluntary deductions like pension or health insurance.' },
           { q: 'What deductions does this calculator include?', a: 'This calculator includes national income tax, social security contributions (CPP/EI in Canada, National Insurance in the UK, FICA in the US, PRSI + USC in Ireland, Medicare Levy in Australia, ACC in New Zealand), and standard deductions for your country. Optional deductions like pension, 401(k), RRSP, and health insurance can be added manually.' },
@@ -640,6 +640,7 @@ export default function SalaryCalc({ country, embedded = false }) {
           { to: `/${country}/rent-vs-buy`,   label: 'Rent vs Buy' },
         ]} />
         <CalcAlsoAvailable calcSlug="salary" calcLabel="Salary" countries={otherCountriesSalary} />
+        <AdSenseSlot format="leaderboard" placement="bottom" />
       </div>
     </>
   )
