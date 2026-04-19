@@ -14,14 +14,15 @@
  */
 import { useState } from 'react'
 
-// Compact formatter: 700000 → "700k", 1200000 → "1.2M"
+// Compact formatter: 1800 → "1.8k", 700000 → "700k", 1200000 → "1.2M"
 function fmtCompact(v, step) {
   const n = parseFloat(v)
   if (isNaN(n)) return String(v)
   // Don't compact decimals/percentages
   if (step < 1 || Math.abs(n) < 1000) return String(n)
   if (Math.abs(n) >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
-  return Math.round(n / 1000) + 'k'
+  // Keep 1 decimal so 1800 → "1.8k" and 2100 → "2.1k" (not both "2k")
+  return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
 }
 
 export default function NumericInput({
